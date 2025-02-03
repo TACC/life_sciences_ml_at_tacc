@@ -65,10 +65,9 @@ Let's talk about some of the factors that have contributed to the increase in us
 
 
 Neural networks are mathematical systems that can learn patterns from data and model real-world processes.
-In this sense, a neural network is just another kind of machine learning model like the ones we have already studied (Linear Classifiers, KNN, Logistic Regression, etc.).
+In this sense, a neural network is just another kind of machine learning model like the ones we have already studied.
 
-The basic architecture of a neural network is depicted below.
-Inputs are fed to a series of layers, composed of *perceptrons*, before ultimately producing an output.
+The basic architecture of a neural network is depicted below:
 
 .. figure:: ./images/ann-arch-overview.png
     :alt: Basic Idea of ANN Architecture
