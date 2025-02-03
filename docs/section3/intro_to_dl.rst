@@ -5,7 +5,7 @@ Deep Learning has achieved remarkable progress in recent years, revolutionizing 
 from image classification to natural language processing. **Deep Learning** is a subfield of 
 Machine Learning, which itself falls under the broader category of **Artificial Intelligence (AI)**. 
 
-.. image:: ./AI-ML-DL.png
+.. image:: ./images/AI-ML-DL.png
     :alt: AI-ML-DL Diagram
     :width: 500px
     :align: center
@@ -16,7 +16,7 @@ structure and behavior of neurons in the brain, were originally proposed in 1943
 understand brain function [1]_.
 Today, they serve as powerful tools for learning from data and solving complex problems. 
 
-.. figure:: ./Bio-Basis-of-ANNs.png
+.. figure:: ./images/Bio-Basis-of-ANNs.png
     :alt: Biological basis of Artifical Neural Networks
     :width: 500px
     :align: center
@@ -70,7 +70,7 @@ In this sense, a neural network is just another kind of machine learning model l
 The basic architecture of a neural network is depicted below.
 Inputs are fed to a series of layers, composed of *perceptrons*, before ultimately producing an output.
 
-.. figure:: ./ann-arch-overview.png
+.. figure:: ./images/ann-arch-overview.png
     :alt: Basic Idea of ANN Architecture
     :width: 600px
     :align: center
@@ -83,7 +83,7 @@ A **perceptron**, analogous to a single neuron, is the basic building block of a
 Broadly speaking, a perceptron is a mathematical function that takes in any number of inputs and produces a single output.
 The basic architecture of a perceptron is depicted below:
 
-.. figure:: ./perceptron_diagram.png
+.. figure:: ./images/perceptron_diagram.png
     :alt: How a perceptron works
     :width: 700px
     :align: center
@@ -123,7 +123,7 @@ To summarize, the perceptron takes in multiple inputs (as many as you want) and 
 It calculates a weighted sum of the inputs, adds a bias term, and then passes the result through an activation function to produce an output.
 When multiple perceptrons are connected, they form a neural network that can learn complex decision boundaries.
 
-.. figure:: ./MLP-diagram.png
+.. figure:: ./images/MLP-diagram.png
     :alt: Multilayer Perceptron Diagram
     :width: 600px
     :align: center
