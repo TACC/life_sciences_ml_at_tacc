@@ -1,2 +1,3 @@
 sphinxemoji
 sphinx-rtd-theme
+sphinx-togglebutton
