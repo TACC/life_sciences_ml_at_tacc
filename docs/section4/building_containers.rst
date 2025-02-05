@@ -189,6 +189,12 @@ there is not a difficult install process. However, we can make it executable and
 
 Now test with the following:
 
+.. figure:: ../images/dog.jpg
+   :width: 400
+   :align: center
+
+   Yellow Labrador (Source: Wikipedia)
+
 .. code-block:: console
 
    root@4561d15a324d:/code# cd /home
