@@ -235,7 +235,7 @@ On a HPC system, your job submission script would look something like:
   #SBATCH -N 1                                 # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                                 # Total number of mpi tasks requested
   #SBATCH -t 02:00:00                          # Run time (hh:mm:ss) - 4 hours
-  #SBATCH --reservation Containers-Fall24      # a reservation only active during the training
+  #SBATCH --reservation <my_reservation>       # a reservation only active during the training
 
   module load tacc-apptainer
   apptainer exec docker://python:latest /usr/local/bin/python --version
@@ -303,9 +303,9 @@ Create a file called "pi.slurm" on the work filesystem:
 .. code-block:: console
 
   $ cd $WORK
-  $ mkdir containers-at-tacc
-  $ cd containers-at-tacc
-  $ nano pi.slurm
+  $ mkdir life-sciences-ml-at-tacc
+  $ cd life-sciences-ml-at-tacc
+  $ nano classify.slurm
 
 Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the
 following Slurm script.
@@ -314,23 +314,28 @@ following Slurm script.
 
   #!/bin/bash
 
-  #SBATCH -J calculate-pi                      # Job name
+  #SBATCH -J classify-image                    # Job name
   #SBATCH -o output.%j                         # Name of stdout output file (%j expands to jobId)
   #SBATCH -p rtx                               # Queue name
   #SBATCH -N 1                                 # Total number of nodes requested (56 cores/node)
   #SBATCH -n 1                                 # Total number of mpi tasks requested
   #SBATCH -t 00:10:00                          # Run time (hh:mm:ss)
-  #SBATCH --reservation Containers-Fall24      # a reservation only active during the training
+  #SBATCH --reservation <my_reservation>       # a reservation only active during the training
 
   module load tacc-apptainer
+
+  cd $SCRATCH
 
   echo "running the lolcow container:"
   apptainer run docker://godlovedc/lolcow:latest
 
-  echo "estimating the value of Pi:"
-  apptainer exec docker://USERNAME/pi-estimator:0.1 pi.py 10000000
+  echo "grabbing image dog.jpg:"
+  wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/images/dog.jpg
 
-* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish a pi-estimator container from the previous sections, you are welcome to use "wjallen" as the username to pull Joe Allen's container.
+  echo "classify image dog.jpg:"
+  apptainer exec --nv docker://USERNAME/image-classifier:0.1 image_classifier.py dog.jpg
+
+* Don't forget to replace ``USERNAME`` with your DockerHub username! If you didn't publish an image-classifier container from the previous sections, you are welcome to use "eriksf" as the username to pull my container.
 
 * If you have more than one allocation, you will need to add another line specifying what allocation to use, such as: ``#SBATCH -A AllocationName``
 
@@ -338,7 +343,7 @@ Once you are done, try submitting this file as a job to Slurm.
 
 .. code-block:: console
 
-  $ sbatch pi.slurm
+  $ sbatch classify.slurm
 
 You can check the status of your job with the command ``showq -u``.
 
