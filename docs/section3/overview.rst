@@ -7,3 +7,4 @@ In this section we introduce deep learning and neural networks.
    :maxdepth: 2
 
    intro_to_dl
+   TensorFlow
