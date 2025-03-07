@@ -1,7 +1,7 @@
 Introduction to Deep Learning
 =============
 
-Deep learning has revolutionarized the way computers learn and process information. 
+Deep learning has revolutionized the way computers learn and process information. 
 It has become one of the most powerful tools for complex data analysis and automated decision-making.
 As a subfield of **artificial intelligence (AI)** and **machine learning (ML)**, deep learning uses **artificial neural networks (ANNs)** to extract patterns and insights from large amounts of data automatically and autonomously. 
 
@@ -32,13 +32,13 @@ Deep learning is driving breakthroughs in life sciences research, including:
     6.  `Predicting sample origins based on genetic variation <https://doi.org/10.7554/eLife.54507>`_
 
 The range of deep learning applications is extensive, making it an exciting field for researchers to explore. 
-To understand its potential, let's first explore the foundation of deep learning: Artifical Neural Networks.
+To understand its potential, let's first explore the foundation of deep learning: Artificial Neural Networks.
 
 =============
 Understanding Neural Networks
 =============
-Artifical Neural Networks, or just *neural networks* for short, are the backbone of deep learning.
-They consist of artificial neurons called **perceptrons**, which process infomation in a way inspired by biological neurons in the human brain.
+Artificial Neural Networks, or just *neural networks* for short, are the backbone of deep learning.
+They consist of artificial neurons called **perceptrons**, which process information in a way inspired by biological neurons in the human brain.
 
 In biological neurons, the dendrite receives electrical signals from other neurons and only fires an output signal when the total input signals exceed a certain threshold.
 Similarly, perceptrons take in multiple inputs, apply weights to them to signal their importance, and produce a single output that represents the total strength of the input signals. 
@@ -57,7 +57,7 @@ Perceptrons: The Building Blocks of Neural Networks
 
 A perceptron has multiple inputs, which we'll call :math:`x_1`, :math:`x_2`, and :math:`x_3`.
 Each input has an associated **weight**, denoted as :math:`w_1`, :math:`w_2`, and :math:`w_3`.
-These weights determine how important each input is to the percepton's decision.
+These weights determine how important each input is to the perceptron's decision.
 During *training*, these weights are adjusted to improve accuracy; during *testing*, they remain fixed.
 
 **2. Linear Summation Function**
@@ -318,7 +318,7 @@ Next, let's try to plot the sigmoid function:
     plt.show()
 
 **Thought Challenge:**
- 1. What do you think the line ``x = np.linespace(-10, 10, 100)`` does? (Hint: try adjusting these numbers and see what happens)
+ 1. What do you think the line ``x = np.linspace(-10, 10, 100)`` does? (Hint: try adjusting these numbers and see what happens)
  2. Take a look at the output of the plot. What do you notice? What types of questions might this activation function be useful for?
 
 .. figure:: ./images/Sigmoid-Function.png
@@ -386,7 +386,7 @@ Write down your answer first. Then click below to see our answer:
          3. **Vanishing Gradient Issue**: 
 
              * Both functions flatten out at extreme values, meaning their gradients become very small. 
-             * This can slow down learning in deep networks. 
+             * This can slow down learning in deep networks.
         - What are the implications of this difference?
 
              * `Tanh` is often preferred for hidden layers because it helps keep activation functions centered around zero, making learning more efficient.
@@ -515,7 +515,7 @@ Example:
 
 By repeating this process, we can create networks of any depth. 
 However, so far, we've only computed outputs. 
-To train a neural network, we need a way to *adjust weights* based on taining data. 
+To train a neural network, we need a way to *adjust weights* based on training data. 
 This process, called **backpropagation**, is where frameworks like TensorFlow simplify things for us. 
 
 **Reference List**
