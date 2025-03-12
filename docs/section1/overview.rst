@@ -1,8 +1,14 @@
-Welcome and Introduction to TACC Systems and Tools
-==================================================
-
-Welcome to the TACC Institute Machine Learning Institute. In this section you will learn how to use TACC's systems
-and tools, as well as the primary Python libraries used for data processing and analysis.
-
 .. toctree::
    :maxdepth: 1
+
+   01_intro_to_hpc.rst
+   02_first_steps.rst
+   03_connecting.rst
+   04_running.rst
+   05_understanding.rst
+   06_executing.rst
+   07_managing.rst
+   08_requesting.rst
+   09_transferring.rst
+
+   Your First Steps at TACC

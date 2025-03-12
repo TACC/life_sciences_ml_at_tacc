@@ -13,7 +13,7 @@ learn effective techniques to prepare and manage preprocessing of datasets, and 
 own models efficiently and accurately.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
    
    section1/overview
