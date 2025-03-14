@@ -8,3 +8,5 @@ In this section we introduce deep learning and neural networks.
 
    intro_to_dl
    TensorFlow
+   Build_Your_Own_NN
+   cnn
