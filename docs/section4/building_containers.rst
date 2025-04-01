@@ -145,17 +145,14 @@ is a Linux server running Ubuntu 22.04. We could start with a base Ubuntu 22.04 
 then install the dependencies including `CUDA <https://developer.nvidia.com/cuda-toolkit>`_ (for running on GPUs),
 `Python <https://www.python.org/>`_, and `PyTorch <https://pytorch.org/>`_, but
 why not start farther up the stack. If you want to run with NVIDIA GPUs, we usually recommend starting with the
-official CUDA (`nvidia/cuda <https://hub.docker.com/r/nvidia/cuda>`_) images from NVIDIA on Docker Hub. Since we
-specifically want to use PyTorch, then the official repository on Docker Hub,
-`pytorch/pytorch <https://hub.docker.com/r/pytorch/pytorch>`_, is a great place to start. These images
-already contain CUDA, Python, and PyTorch and is how we will containerize it. Use ``docker run`` to interactively
-attach to a fresh
-`PyTorch 2.4.1 container <https://hub.docker.com/r/pytorch/pytorch/tags?name=2.4.1-cuda12.1-cudnn9-runtime>`_.
+official CUDA (`nvidia/cuda <https://hub.docker.com/r/nvidia/cuda>`_) images from NVIDIA on Docker Hub. So we will
+start with one of those. Use ``docker run`` to interactively
+attach to a fresh `CUDA 12.4.1 container <https://hub.docker.com/r/nvidia/cuda/tags?name=12.4.1-cudnn-runtime-ubuntu>`_.
 
 .. code-block:: console
 
-   [user-vm]$ docker run --rm -it -v $PWD:/code pytorch/pytorch:2.4.1-cuda12.1-cudnn9-runtime /bin/bash
-   root@4561d15a324d:/workspace#
+   [user-vm]$ docker run --rm -it -v $PWD:/code nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04 /bin/bash
+   root@4f7f9ce3da83:/#
 
 Here is an explanation of the options:
 
@@ -165,7 +162,7 @@ Here is an explanation of the options:
    --rm                                           # remove the container on exit
    -it                                            # interactively attach terminal to inside of container
    -v $PWD:/code                                  # mount the current directory to /code
-   pytorch/pytorch:2.4.1-cuda12.1-cudnn9-runtime  # image and tag from Docker Hub
+   nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04   # image and tag from Docker Hub
    /bin/bash                                      # shell to start inside container
 
 
@@ -174,18 +171,60 @@ And, new to this example, we are using the ``-v`` flag which mounts the contents
 of our current directory (``$PWD``) inside the container in a folder in the root
 directory called (``/code``).
 
+Update and Upgrade
+~~~~~~~~~~~~~~~~~~
+
+The first thing we will typically do is use the Ubuntu package manager ``apt`` to
+update the list of available packages and install newer versions of the packages
+we have. We can do this with:
+
+.. code-block:: console
+
+  root@4f7f9ce3da83:/# apt-get update
+  ...
+  root@4f7f9ce3da83:/# apt-get upgrade
+  ...
+
+.. note::
+
+  On the second command, you may need to choose 'Y' to install the upgrades.
+
+Install Required Packages
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For our python script to work, we need to install python3:
+
+.. code-block:: console
+
+  root@4f7f9ce3da83:/# apt-get install python3.10-full python3-pip
+  ...
+  root@4f7f9ce3da83:/# python3 --version
+  Python 3.10.12
+
+An important question to ask is: Does this version match the version you are
+developing with on your local workstation? If not, make sure to install the
+correct version of python.
+
+The next step is to install the dependencies for our code. In this case, we
+need to install the `torch` and `torchvision` packages from `PyTorch <https://pytorch.org/get-started/locally/>`_.
+We are going to install version 2.5.1:
+
+.. code-block:: console
+
+   root@4f7f9ce3da83:/# pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
+
 
 Install and Test Your Code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Since we are using a simple Python script and our dependencies are already contained in the base image,
-there is not a difficult install process. However, we can make it executable and add it to the user's `PATH`.
+Since we are using a simple Python script, there is not a difficult install process.
+However, we can make it executable and add it to the user's `PATH`.
 
 .. code-block:: console
 
-   root@4561d15a324d:/workspace# cd /code
-   root@4561d15a324d:/code# chmod +rx image_classifier.py
-   root@4561d15a324d:/code# export PATH=/code:$PATH
+   root@4f7f9ce3da83:/# cd /code
+   root@4f7f9ce3da83:/code# chmod +rx image_classifier.py
+   root@4f7f9ce3da83:/code# export PATH=/code:$PATH
 
 Now test with the following:
 
@@ -197,10 +236,10 @@ Now test with the following:
 
 .. code-block:: console
 
-   root@4561d15a324d:/code# cd /home
-   root@4561d15a324d:/home# which image_classifier.py
+   root@4f7f9ce3da83:/code# cd /home
+   root@4f7f9ce3da83:/home# which image_classifier.py
    /code/image_classifier.py
-   root@4561d15a324d:/home# image_classifier.py -h
+   root@4f7f9ce3da83:/home# image_classifier.py -h
    usage: image_classifier.py [-h] image
 
    positional arguments:
@@ -208,7 +247,7 @@ Now test with the following:
 
    options:
      -h, --help  show this help message and exit
-   root@4561d15a324d:/home# image_classifier.py /code/dog.jpg
+   root@4f7f9ce3da83:/home# image_classifier.py /code/dog.jpg
    Downloading: "https://download.pytorch.org/models/resnet101-cd907fc2.pth" to /root/.cache/torch/hub/checkpoints/resnet101-cd907fc2.pth
    100%|████████████████████████████████████████████████████████████████████████████████████████████████| 171M/171M [00:01<00:00, 105MB/s]
    Classifying /code/dog.jpg with ResNet101...
@@ -233,13 +272,13 @@ The FROM Instruction
 
 We can use the FROM instruction to start our new image from a known base image.
 This should be the first line of our Dockerfile. In our scenario, we found that
-the pytorch:2.4.1-cuda12.1-cudnn9-runtime image from the official PyTorch repository
-on Docker Hub contained all the dependencies we need in our environment, so that is
+the ``nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04`` image from the official Nvidia repository
+on Docker Hub was a good place to start, so that is
 how we will containerize it for others to use:
 
 .. code-block:: dockerfile
 
-   FROM pytorch/pytorch:2.4.1-cuda12.1-cudnn9-runtime
+   FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
 
 Base images typically take the form `image_name:version`. Avoid using the '`latest`'
 version; it is hard to track where it came from and the identity of '`latest`'
@@ -254,15 +293,23 @@ The RUN Instruction
 ~~~~~~~~~~~~~~~~~~~
 
 We can install updates, install new software, or download code to our image by
-running commands with the RUN instruction. In our case, our dependencies are already
-in the base image, so we will use a few RUN instructions to just
-update the base OS. Keep in mind that the the ``docker build`` process cannot handle
-interactive prompts, so we use the ``-y`` flag with ``apt``.
+running commands with the RUN instruction. In our case, our dependencies are Python3
+and PyTorch, so we will use a few RUN instructions to update the base OS and install them
+using the Ubuntu package manager (``apt``). Keep in mind that the the ``docker build``
+process cannot handle interactive prompts, so we use the ``-y`` flag with ``apt``.
 
 .. code-block:: dockerfile
 
-   RUN apt update
-   RUN apt upgrade -y
+   RUN apt-get update
+   RUN apt-get upgrade -y
+   RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python3.10-full python3-pip
+
+.. tip::
+   The ``DEBIAN_FRONTEND=noninteractive`` flag is used to suppress any
+   interactive prompts that may occur during the installation process using the Ubuntu
+   package manager ``apt``. This is important because it will allow package installations
+   that aren't caught by the ``-y`` flag (like ``tzdata``). This is a common problem with
+   ``apt``, so it is a good idea to include this flag in your Dockerfile.
 
 Each RUN instruction creates an intermediate image (called a 'layer'). Too many
 layers makes the Docker image less performant, and makes building less
@@ -275,13 +322,21 @@ building later on:
 .. code-block:: dockerfile
 
    RUN apt-get update && \
-       apt-get upgrade -y
+       apt-get upgrade -y && \
+       DEBIAN_FRONTEND=noninteractive apt-get install -y python3.10-full python3-pip
 
 .. tip::
 
    In the above code block, the \ character at the end of the lines causes the
    newline character to be ignored. This can make very long run-on lines with
    many commands separated by && easier to read.
+
+We will add another RUN instruction to install the PyTorch dependencies. We can
+use the same command we used interactively:
+
+.. code-block:: dockerfile
+
+   RUN pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
 
 The COPY Instruction
 ~~~~~~~~~~~~~~~~~~~~
@@ -337,10 +392,13 @@ The contents of the final Dockerfile should look like:
 .. code-block:: dockerfile
    :linenos:
 
-   FROM pytorch/pytorch:2.4.1-cuda12.1-cudnn9-runtime
+   FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
 
    RUN apt-get update && \
-       apt-get upgrade -y
+       apt-get upgrade -y && \
+       DEBIAN_FRONTEND=noninteractive apt-get install -y python3.10-full python3-pip
+
+   RUN pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124
 
    COPY image_classifier.py /code/image_classifier.py
 
@@ -374,6 +432,14 @@ To build the image, use:
 
    [user-vm]$ docker build -t username/image-classifier:0.1 .
 
+
+Or for a different architecture (see `Multi-architecture builds <https://containers-at-tacc.readthedocs.io/en/latest/advanced/02.multiarchitecture.html>`_, you can use, for example:
+
+.. code-block:: console
+
+   [user-vm]$ docker build --platform linux/arm64 -t username/image-classifier:0.1 .
+
+
 .. note::
 
    Don't forget to replace 'username' with your Docker Hub username.
@@ -385,9 +451,9 @@ also use `docker inspect` to find out more information about the image.
 .. code-block:: console
 
    [user-vm]$ docker images
-   REPOSITORY                TAG                             IMAGE ID       CREATED          SIZE
-   eriksf/image-classifier   0.1                             a23875141d7a   34 seconds ago   6.01GB
-   pytorch/pytorch           2.4.1-cuda12.1-cudnn9-runtime   d4fb707a1b5f   5 months ago     5.93GB
+   REPOSITORY                TAG                                IMAGE ID       CREATED          SIZE
+   eriksf/image-classifier   0.1                                a23875141d7a   34 seconds ago   6.01GB
+   nvidia/cuda               12.4.1-cudnn-runtime-ubuntu22.04   33f27d22a52d   11 months ago    3.1GB
    ...
 
 .. code-block:: console
@@ -412,9 +478,9 @@ because the code is already in the container:
 
    $ docker run --rm -it -v $PWD:/images username/image-classifier:0.1 /bin/bash
    ...
-   root@10adb20f07b7:/workspace# ls /code
+   root@10adb20f07b7:/# ls /code
    image_classifier.py
-   root@10adb20f07b7:/workspace# image_classifier.py /images/dog.jpg
+   root@10adb20f07b7:/# image_classifier.py /images/dog.jpg
    Downloading: "https://download.pytorch.org/models/resnet101-cd907fc2.pth" to /root/.cache/torch/hub/checkpoints/resnet101-cd907fc2.pth
    100%|████████████████████████████████████████████████████████████████████████████████████████████████| 171M/171M [00:01<00:00, 107MB/s]
    Classifying /images/dog.jpg with ResNet101...
