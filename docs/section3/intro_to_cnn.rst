@@ -1,4 +1,4 @@
-Convolutional Neural Networks (CNNs)
+Intro to Convolutional Neural Networks
 ================================================
 
 In the previous section, we learned how to classify mushrooms based on their physical characteristics.
