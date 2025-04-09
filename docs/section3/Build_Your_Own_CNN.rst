@@ -1,4 +1,4 @@
-Hands-On Convolutional Neural Network
+Build Your Own Convolutional Neural Network
 =====================================
 
 Coral reefs are among the most diverse and valuable ecosystems on Earth, providing habitat for 25% of all marine species and supporting the livelihoods of over half a billion people worldwide.
