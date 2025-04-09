@@ -41,7 +41,7 @@ The code below lists the contents of the ``coral-species`` data directory to ver
     dataset_dir = Path('/full/path/to/your/scratch/directory/coral-species-CNN-tutorial/data/coral-species')
 
     # List the contents of the data directory
-    print(list(dataset_dir.iterder()))
+    print(list(dataset_dir.iterdir()))
 
     # You should see something like this:
     # [PosixPath('../data/coral-species/MCAV'), PosixPath('../data/coral-species/ACER'), PosixPath('../data/coral-species/CNAT')]
