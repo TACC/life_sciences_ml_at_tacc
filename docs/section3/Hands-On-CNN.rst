@@ -133,9 +133,9 @@ The script below prints a summary and gives recommendations if inconsistencies a
     
 Our dataset analysis reveals some important characteristics that we'll need to keep in mind as we proceed with the tutorial:
 
- 1. **Image Size Variation**: We have 500 total images in out dataset, with 132 different image sizes (dimensions). Also notice that some images are in portrait orientation (height > width) while others are landscape (width > height). CNNs expect all images to have the same dimensions, so we'll need to resize them to a standard size before training our model.
+ 1. **Image Size Variation**: We have 451 total images in our dataset, with 88 different image sizes (dimensions). Also notice that some images are in portrait orientation (height > width) while others are landscape (width > height). CNNs expect all images to have the same dimensions, so we'll need to resize them to a standard size before training our model.
 
- 2. **Color Mode**: Not all images have the same color mode. CNNs also expect all images to have the same color mode, so we'll need to convert any images with non-RGB color modes to RGB.
+ 2. **Color Mode**: All images share the same color mode. Great!
 
 We will address these issues in Step 5 when we prepare our data for input into the CNN. 
 
