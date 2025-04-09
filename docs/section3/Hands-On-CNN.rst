@@ -137,7 +137,7 @@ Our dataset analysis reveals some important characteristics that we'll need to k
 
  2. **Color Mode**: All images share the same color mode. Great!
 
-We will address these issues in Step 5 when we prepare our data for input into the CNN. 
+We will address these issues in Step 4 when we prepare our data for input into the CNN. 
 
 1.4 Check for Corrupted Images
 ------------------------------
@@ -184,12 +184,12 @@ This ensures we only keep clean, valid images for training.
     print(f"Valid images: {len(valid_images)}")
     print(f"Corrupted images removed: {len(bad_images)}")
 
-If there are any corrupted images, in your dataset, this code will automatically remove them. 
+If there are any corrupted images in your dataset, this code will automatically remove them. 
 
 1.5 Create a DataFrame of Image Paths and Labels
 -----------------------------------------------
 
-Now that we have a good idea of what our data looks like and have removed any corrupted images, we can start setting up our data for training.
+Now that we have taken a peak at the format of our data and have removed any corrupted images, we can start setting up our data for training.
 In this step, we build a ``pandas.DataFrame`` that organizes all the image data into two columns:
 
   1. **filepath**: The full path to each image file
@@ -400,6 +400,7 @@ If our dataset is imbalanced (i.e., some classes have many more images than othe
 To address this, we can compute **class weights** based on the training data using the ``compute_class_weight`` function from scikit-learn.
 
 These weights:
+
  - Assign higher importance to underrepresented classes
  - Are passed into ``model.fit()`` using the ``class_weight`` argument
  - Adjust how the loss is calculated during training
@@ -444,14 +445,14 @@ Data generators are special tools that help us efficiently load and preprocess i
 Keras provides a built-in data generator called ``ImageDataGenerator`` that can:
 
   - Resize all images to a consistent size
-  - Normalize pixel values (e.g., from [0-255] to [0 to 1])
+  - Normalize pixel values (e.g., from [0-255] to [0-1])
   - Augment the training data with random transformations to improve generalization 
 
 Data generators can be used with Keras model methods like ``fit()``, ``evaluate()``, and ``predict()``, which is particularly useful when dealing with large datasets that don't all fit into memory at once.  
 
 **b. Data Augmentation**
 
-Data augmentation is a powerful technique that that helps our model learn more robust features by creating variations of our training images.
+Data augmentation is a powerful technique that helps our model learn more robust features by creating variations of our training images.
 Augmentation techniques not only expand the size of our training set, but also help prevent overfitting by exposing our model to different variations of our images.
 
 Conveniently, ``ImageDataGenerator`` also provides a number of built-in augmentation techniques that we can use to augment our training data, such as:
@@ -480,7 +481,7 @@ We will define three separate ``ImageDataGenerator`` objects, one for each datas
     IMAGE_SIZE = (224, 224)
     BATCH_SIZE = 32
 
-    # Define data generators
+    # Define training data generator
     train_datagen = ImageDataGenerator(
         rescale=1./255,             # Normalize pixel values to [0, 1]
         rotation_range=30,          # Augment: Random rotation
@@ -499,12 +500,6 @@ We will define three separate ``ImageDataGenerator`` objects, one for each datas
 -----------------------------------------------
 
 Now that our preprocessing methods are defined, we can use ``flow_from_dataframe()`` to load images in batches directly from our labeled Dataframes (``train_df``, ``val_df``, and ``test_df``).
-
-Below, we create three data generators:
-
-  - ``train_generator``: Used for training
-  - ``val_generator``: Used to validate during training
-  - ``test_generator``: Used for final evaluation of model performance
 
 All generators return batches of preprocessed image tensors and their corresponding labels.
 
@@ -566,7 +561,6 @@ Let's display a few images from the training geneator along with their decoded c
 
 .. code-block:: python
 
-    # Import libraries we need for displaying images
     import matplotlib.pyplot as plt
     import numpy as np
 
@@ -798,7 +792,6 @@ During training, the model will learn patterns in the training data and adjust i
 After each epoch, the model's performance is evaluated on the validation set. 
 
 Here, we will also pass in ``class_weight`` to demonstrate how to handle imbalanced data.
-This helps balance the influence of each class during loss calculation (based on Step 4.2). 
 
 We also track the training history, which we'll use later to visualize performance over time. 
 
@@ -918,11 +911,6 @@ We use ``model.evaluate()`` to calculate the test accuracy and loss. These metri
 
 .. code-block:: python
 
-    from sklearn.metrics import confusion_matrix
-    import seaborn as sns
-    import numpy as np
-    import matplotlib.pyplot as plt
-
     # Evaluate test accuracy and loss
     test_loss, test_acc = cnn_model.evaluate(test_generator, verbose=0)
     print(f"Test Accuracy: {test_acc:.2%}")
@@ -983,7 +971,7 @@ It helps identify which classes are being confused with each other.
 Detailed Performance with a Classification Report
 ------------------------------------------------
 
-The classification report provides precision, recall, and F1-score for each class, offering a more nuanced view of model performance.
+The classification report provides precision, recall, and F1-scores for each class, offering a more nuanced view of model performance.
 
 .. code-block:: python
 
@@ -1117,8 +1105,7 @@ We exclude the original classification head (``include_top=False``) and freeze a
 Next, we stack a **custom classifier** on top using Keras’ ``Sequential`` API:
 
 - Flatten the output of VGG19’s last convolutional layer
-- Add two fully connected layers with ``ReLU``, ``BatchNormalization``, and ``Dropout``
-- End with a softmax layer for 3-class classification
+- Add the same fully connected (dense) layers that we had in our original CNN built from scratch
 
 .. code-block:: python
 
@@ -1223,7 +1210,7 @@ Example Output:
 Visualizing Training History
 ------------------------------
 
-Just like we did for our CNN model, let's plot the training and validation performance over time. 
+Just like we did for our first CNN model, let's plot the training and validation performance over time. 
 
 Refer back to Section 1: Step 6 – *Visualizing Training History* for a refresher on how to do this.
 
@@ -1242,7 +1229,7 @@ Refer back to Section 1: Step 6 – *Visualizing Training History* for a refresh
 Step 3: Evaluate the VGG19 Model on the Test Set
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-Just like we did for our CNN model, let's evaluate the VGG19 model on the test set.
+Just like we did for our first CNN model, let's evaluate the VGG19 model on the test set.
 
 Evaluate Test Accuracy and Loss
 -------------------------------
