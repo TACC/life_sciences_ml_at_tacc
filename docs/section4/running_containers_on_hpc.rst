@@ -106,7 +106,7 @@ architecture (e.g. x86) is the same between the container and the host.
 
 .. code-block:: console
 
-	$ apptainer pull docker://godlovedc/lolcow
+	$ apptainer pull docker://eriksf/lolcow
 
 	$ ls
 
@@ -246,7 +246,7 @@ to reserve for you.
 
 .. Note::
 
-  Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Vista system, the user guide is at: `https://docs.tacc.utexas.edu/hpc/vista/ <https://docs.tacc.utexas.edu/hpc/vista//>`_
+  Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Vista system, the user guide is at: `https://docs.tacc.utexas.edu/hpc/vista/ <https://docs.tacc.utexas.edu/hpc/vista/>`_
 
 
 How do HPC systems fit into the development workflow?
@@ -327,7 +327,7 @@ following Slurm script.
   cd $SCRATCH
 
   echo "running the lolcow container:"
-  apptainer run docker://godlovedc/lolcow:latest
+  apptainer run docker://eriksf/lolcow:latest
 
   echo "grabbing image dog.jpg:"
   wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/images/dog.jpg
@@ -363,15 +363,15 @@ the drivers on our systems can work as expected.
 As a base, we recommend starting with the official CUDA
 (`nvidia/cuda <https://hub.docker.com/r/nvidia/cuda>`_) images from NVIDIA on Docker Hub.  If you
 specifically want to use `PyTorch <https://pytorch.org/>`_ or `Tensorflow <https://www.tensorflow.org/>`_
-then the official repositories on Docker Hub, `pytorch/pytorch <https://hub.docker.com/r/pytorch/pytorch>`_
-and `tensorflow/tensorflow <https://hub.docker.com/r/tensorflow/tensorflow>`_ respectively, are good
+then the official repositories on Docker Hub, `pytorch/pytorch <https://hub.docker.com/r/pytorch/pytorch>`_ (x86_64)
+and `tensorflow/tensorflow <https://hub.docker.com/r/tensorflow/tensorflow>`_ (x86_64) respectively, are good
 starting points.
 
 Alternatively, the `NVIDIA GPU Cloud <https://ngc.nvidia.com/>`_ (NGC) has a large number of pre-built
 containers for deep learning and HPC applications including
 `PyTorch <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch>`_ and
 `Tensorflow <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorflow>`_ (full-featured, large,
-and include ARM64 versions). 
+and include ARM64/aarch64 versions).
 
 For instance, we can use a tool like ``gpustat`` to poke at the GPU on TACC systems as follows:
 
@@ -564,7 +564,7 @@ to build a container to train a CNN for image classification using transfer lear
 Transfer learning is a technique where a model that has been trained on a large dataset
 (e.g. `ImageNet <http://www.image-net.org/>`_) is used as a starting point for training a model on a
 smaller dataset. This is particularly useful when the smaller dataset is not large enough to train a model
-from scratch. The ImageNet dataset contains well over 1 million images and 1000 classes.
+from scratch. The ImageNet dataset contains well over a million images and 1000 classes.
 There are 2 main approaches or scenarios used in transfer learning:
 
 1. **Feature Extraction**: Use the pre-trained model as a fixed feature extractor. In this case, we freeze all the
@@ -575,8 +575,8 @@ There are 2 main approaches or scenarios used in transfer learning:
 In this example, we will train a model to classify `hymenoptera <https://www.inaturalist.org/taxa/47201-Hymenoptera>`_
 (ants, bees, and wasps) using the dataset located `here <https://download.pytorch.org/tutorial/hymenoptera_data.zip>`_.
 This dataset contains a training set of approximately 120 images each of ants and bees, and a validation set of
-approximately 75 images each. Again, too small and specific to train a model from scratch, but well placed to 
-use transfer learning.  The model we will use is a pre-trained ResNet18 [1]_ model, which is a convolutional neural network
+approximately 75 images each. Again, too small and specific to train a model from scratch, but well placed to
+use for transfer learning.  The model we will use is a pre-trained ResNet18 [1]_ model, which is a convolutional neural network
 (CNN) that has been trained on the ImageNet dataset.  The ResNet18 model is a deep residual network with 18 layers
 that is designed to learn features from images.  The model is available in the `torchvision <https://pytorch.org/vision/stable/index.html>`_
 library, which is a package that provides popular datasets, model architectures, and common image transformations
@@ -589,7 +589,7 @@ for computer vision.
    The architecture of ResNet18. Source: [2]_
 
 
-On your local laptop or VM, clone the following repository:
+On your local laptop or VM, clone the following `repository <https://github.com/eriksf/pytorch-transfer-learning>`_:
 
 .. code-block:: console
 
@@ -729,8 +729,8 @@ uv-based Python package, we'll discuss each of the important Dockerfile sections
 previous section, this Dockerfile is a multi-stage build (see `Multi-stage builds <https://containers-at-tacc.readthedocs.io/en/latest/advanced/01.multistage.html>`_),
 which means that it will build the final image in multiple steps.
 
-In the first part of stage 1 (base stage), we're going to base our image on a tagged version
-(12.6.3-cudnn-runtime-ubuntu24.04) of the official NVIDIA CUDA image, label it ``base``, and then install
+In stage 1 (base stage), we're going to base our image on a tagged version
+(12.6.3-cudnn-runtime-ubuntu24.04) of the official NVIDIA CUDA images, label it ``base``, and then install
 some system updates and Python 3.12 using ``apt``, the package manager for Ubuntu/Debian.
 
 .. code-block:: dockerfile
@@ -767,7 +767,7 @@ and use ``uv`` again to install the project.
     RUN --mount=type=cache,target=/root/.cache/uv \
         uv sync --frozen --no-dev
 
-In the final stage (runtime stage), we will copy the ``/app`` directory from the builder stage, set the PATH 
+In the final stage (runtime stage), we will copy the ``/app`` directory from the builder stage, set the PATH
 environment variable, run a Python command to prebuild the matplotlib font cache, and then set the default command
 to run the help for the ``train`` command. The important thing to take away here is that we're copying in the
 ``/app`` directory from the builder stage, which contains all the files we need to run the project, and jettisoning
@@ -820,7 +820,7 @@ For reference, here's what the Dockerfile looks like in total:
     # Build matpotlib font cache
     RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot"
 
-    CMD [ "train", "--help" ]    
+    CMD [ "train", "--help" ]
 
 Now let's go ahead and build the container.  This will take a few minutes, so be patient.
 
@@ -880,7 +880,7 @@ Running the Container on Vista
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To start, let's allocate a single `Grace Hopper <https://docs.tacc.utexas.edu/hpc/vista/#system-gh>`_ node,
-which has a single NVIDIA GH200 GPU with 95 GB of Memory. 
+which has a single NVIDIA GH200 GPU with 95 GB of Memory.
 
 .. code-block:: console
 
