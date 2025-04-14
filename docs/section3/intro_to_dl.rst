@@ -166,24 +166,25 @@ Gradient descent helps adjust weights, but in multi-layer networks, we need a wa
 This process is called **backpropagation**, and it allows error signals to flow backward through the network, updating weights efficiently. 
 
 
-Now that we have a basic understanding of how neural networks adjust their weights, let's look at a real-world example: training a neural network to classify histology images as malignant or benign.
+Now that we have a basic understanding of how neural networks adjust their weights, let's look at a real-world example: training a neural network to classify gene expression profiles as malignant or benign.
 
-**Training Example: Classifying Malignant vs Benign Cells**
+**Training Example: Classifying Malignant vs Benign Tumors from Gene Expression**
 
-Imagine you are training a neural network to classify microscopy images of cells as either malignant or benign.
+Imagine you are training a neural network to classify tumors as either malignant or benign based on its gene expression profile. 
 
- * The first layer of the network detects basic features in the image like edges and textures.
- * The next layer identifies more complex features, like organelles or cell arrangements.
- * Deeper layers might recognize abnormalities and pathological patterns, like irregular nuclei. 
+ * Each tumor sample is represented as a long vector of gene expression values–one value per gene.
+ * Each input perceptron receives the expression level of a single gene. So, your dataset includes 20,000 genes, the input layer will contain 20,000 perceptrons, each responsible for processing one gene's expression level.
+ * Hidden layers learn to detect complex, nonlinear patterns by combining gene-level signals into higher-level features.
+ * The final layer produces a prediction: *malignant* or *benign*
 
-.. figure:: ./images/training-cancer-classifier.png
+.. figure:: ./images/training-cancer-classifier-gene.png
     :alt: A neural network in the training stage
     :width: 700px
     :align: center    
 
-The network processes each training image through all layers and produces a final prediction–*malignant* or *benign*.
-If it's wrong, an error signal is sent backward (**backpropagation**), and the weights are adjusted accordingly using gradient descent.
-This process continues until the model has the optimal weights and gets the correct answer practically every time. 
+The network processes each gene expression profile through all layers and generates a prediction.
+If it gets the prediction wrong, an error signal is sent backward (**backpropagation**), and the weights are adjusted accordingly using gradient descent.
+This process continues across many training samples until the model learns a set of weights that minimizes prediction error.
 
 Once training is complete, the model no longer updates its weights–it is ready to apply what it has learned to new, unseen data.
 This is where *inference* comes in. 
@@ -192,15 +193,20 @@ This is where *inference* comes in.
 Inference
 --------------
 
-Inference refers to the process of making predictions, decisions, or drawing conclusions based on a trained model and input data.
-During inference, new input data (e.g., a new, unlabeled microscopy image) is fed into the trained network.
-The data passes through the network layers, applying the learned weights and biases to produce a predicted output.
-In our example, the neural network would classify the new image as either *malignant* or *benign* based on the patterns learned during training.
+Inference is the process of using a trained neural network to make predictions on new, unseen data. 
+During inference, the model does not update its weights–it simply applies the learned weights to the new data to generate a prediction.
 
-.. figure:: ./images/inference-cancer-classifier.png
+In our example, each new tumor sample is represented as a vector of gene expression values.
+This vector is fed into the trained network, which processes it through all layers using the learned weights and biases. 
+
+The network then produces a predicted classification: whether the gene expression profile indicates a *malignant* or *benign* tumor. 
+
+.. figure:: ./images/inference-cancer-classifier-gene-expr.png
     :alt: A neural network in the inference stage
     :width: 700px
     :align: center 
+
+This is the stage where the neural network becomes practically useful: once trained, it can analyze and interpret new biological data to support tasks like diagnosis, prognosis, or treatment decision-making.
 
 Now that we understand the general concepts of *training* and *inference*, let's take a closer look under the hood–how could we implement the basic building blocks of a neural network ourselves?
 
@@ -318,79 +324,55 @@ Next, let's try to plot the sigmoid function:
     plt.show()
 
 **Thought Challenge:**
- 1. What do you think the line ``x = np.linspace(-10, 10, 100)`` does? (Hint: try adjusting these numbers and see what happens)
- 2. Take a look at the output of the plot. What do you notice? What types of questions might this activation function be useful for?
+ **Q1:** What do you think the line ``x = np.linspace(-10, 10, 100)`` does? (Hint: try adjusting these numbers and see what happens)
+
+ **Q2:** Take a look at the output of the plot. What do you notice? What types of questions might this activation function be useful for?
 
 .. figure:: ./images/Sigmoid-Function.png
     :align: center
     :width: 500px
 
+.. toggle:: Click to show the answer
 
-The `tanh` Activation Function
---------------   
+    **Answer**:
 
-Mathematically, the `tanh` function is defined as:
+    **Q1:** The ``x = np.linspace(-10, 10, 100)`` line creates an array of 100 evenly spaced numbers between -10 and 10. These values are used as the input range for plotting the activation function.
+    
+    **Q2:** The output values always fall between 0 and 1. As ``x`` becomes very negative, the output approaches 0, and as ``x`` becomes very positive, the output approaches 1. Around ``x = 0``, the function is at its steepest–this is where the function is most sensitive to changes in ``x``. These properties make the sigmoid function useful for binary classification problems, where we want to model probabilities between 0 and 1.
 
-.. math::
-    f(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+The `softmax` Activation Function
+--------------
 
-**Code Challenge**: Try adding the `tanh` function to our `sigmoid` plot so that you can compare them side by side.
+The `softmax` function is often used in the output layer of neural networks for **multi-class classification** tasks.
+It converts raw output scores (called *logits*) into probabilities that sum to 1.
 
-**Thought Challenge**: How does the `tanh` function differ from the `sigmoid` function? What are the implications of this difference?
+Mathematically, for an input vector :math:`z`, the `softmax` of element :math:`i` is defined as:
 
-Write down your answer first. Then click below to see our answer:
+.. math:: \text{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j} e^{z_j}}
+
+Without getting into the weeds, the `softmax` function ensures that each output is between 0 and 1, and the sum of all outputs is exactly 1–just like a probability distribution.
+
+Let's look at a Python implementation:
+
+.. code-block:: python3
+
+    def softmax(z):
+        e_z = np.exp(z - np.max(z)) 
+        return e_z / np.sum(e_z)
+
+**Thought Challenge:** Try running ``softmax([2.0, 1.0, 0.1])``. What do you notice about the output? Why might `softmax` be better than using `sigmoid` when we have multiple classes?
 
 .. toggle:: Click to show the answer
-    
-    **Code Challenge Solution**:
 
-    .. code-block:: python3
+    **Answer**: 
 
-        import numpy as np
-        import matplotlib.pyplot as plt
-        import math
+    - ``softmax([2.0, 1.0, 0.1])`` returns ``[0.65900114, 0.24243297, 0.09856589]``. This means that the model is most confident in the first class, and least confident in the third class.
+    - `softmax` is better than `sigmoid` for multi-class problems because it looks at all the output perceptrons together, rather than independently, and **forces the model to choose the most likely class**. 
 
-        def sigmoid(x):
-            return 1.0 / (1 + np.exp(-x))
+    For example, imagine you are building a model to classify a cancer sample into one of three cancer types. You wouldn't want the model to say: "It's 90% likely to be a sarcoma, 70% likely to be a carcinoma, and 50% likely to be a lymphoma."
+    That is confusing–and not very useful!
 
-        def tanh(x):
-            return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
-
-        x = np.linspace(-10, 10, 100)
-
-        plt.plot(x, tanh(x), label='Tanh')
-        plt.plot(x, sigmoid(x), label='Sigmoid')
-        plt.xlabel("Input")
-        plt.ylabel("Output")
-        plt.title("Tanh vs Sigmoid Functions")
-        plt.legend()
-
-        plt.show()
-
-    .. figure:: ./images/tanh-vs-sigmoid-solution.png
-        :align: center
-        :width: 500px
-
-    **Thought Challenge Solution**:
-    
-        - How does the `tanh` function differ from the `sigmoid` function?
-
-         1. **Output Range**:
-   
-             * `Tanh`: Outputs between -1 and 1, meaning it's **zero-centered** (helpful for balancing activations)
-             * `Sigmoid`: Outputs between 0 and 1 (always positive). 
-         2. **Steepness**: 
-
-             * `Tanh`: Steeper, with a steeper slope around 0, meaning it has stronger gradients and allows faster learning in that range.
-             * `Sigmoid`: Less steep, meaning it has weaker gradients and slower learning.
-         3. **Vanishing Gradient Issue**: 
-
-             * Both functions flatten out at extreme values, meaning their gradients become very small. 
-             * This can slow down learning in deep networks.
-        - What are the implications of this difference?
-
-             * `Tanh` is often preferred for hidden layers because it helps keep activation functions centered around zero, making learning more efficient.
-             * `Sigmoid` is still useful for binary classification (output layer) because its output represents probabilities (values between 0 and 1). 
+    Instead, with `softmax`, the model would say: "Given all the evidence, I'm 90% confident that this is a sarcoma, 5% that it's a carcinoma, and 5% that it's a lymphoma."
 
 The `ReLU` (Rectified Linear Unit) Activation Function
 --------------
@@ -411,19 +393,18 @@ This means that our range of output is from 0 to infinity:
     :width: 500px
 
 **Thought Challenge:**
- 1. Can you think of any advantages to using the `ReLU` function over the `sigmoid` or `tanh` functions?
+ 1. Can you think of any advantages to using the `ReLU` function over the `sigmoid` function?
 
 .. toggle:: Click to show the answer
 
     **Answer**: 
-        Unlike the `sigmoid` and `tanh` functions, the `ReLU` function does not flatten out in the positive region.
+        Unlike the `sigmoid` function, the `ReLU` function does not flatten out in the positive region.
         This means that the `ReLU` function does not suffer from the vanishing gradient problem, which can make it easier to train deep neural networks.
         `ReLU` is also computationally efficient and straightforward to implement, involving only a simple thresholding operation where negative values and zero are set to zero.
 
-    .. figure:: ./images/sigmoid-tanh-relu.png
+    .. figure:: ./images/sigmoid-relu.png
         :align: center
-        :width: 500px
-
+        :width: 700px
 
 Creating Layers and Computing the Output of Layers
 --------------
@@ -535,7 +516,7 @@ At its core, TensorFlow is a library for programming with linear algebra and sta
 
 **What is a Tensor?**
 
-Everything in TensorFlow is build around tensors. 
+Everything in TensorFlow is built around tensors. 
 To understand TensorFlow, we first need to understand what a tensor is.
 
 A **tensor** is a multi-dimensional array, similar to NumPy arrays. Unlike traditional lists or NumPy arrays, however, *TensorFlow tensors are optimized for parallel computing* and can be processed across mutiple CPU/GPU/TPU cores simultaneously, significantly speeding up computations. 
