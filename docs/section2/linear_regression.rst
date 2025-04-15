@@ -355,7 +355,7 @@ non-numeric data.
 
 
 We've made an updated version of the dataset available on the class git repository inside unit02 folder.
-You can `download it here <https://raw.githubusercontent.com/joestubbs/coe379L-sp24/master/datasets/unit02/used_cars_data2.csv>`_.
+You can `download it here <https://raw.githubusercontent.com/JoshuaUrrutia/life_sciences_ml_at_tacc/refs/heads/development/docs/section2/dna_melting_points.csv>`_.
 
 Either create your own csv from your pre-processing notebook or download the new csv from the website 
 and read it into a DataFrame. 
@@ -364,63 +364,43 @@ and read it into a DataFrame.
 .. code-block:: python3
 
     >>> import pandas as pd
-    >>> cars = pd.read_csv('used_cars_data2.csv')
+    >>> melting_points = pd.read_csv('dna_melting_points.csv')
 
 We can check that our DataFrame has what we expect: 
 
 .. code-block:: python3 
 
-    >>> cars.info()
+    >>> melting_points.info()
     <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 7178 entries, 0 to 7177
-    Data columns (total 16 columns):
-    #   Column                     Non-Null Count  Dtype  
-    ---  ------                     --------------  -----  
-    0   Name                       7178 non-null   object 
-    1   Location                   7178 non-null   object 
-    2   Year                       7178 non-null   int64  
-    3   Kilometers_Driven          7178 non-null   int64  
-    4   Mileage                    7178 non-null   float64
-    5   Engine                     7178 non-null   float64
-    6   Power                      7178 non-null   float64
-    7   Seats                      7178 non-null   float64
-    8   New_Price                  7178 non-null   float64
-    9   Price                      7178 non-null   float64
-    10  Fuel_Type_Electric         7178 non-null   bool   
-    11  Fuel_Type_Petrol           7178 non-null   bool   
-    12  Transmission_Manual        7178 non-null   bool   
-    13  Owner_Type_Fourth & Above  7178 non-null   bool   
-    14  Owner_Type_Second          7178 non-null   bool   
-    15  Owner_Type_Third           7178 non-null   bool   
-    dtypes: bool(6), float64(6), int64(2), object(2)
-    memory usage: 603.0+ KB
+    RangeIndex: 6 entries, 0 to 5
+    Data columns (total 2 columns):
+    #   Column         Non-Null Count  Dtype  
+    ---  ------         --------------  -----  
+    0   percent_gc     6 non-null      int64  
+    1   melting_point  6 non-null      float64
+    dtypes: float64(1), int64(1)
+    memory usage: 224.0 bytes
 
-To use ``fit()``, we need to pass it the independent and dependent variables. If we are trying to 
-predict ``Price``, what are the dependent and independent variables? 
-Remember that the ``Name`` and ``Location`` are not numeric. 
-
-
-**Class Discussion.** Let's talk through how to manipulate the DataFrame to specify the ``X`` (independent)
-and ``Y`` (dependent) variables, call fit(), and then use the model to predict some values from 
-the DataFrame. 
+To use ``fit()``, we need to pass it the independent and dependent variables. 
 
 
 *Solution:*
 
 .. code-block:: python3
 
-    >>> X = cars.drop(["Name", "Location", "Price"], axis=1)
-    >>> Y = cars["Price"]
-    >>> cars_lr = linear_model.LinearRegression()
-    >>> cars_lr.fit(X, Y)
+    >>> X = melting_points.drop(["melting_point"], axis=1)
+    >>> Y = melting_points['melting_point']
+    >>> lr = sklearn.linear_model.LinearRegression()
+    >>> lr.fit(X,Y)
 
     # be careful of the shape of the object that you pass to predict()
     # predict one value... 
-    >>> cars_lr.predict(X.iloc[0:1])
+    >>> lr.predict(X.iloc[0:1])
 
     # predict a set of values
-    >>> cars_lr.predict(X.iloc[0:10])
+    >>> lr.predict(X.iloc[0:10])
 
     # How do they compare to the actual values?
-    >>> print(f"estimated value for car 0: {cars_lr.predict(X.iloc[0:1])}, actual value for car 0: {Y.iloc[0]}")
+    >>> print(f"estimated melting point for Oligo 1: {lr.predict(X.iloc[0:1])}, actual melting point for Oligo 1: {Y.iloc[0]}")
+
 
