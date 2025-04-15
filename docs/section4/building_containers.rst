@@ -433,7 +433,7 @@ To build the image, use:
    [user-vm]$ docker build -t username/image-classifier:0.1 .
 
 
-Or for a different architecture (see `Multi-architecture builds <https://containers-at-tacc.readthedocs.io/en/latest/advanced/02.multiarchitecture.html>`_, you can use, for example:
+Or for a different architecture (see `Multi-architecture builds <https://containers-at-tacc.readthedocs.io/en/latest/advanced/02.multiarchitecture.html>`_), you can use, for example:
 
 .. code-block:: console
 
