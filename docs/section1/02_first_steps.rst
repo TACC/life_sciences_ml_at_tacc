@@ -41,21 +41,25 @@ HPC Systems
 ^^^^^^^^^^^
 The training will be fully interactive. Participants are **strongly encouraged** to follow along on the command line.
 
-In this workshop, we will use:
+In this workshop, for commands on the local system we will use:
 
 .. code-block:: console
 
    [local]$
 
-for commands on the local system and:
+
+and for commands on remote systems :
 
 .. code-block:: console
 
    [frontera]$ 
 
+or 
+
+.. code-block:: console
+
    [vista]$
    
-for commands on the remote system consistently throughout.
 
 Tips for Success
 """"""""""""""""
