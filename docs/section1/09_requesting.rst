@@ -39,7 +39,6 @@ TACC offers three types of project allocations:
    System    Startup SUs           Educational SUs                                                                    Research SUs
    ========= ===================== ================================================================================== ==================================================================================
    Lonestar6 500                   500                                                                                Up to 100,000
-   Maverick2 200                   200                                                                                2,100
    Frontera  CPU: 5,000 GPU: 3,000 `See Frontera Allocations <https://frontera-portal.tacc.utexas.edu/allocations/>`_ `See Frontera Allocations <https://frontera-portal.tacc.utexas.edu/allocations/>`_
    ========= ===================== ================================================================================== ==================================================================================
 
@@ -63,4 +62,5 @@ Mandatory Fields to Include in Your Submission
 
 *Startups projects*: summary of the proposed experiments (1 page maximum). Estimated resources required (include a short justification of the number and type of nodes you will request, as well as any storage requirements). (1 page maximum)
 List any sources of funding (or pending funding) that support the proposed research, including funding agency and grant name(s) (Startup Allocations may be for unfunded exploratory research)
+
 
