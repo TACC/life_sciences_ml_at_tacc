@@ -3,7 +3,7 @@ Intro to Deep Learning
 
 Deep learning has revolutionized the way computers learn and process information. 
 It has become one of the most powerful tools for complex data analysis and automated decision-making.
-As a subfield of **artificial intelligence (AI)** and **machine learning (ML)**, deep learning uses **artificial neural networks (ANNs)** to extract patterns and insights from large amounts of data automatically and autonomously. 
+As a subfield of **artificial intelligence (AI)** and **machine learning (ML)**, deep learning uses **artificial neural networks (ANNs)** to extract patterns and insights from large amounts of data autonomously. 
 
 .. image:: ./images/AI-ML-DL.png
     :alt: AI-ML-DL Diagram
@@ -15,10 +15,9 @@ This progress is fueled by:
 
 * **Computing Power**: The accessibility of GPUs and TPUs (Tensor Processing Units) has accelerated the training process, enabling efficient processing of high-dimensional data as well as the development of models with millions (or billions) of parameters.
 * **Development of DL Frameworks**: Tools like `TensorFlow <https://www.tensorflow.org/>`_ and `PyTorch <https://pytorch.org/>`_ have made it easier to build and train neural networks and are optimized for GPU and TPU performance.
-* **Big Data**: Expanding datasets, such as the `Protein Data Bank (PDB) <https://www.wwpdb.org/>`_ (containing >200,000 protein structures), have enabled the training of larger and more complex models, such as AlphaFold2 [1]_, which won the 2024 Nobel Prize in Chemistry.
+* **Big Data**: Expanding datasets, such as the `Protein Data Bank (PDB) <https://www.wwpdb.org/>`_ (containing >200,000 protein structures), have enabled the training of larger and more complex models, such as AlphaFold2 [1]_, whose creators were awarded the 2024 Nobel Prize in Chemistry.
 
 Originally proposed in 1943 to help researchers understand brain function [2]_, ANNs now serve as powerful tools for learning from data and solving complex problems.
-
 
 **Deep Learning in Life Sciences**
 
@@ -173,7 +172,7 @@ Now that we have a basic understanding of how neural networks adjust their weigh
 Imagine you are training a neural network to classify tumors as either malignant or benign based on its gene expression profile. 
 
  * Each tumor sample is represented as a long vector of gene expression values–one value per gene.
- * Each input perceptron receives the expression level of a single gene. So, your dataset includes 20,000 genes, the input layer will contain 20,000 perceptrons, each responsible for processing one gene's expression level.
+ * Each input perceptron receives the expression level of a single gene. So, if your dataset includes 20,000 genes, the input layer will contain 20,000 perceptrons. Each one processes the expression level of a single gene. 
  * Hidden layers learn to detect complex, nonlinear patterns by combining gene-level signals into higher-level features.
  * The final layer produces a prediction: *malignant* or *benign*
 
@@ -194,7 +193,7 @@ Inference
 --------------
 
 Inference is the process of using a trained neural network to make predictions on new, unseen data. 
-During inference, the model does not update its weights–it simply applies the learned weights to the new data to generate a prediction.
+During inference, the model does not update its weights — it simply applies the learned weights to the new data to generate a prediction.
 
 In our example, each new tumor sample is represented as a vector of gene expression values.
 This vector is fed into the trained network, which processes it through all layers using the learned weights and biases. 
@@ -208,7 +207,7 @@ The network then produces a predicted classification: whether the gene expressio
 
 This is the stage where the neural network becomes practically useful: once trained, it can analyze and interpret new biological data to support tasks like diagnosis, prognosis, or treatment decision-making.
 
-Now that we understand the general concepts of *training* and *inference*, let's take a closer look under the hood–how could we implement the basic building blocks of a neural network ourselves?
+Now that we understand the general concepts of *training* and *inference*, let's take a closer look at how we could implement the basic building blocks of a neural network ourselves!
 
 =============
 Building a Neural Network by Hand
@@ -221,7 +220,7 @@ Implementing a Perceptron and Layer
 
 To implement a neural network, at minimum we would need functions to:
 
- 1. Create individual perceptrons of a specific size (i.e., *dimension*) and initialize and maintain that number of weights equal as well as a bias term.
+ 1. Create individual perceptrons of a specific size (i.e., *dimension*) and initialize a number of weights equal to the input dimension, along with a bias term.
  2. Create layers in our network comprised of a certain number of perceptrons as well as the non-linear activation function to use. 
  3. Compute the output of a layer for some input of the appropriate shape. 
 
@@ -259,7 +258,7 @@ We could then implement a layer as a certain number of perceptrons with an activ
         Create a layer of `num_perceptrons` perceptrons, each of dimension `dim` with activation function `activation_function`. 
         Initialize the weights of all perceptrons to a random float between 0 and 1.
         """
-        # represent the layer as a list of dictionaries of perceptrons
+        # represent the layer as a list of perceptrons, where each perceptron is a dictionary
         layer = []
         for i in range(num_perceptrons):
             layer.append({"weights": create_perceptron(dim), "activation_function": activation_function})
@@ -405,6 +404,7 @@ This means that our range of output is from 0 to infinity:
     .. figure:: ./images/sigmoid-relu.png
         :align: center
         :width: 700px
+
 
 Creating Layers and Computing the Output of Layers
 --------------
@@ -628,8 +628,8 @@ TensorFlow also provides built-in functions for mathematical operations, includi
     # tf.Tensor([0.11920292 0.5        0.8807971 ], shape=(3,), dtype=float32)
 
     # Tanh function
-    print(tf.math.tanh(z))
-    # tf.Tensor([-0.9640276  0.         0.9640276], shape=(3,), dtype=float32)
+    print(tf.math.softmax(z))
+    # tf.Tensor([0.01587624 0.11731043 0.86681336], shape=(3,), dtype=float32)
 
     # ReLU function
     print(tf.nn.relu(z))
@@ -661,7 +661,7 @@ Keras is built around two key concepts: ``Layers`` and ``Models``.
 **1. Layers**
 
 The ``tf.keras.layers.Layer`` class is the fundamental abstraction in Keras.
-A ``Layer`` is a fundamental building block of a neural network. It takes input tensors, applies some transformation, and produces output tensors.
+A ``Layer`` is a building block of a neural network. It takes input tensors, applies some transformation, and produces output tensors.
 Weights created by layers can be trainable or non-trainable. 
 You can also use layers to handle data preprocessing tasks like normalization and text vectorization. 
 
