@@ -4,8 +4,7 @@ Running Interactive Sessions with Idev
 The ``idev`` utility initiates an interactive session on one or more compute nodes
 so that you can issue commands and run code as if you were doing so on your personal
 machine. An interactive session is useful for development, as you can quickly compile,
-run, and validate code. Accessing a single compute node is accomplished by simply
-executing ``idev`` on any of the TACC systems.
+run, and validate code. This is accomplished by simply executing ``idev`` on any of the TACC systems.
 
 Initiating an Interactive Session
 ---------------------------------
@@ -27,10 +26,9 @@ To learn about the command line options available for ``idev``, use ``idev -help
 
 Let's go over some of the most useful ``idev`` command line options that can customize your interactive session:
 
-To change the **time** limit to be lesser or greater than the default 30 minutes, users can use the ``-m`` command line option. 
-For example, a user requesting an interactive session for an hour would use the command line option ``-m 60``.
+To change the **time** limit from the default 30 minutes, users can apply the ``-m`` command line option. For example, a user requesting an interactive session for an hour would use the command line option ``-m 60``.
 
-To change the **account_name** associated with the interactive session, users can use the ``-A`` command line option. 
+To change the **allocation_name** associated with the interactive session, users can use the ``-A`` command line option. 
 This option is useful for when a user has multiple allocations they belong to. 
 For example, if I have allocations on accounts ``TACC`` and ``Training``, 
 I can use ``-A`` to set the allocation I want to be used like so: ``-A TACC`` or ``-A Training``.
@@ -81,7 +79,7 @@ The code also includes a 3-second delay before finishing.
    c205-004[clx](635)$ unzip firststeps.zip
    c205-004[clx](636)$ cd Lab01
    c205-004[clx](637)$ pwd
-   /work2/02555/lima/frontera/Lab01
+   /work2/03302/lconcia/frontera/Lab01
    c205-004[clx](638)$ ls
    example.slurm  example_template.slurm  my_code.py
 

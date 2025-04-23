@@ -10,7 +10,7 @@ The code also includes a 3-second delay before finishing.
    [frontera]$ cdw
    [frontera]$ cd Lab01
    [frontera]$ pwd
-   /work2/02555/lima/frontera/Lab01
+   /work2/03302/lconcia/frontera/Lab01
    [frontera]$ ls
    example.slurm  example_template.slurm  my_code.py
 

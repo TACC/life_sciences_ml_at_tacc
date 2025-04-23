@@ -3,32 +3,63 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Introduction to High Performance Computing
-==========================================
-What is High Performance Computing (HPC) ?
-""""""""""""""""""""""""""""""""""""""""""
-HPC refers to the aggregation of computing resources (like supercomputers or clusters) to achieve performance far greater than a single workstation or server
+Your first steps at TACC
+========================
 
-Basic HPC System Architecture
-"""""""""""""""""""""""""""""
-As you prepare to use TACC systems for this workshop, it is important to understand
-the basic architecture. Think of an HPC resource as a very large and complicated lab
-instrument. Users need to learn how to:
 
-* Interface with it / push the right buttons (Linux)
-* Load samples (data)
-* Run experiments (jobs)
-* Interpret the results (data analysis / vis)
+Authentication 
+^^^^^^^^^^^^^^
+To participate in this workshop, you will need a TACC account and must have set up multi-factor authentication using a token app or SMS. 
+You can do this by visiting the TACC portal https://tacc.utexas.edu/portal/login
 
-.. image:: ./images/hpc_schematic.png
-   :target: ./images/hpc_schematic.png
-   :alt: HPC System Architecture
+.. image:: ./images/TACC_login.png
+   :target: ./images/TACC_login.png
+   :alt: TACC login page
 
-**Login vs. Compute Nodes**
+Then clicking on your username at the top right of the page, 
 
-As we've discussed, an HPC system has login nodes and compute nodes. We cannot run
-applications on the login nodes because they require too many resources and will 
-interrupt the work of others. Instead, we must submit a job to a queue to run on compute nodes.
+.. image:: ./images/TACC_dashboard.png
+   :target: ./images/TACC_dashboard.png
+   :alt: TACC Dashboard
+   :width: 800px
+
+
+selecting "Manage Account", and, under MFA Pairing, clicking to pair. 
+
+.. image:: ./images/TACC_MFA_pairing.png
+   :target: ./images/TACC_MFA_pairing.png
+   :alt: TACC MFA pairing
+   :width: 800px
+
+
+You can find more details about MFA Pairing `here <https://docs.tacc.utexas.edu/basics/mfa/>`_.
+
+In your **TACC portal**, you can also view your allocations, open tickets, and the systems along with their current status.
+
+
+HPC Systems
+^^^^^^^^^^^
+The training will be fully interactive. Participants are **strongly encouraged** to follow along on the command line.
+
+In this workshop, for commands on the local system we will use:
+
+.. code-block:: console
+
+   [local]$
+
+
+and for commands on remote systems :
+
+.. code-block:: console
+
+   [frontera]$ 
+
+or 
+
+.. code-block:: console
+
+   [vista]$
+   
 
 Tips for Success
 """"""""""""""""
@@ -44,18 +75,3 @@ User Responsibility on Shared Resources
 
 HPC systems are shared resources. Your jobs and activity on a cluster, if mismanaged,
 can affect others. TACC staff are always `available to help <https://www.tacc.utexas.edu/about/help/>`_.
-
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Contents:
-
-   steps_at_tacc/requesting
-   steps_at_tacc/connecting
-   steps_at_tacc/transferring
-   steps_at_tacc/managing
-   steps_at_tacc/running
-   steps_at_tacc/understanding
-   steps_at_tacc/executing
-
- 

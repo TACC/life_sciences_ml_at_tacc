@@ -37,13 +37,20 @@ modules are available to load. To display a concise listing:
 
     [frontera]$ module overview
 
-    ------------------ /opt/apps/modulefiles/Core -----------------
-    StdEnv    (1)   hashrf    (2)   papi        (2)   xalt     (1)
-    ddt       (1)   intel     (2)   singularity (2)   
-    git       (1)   noweb     (1)   Rstats      (2)
-
-    --------------- /opt/apps/lmod/lmod/modulefiles/Core ----------
-    lmod (1)   settarg (1)
+    ----------------- /opt/apps/intel19/impi19_0/python3_7/modulefiles -----------------
+    boost-mpi (2)
+    
+    --------------------- /opt/apps/intel19/python3_7/modulefiles ----------------------
+    boost (2)
+    
+    ---------------------- /opt/apps/intel19/impi19_0/modulefiles ----------------------
+    Rstats    (2)   gromacs    (4)    openfoam        (4)     remora      (2)
+    adcirc    (1)   hpctoolkit (2)    opensees        (4)     rosetta     (1)
+    adios2    (1)   hypre      (16)   p3dfft++        (1)     slepc       (39)
+    amask     (1)   ipm        (1)    p4est           (2)     suitesparse (10)
+    arpack    (1)   kokkos     (4)    parallel-netcdf (4)     sundials    (9)
+    aspect    (1)   lammps     (4)    parmetis        (1)     superlu     (12)
+    
 
 This shows the short name of the module (i.e. git, or singularity)
 and the number in the parenthesis is the number of versions for each.
@@ -58,6 +65,7 @@ To check all the versions of a package (e.g., Rstats):
 
     --------------- /opt/apps/intel19/impi19_0/modulefiles ---------------
          Rstats/3.6.3    Rstats/4.0.3 (D)
+
 
 In *Rstats/4.0.3 (D)*, *D* denotes the default module. 
 When loading packages, if you don't specify the version, the default module will be loaded. To load packages a user simply does:

@@ -7,43 +7,6 @@ PIs are responsible for requesting resource allocations and managing their team.
 
 Browse the `System List <https://tacc.utexas.edu/systems/all/>`_, `Allocations <https://tacc.utexas.edu/use-tacc/allocations/>`_, and `Software List <https://tacc.utexas.edu/use-tacc/software-list/>`_ to help determine which resource and allocation fits your research.
 
-All Systems
------------
-
-TACC's High Performance Computing Resource Overview
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-`Frontera <https://tacc.utexas.edu/systems/frontera/>`_: The fastest academic supercomputer in the world, providing computational capability that makes larger, more complex research challenges possible.
-
-
-`Vista <https://tacc.utexas.edu/systems/vista/>`_: Vista expands TACC’s capacity for AI and ensures that the broad science, engineering, and education research communities have access to the most advanced computing and AI technologies.
-
-`Stampede3 <https://tacc.utexas.edu/systems/stampede3/>`_:
-The newest strategic resource advancing NSF's supercomputing ecosystem for the nation's open science community.
-
-`Lonestar6 <https://tacc.utexas.edu/systems/lonestar6/>`_:
-Supporting Texas researchers in providing simulation, data analysis, visualization, and AI/machine learning.
-
-`Jetstream2 <https://tacc.utexas.edu/systems/jetstream2/>`_:
-A user-friendly, scalable cloud environment with reproducible, sharable computing on geographically isolated clouds.
-
-`Chameleon <https://tacc.utexas.edu/systems/chameleon/>`_:
-Reconfigurable large-scale OpenStack cloud testbed for computer science and networking research.
-
-`Cyclone <https://tacc.utexas.edu/systems/cyclone/>`_:
-Cloud infrastructure system that provides a platform for cloud-native applications and workflows.
-
-Storage Systems
-^^^^^^^^^^^^^^^
-
-`Corral <https://tacc.utexas.edu/systems/corral/>`_:
-Storage and data management resource designed and optimized to support large-scale collections and a collaborative research environment.
-
-`Ranch <https://tacc.utexas.edu/systems/ranch/>`_:
-Long-term data archiving environment designed, implemented, and supported to provide storage for data sets of the TACC user community.
-
-`Stockyard <https://tacc.utexas.edu/systems/stockyard/>`_:
-Global file system at the center of TACC's system ecosystem that supports data-driven science by providing online storage of large datasets, and offers migration for further data management and archiving.
 
 Allocation Opportunities 
 ------------------------
@@ -76,7 +39,6 @@ TACC offers three types of project allocations:
    System    Startup SUs           Educational SUs                                                                    Research SUs
    ========= ===================== ================================================================================== ==================================================================================
    Lonestar6 500                   500                                                                                Up to 100,000
-   Maverick2 200                   200                                                                                2,100
    Frontera  CPU: 5,000 GPU: 3,000 `See Frontera Allocations <https://frontera-portal.tacc.utexas.edu/allocations/>`_ `See Frontera Allocations <https://frontera-portal.tacc.utexas.edu/allocations/>`_
    ========= ===================== ================================================================================== ==================================================================================
 
@@ -100,4 +62,5 @@ Mandatory Fields to Include in Your Submission
 
 *Startups projects*: summary of the proposed experiments (1 page maximum). Estimated resources required (include a short justification of the number and type of nodes you will request, as well as any storage requirements). (1 page maximum)
 List any sources of funding (or pending funding) that support the proposed research, including funding agency and grant name(s) (Startup Allocations may be for unfunded exploratory research)
+
 

@@ -14,7 +14,7 @@ us our present location. Try executing this command on Frontera:
 .. code-block:: console
 
    [frontera]$ pwd
-   /home1/02555/lima
+   /home1/03302/lconcia
 
 This home location on the Linux filesystem is unique for each user, and it is roughly
 analogous to C:\\Users\\username on Windows, or /Users/username on Mac.
@@ -46,10 +46,10 @@ a folder on Windows or Mac:
 .. code-block:: console
 
    [frontera]$ pwd
-   /home1/02555/lima
+   /home1/03302/lconcia
    [frontera]$ cd folder1
    [frontera]$ pwd
-   /home1/02555/lima/folder1
+   /home1/03302/lconcia/folder1
 
 Use ``ls`` to list the contents. What do you expect to see?
 
@@ -66,10 +66,10 @@ which refers to the **parent folder** - one level higher than the current locati
 
    [frontera]$ cd ..
    [frontera]$ pwd
-   /home1/02555/lima
+   /home1/03302/lconcia
 
 We are back in our home directory. Instead, we could specify 
-the complete path of where we want to go, in this case ``cd /home1/02555/lima``.
+the complete path of where we want to go, in this case ``cd /home1/03302/lconcia``.
 Finally, let's remove the directories we have made, using ``rm -r`` to remove our parent 
 folder ``folder1`` and its subfolders. The ``-r`` command line option recursively removes subfolders 
 and files located "down" the parent directory. ``-r`` is required for folders.
@@ -93,7 +93,7 @@ To identify the path to our ``$WORK`` directory, we can use ``cd $WORK`` or the 
    
    [frontera]$ cdw
    [frontera]$ pwd
-   /work2/02555/lima/frontera
+   /work2/03302/lconcia/frontera
 
 To identify the path to our ``$SCRATCH`` directory, we can use ``cd $SCRATCH`` or the helpful shortcut ``cds``:
 
@@ -101,36 +101,36 @@ To identify the path to our ``$SCRATCH`` directory, we can use ``cd $SCRATCH`` o
    
    [frontera]$ cds
    [frontera]$ pwd
-   /scratch1/02555/lima/frontera
+   /scratch1/03302/lconcia
 
 Copying files from your local computer to Frontera's ``$WORK`` would require the ``scp`` command (Windows users use the program "WinSCP"):
 
 .. code-block:: console
 
-   [local]$ scp my_file lima@frontera.tacc.utexas.edu:/work2/02555/lima/frontera
+   [local]$ scp my_file lconcia@frontera.tacc.utexas.edu:/work2/03302/lconcia/frontera
    (enter password)
    (enter token)
 
-In this command, you specify the name of the file you want to transfer (``my_file``), the username (``lima``), the hostname (``frontera.tacc.utexas.edu``), 
-and the path you want to put the file (``/work2/02555/lima/frontera``). Take careful notice of the separators including spaces, the @ symbol, and the colon. 
+In this command, you specify the name of the file you want to transfer (``my_file``), the username (``lconcia``), the hostname (``frontera.tacc.utexas.edu``), 
+and the path you want to put the file (``/work2/03302/lconcia/frontera``). Take careful notice of the separators including spaces, the @ symbol, and the colon. 
 
-Copying files from your local computer to Frontera's ``$SCRATCH`` using ``scp``:
+Copying files from your local computer **to** Frontera's ``$SCRATCH`` using ``scp``:
 
 .. code-block:: console
 
-   [local]$ scp my_file lima@frontera.tacc.utexas.edu:/scratch1/02555/lima/frontera
+   [local]$ scp my_file lconcia@frontera.tacc.utexas.edu:/scratch1/03302/lconcia/frontera
    (enter password)
    (enter token)
 
-Copy files from Frontera to your local computer using the following:
+Copy files **from** Frontera to your local computer using the following:
 
 .. code-block:: console
 
-   [local]$ scp lima@frontera.tacc.utexas.edu:/work2/02555/lima/frontera/my_file ./
+   [local]$ scp lconcia@frontera.tacc.utexas.edu:/work2/03302/lconcia/frontera/my_file ./
    (enter password)
    (enter token)
 
-Note: If you wanted to copy ``my_file`` from ``$SCRATCH``, the path you would specify after the colon would be ``/scratch1/02555/lima/frontera/my_file``.
+Note: If you wanted to copy ``my_file`` from ``$SCRATCH``, the path you would specify after the colon would be ``/scratch1/03302/lconcia/frontera/my_file``.
  
 Instead of files, full directories can be copied using the "recursive" flag (``scp -r ...``). 
 
@@ -167,14 +167,14 @@ Exercise
    
          [frontera]$ cdw
          [frontera]$ pwd
-         /work2/02555/lima/frontera
+         /work2/03302/lconcia/frontera
          [frontera]$ logout
 
    4. From your local computer, copy the file ``firststeps.zip`` to Frontera. (You will need to know where the file ``firststeps.zip`` was downloaded on your local computer and navigate to this folder.)
 
       .. code-block:: console
 
-         [local]$ scp firststeps.zip lima@frontera.tacc.utexas.edu:/work2/02555/lima/frontera
+         [local]$ scp firststeps.zip lconcia@frontera.tacc.utexas.edu:/work2/03302/lconcia/frontera
          (enter password)
          (enter token)
 
