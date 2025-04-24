@@ -25,7 +25,11 @@ First, we will import the Mushroom dataset using the ``ucimlrepo`` package:
 .. code-block:: python3
 
     import pandas as pd
+    import random
     from ucimlrepo import fetch_ucirepo 
+
+    # Set seed for reproducibility
+    random.seed(123)
 
     # fetch dataset 
     mushroom = fetch_ucirepo(id=73) 
@@ -325,8 +329,12 @@ This architecture provides a good starting point for understanding how neural ne
 .. code-block:: python3
 
     # Import necessary libraries from Keras
+    import tensorflow as tf
     from tensorflow.keras import Sequential
     from tensorflow.keras.layers import Input, Dense
+
+    # Set random seed for reproducibility
+    tf.random.set_seed(123) 
 
     # Create model with sequential API
     model = Sequential([
@@ -380,11 +388,7 @@ This architecture provides a good starting point for understanding how neural ne
 
 **Training the Neural Network**
 
-With our model built and compiled, we can now train it on our data:
-
-.. code-block:: python3
-
-    model.fit(X_train, y_train, validation_split=0.2, epochs=5, batch_size=32, verbose=2)
+With our model built and compiled, we can now train it on our data. Before executing the training code, let's understand the key parameters we'll use:
 
 .. list-table:: Key Training Parameters
    :widths: 20 80
@@ -423,38 +427,46 @@ With our model built and compiled, we can now train it on our data:
       
       The batch size of 32 in our example is relatively small, which is good for learning complex patterns in modest-sized datasets.
 
+Now let's train our model with these parameters:
+
+.. code-block:: python3
+
+    # Train the model with the specified parameters
+    model.fit(X_train, y_train, validation_split=0.2, epochs=5, batch_size=32, verbose=2)
+
 Below shows the output of the training process:
 
 .. code-block:: python-console
 
     Epoch 1/5
-    143/143 - 0s - 2ms/step - accuracy: 0.8828 - loss: 0.4267 - val_accuracy: 0.9552 - val_loss: 0.2148
+    143/143 - 0s - 3ms/step - accuracy: 0.8709 - loss: 0.3543 - val_accuracy: 0.9569 - val_loss: 0.1458
     Epoch 2/5
-    143/143 - 0s - 514us/step - accuracy: 0.9732 - loss: 0.1418 - val_accuracy: 0.9798 - val_loss: 0.0906
+    143/143 - 0s - 969us/step - accuracy: 0.9776 - loss: 0.0964 - val_accuracy: 0.9851 - val_loss: 0.0638
     Epoch 3/5
-    143/143 - 0s - 519us/step - accuracy: 0.9857 - loss: 0.0648 - val_accuracy: 0.9903 - val_loss: 0.0477
+    143/143 - 0s - 723us/step - accuracy: 0.9894 - loss: 0.0481 - val_accuracy: 0.9938 - val_loss: 0.0364
     Epoch 4/5
-    143/143 - 0s - 508us/step - accuracy: 0.9930 - loss: 0.0369 - val_accuracy: 0.9965 - val_loss: 0.0289
+    143/143 - 0s - 739us/step - accuracy: 0.9949 - loss: 0.0288 - val_accuracy: 0.9982 - val_loss: 0.0230
     Epoch 5/5
-    143/143 - 0s - 509us/step - accuracy: 0.9978 - loss: 0.0232 - val_accuracy: 0.9982 - val_loss: 0.0194
+    143/143 - 0s - 738us/step - accuracy: 0.9985 - loss: 0.0186 - val_accuracy: 0.9982 - val_loss: 0.0157
 
+Let's understand what this output tells us:
 
 1. **Progress metrics**:
   - ``143/143``: Shows progress through the training batches; 143 batches were completed out of 143, and each batch contains 32 samples (as specified by ``batch_size=32``)
   - ``0s``: Indicates the time taken for each epoch; here, the first epoch took <1 second to complete.
-  - ``2ms/step``: This indicates the average time taken per training step (one forward and backward pass through a single batch) during training.
+  - ``3ms/step``: This indicates the average time taken per training step (one forward and backward pass through a single batch) during training.
 
 2. **Training metrics**:
-  - ``accuracy: 0.8828``: Represents the accuracy of the model on the training dataset. The accuracy value of approximately 0.8828 indicates that the model correctly predicted 88.28% of the training samples.
-  - ``loss: 0.4267``: Represents the training loss value (using binary cross-entropy loss function) on the training dataset. Higher loss values indicate that the model's predictions are further from the true labels.
+  - ``accuracy: 0.8709``: Represents the accuracy of the model on the training dataset. The accuracy value of approximately 0.8709 indicates that the model correctly predicted 87.09% of the training samples.
+  - ``loss: 0.3543``: Represents the training loss value (using binary cross-entropy loss function) on the training dataset. Higher loss values indicate that the model's predictions are further from the true labels.
 
 3. **Validation metrics**:
-  - ``val_accuracy: 0.9552``: Represents the accuracy of the model on the validation dataset. The accuracy value of approximately 0.9552 indicates that the model correctly predicted 95.52% of the validation samples.
-  - ``val_loss: 0.2148``: Represents the validation loss value (using binary cross-entropy loss function) on the validation dataset. Lower loss values indicate that the model's predictions are closer to the true labels.
+  - ``val_accuracy: 0.9569``: Represents the accuracy of the model on the validation dataset. The accuracy value of approximately 0.9569 indicates that the model correctly predicted 95.69% of the validation samples.
+  - ``val_loss: 0.1458``: Represents the validation loss value (using binary cross-entropy loss function) on the validation dataset. Lower loss values indicate that the model's predictions are closer to the true labels.
 
 Looking at our training results after 5 epochs, we can observe:
 
-1. The model achieved excellent performance, with final training accuracy of 99.78% and validation accuracy of 99.82%.
+1. The model achieved excellent performance, with final training accuracy of 99.85% and validation accuracy of 99.82%.
 2. Both training and validation loss steadily decreased across epochs, indicating consistent learning.
 3. Validation metrics consistently tracked close to training metrics, suggesting the model generalizes well rather than memorizing the training data.
 
@@ -469,17 +481,17 @@ Let's visualize our training progress before moving on:
     
     # Plot training & validation accuracy
     plt.subplot(1, 2, 1)
-    plt.plot([0.8828, 0.9732, 0.9857, 0.9930, 0.9978], label='Training Accuracy')
-    plt.plot([0.9552, 0.9798, 0.9903, 0.9965, 0.9982], label='Validation Accuracy')
+    plt.plot([0.8709, 0.9776, 0.9894, 0.9949, 0.9985], label='Training Accuracy')
+    plt.plot([0.9569, 0.9851, 0.9938, 0.9982, 0.9982], label='Validation Accuracy')
     plt.title('Model Accuracy')
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend()
-    
+
     # Plot training & validation loss
     plt.subplot(1, 2, 2)
-    plt.plot([0.4267, 0.1418, 0.0648, 0.0369, 0.0232], label='Training Loss')
-    plt.plot([0.2148, 0.0906, 0.0477, 0.0289, 0.0194], label='Validation Loss')
+    plt.plot([0.3543, 0.0964, 0.0481, 0.0288, 0.0186], label='Training Loss')
+    plt.plot([0.1458, 0.0638, 0.0364, 0.0230, 0.0157], label='Validation Loss')
     plt.title('Model Loss')
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
@@ -506,23 +518,22 @@ The true test of our model's capabilities comes from evaluating it on our comple
     # Make predictions on the test data
     y_pred=model.predict(X_test)
 
-For a binary classification problem like our (poisonous vs edible), the model outputs probabilities between 0 and 1 for each sample:
+For a binary classification problem like our (poisonous vs edible), the model outputs probabilities between 0 and 1 for each sample. Let's show the first sample's prediction:
 
 .. code-block:: python3
 
-    # Show the first sample's prediction
     y_pred[0]
 
 .. code-block:: python-console
     
-    array([0.00026373], Dtype=float32)
+    array([0.00309971], dtype=float32)
 
 This shows the probability for the first mushroom sample in the test set.
 The output is a single value between 0 and 1, where:
  - Values closer to 1 indicate the model is more confident that the sample is poisonous.
  - Values closer to 0 indicate the model is more confident that the sample is edible.
 
-For example, our output value is 0.00026, which means that the model is 99.99% confident that the sample is edible.
+For example, our output value is 0.00309971, which means that the model is 99.9969% confident that the sample is edible.
 
 The model outputs probability values, but for practical mushroom classification, we need definitive "edible" or "poisonous" predictions. We need to convert these continuous probability values into discrete class labels:
 
@@ -624,27 +635,28 @@ From these confusion matrix values, we can calculate several important evaluatio
     **Recall** measures a model's ability to correctly identify all true positives within a dataset, minimizing false negatives. 
     Therefore, **recall** is the most important metric for this model.
 
-Let's also print the accuracy of this model using code below
+Let's also print the full classification report of this model using code below
 
 .. code-block:: python3
 
     from sklearn.metrics import classification_report
+
     print(classification_report(y_test,y_pred_final, digits=4))
 
 .. code-block:: python-console
 
                precision    recall  f1-score   support
 
-            0     0.9968    0.9984    0.9976      1263
-            1     0.9983    0.9966    0.9974      1175
+            0     0.9968    0.9992    0.9980      1263
+            1     0.9991    0.9966    0.9979      1175
 
-     accuracy                         0.9975      2438
-    macro avg     0.9976    0.9975    0.9975      2438
- weighted avg     0.9975    0.9975    0.9975      2438
+     accuracy                         0.9979      2438
+    macro avg     0.9980    0.9979    0.9979      2438
+ weighted avg     0.9980    0.9979    0.9979      2438
 
 
-The accuracy of our model is 99.75%.
-99.75% of the time, this model predicted the correct label on the test data.
+The accuracy of our model is 99.79%.
+99.79% of the time, this model predicted the correct label on the test data.
 
 **Thought Challenge**: Did we build a successful model? Why or why not? Is there anything we can do to improve the model?
 
@@ -654,10 +666,10 @@ The accuracy of our model is 99.75%.
     
     Yes, by standard performance metrics, our model is remarkably successful:
     
-    * Accuracy of 99.75% on the test set
+    * Accuracy of 99.79% on the test set
     * Recall of 99.66% for poisonous mushrooms
-    * Precision of 99.83% for poisonous predictions
-    * F1-score of 99.74%
+    * Precision of 99.91% for poisonous predictions
+    * F1-score of 99.79%
     
     **Why it's successful:**
     
