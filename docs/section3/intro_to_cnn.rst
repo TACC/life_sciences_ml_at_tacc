@@ -5,7 +5,7 @@ In the previous section, we learned how to classify mushrooms based on their phy
 In this section, we will introduce Convolutional Neural Networks (CNNs), a specialized class of deep neural networks that excel in tasks involving spatial data, particularly image recognition and computer vision.
 Understanding CNNs will prepare you for future applications where image data is involved. 
 
-By the end of this module, students should be able to:
+By the end of this exercise participants will be able to:
 
 - Understand the challenges associated with ANNs for image processing
 - Explain what makes CNNs a better choice for solving image classification problems
@@ -218,7 +218,7 @@ The Flatten layer in a CNN is necessary to transition from the spatially structu
     model.add(Dense(100, activation='relu'))
 
     # Adding the output layer with num_classes and activation functions as softmax for class classification problem
-    model.add(Dense(num_clases, activation='softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
 
 The formula for calculating trainable parameter in each layer is :math:`(Filter\_Size * Filter\_Size * Size\_of\_input\_channel +1 ) * number\_of\_filters`
 
@@ -239,13 +239,13 @@ In this lecture, we will cover some basics of VGG16 and ResNet.
 VGG-Net
 ~~~~~~~~~~~~~~~~~~~
 
-VGG-Net is a CNN architecture developed by by researchers at the Visual Geometry Group (VGG) at the University of Oxford in 2014 [2]_.
+VGG-Net is a CNN architecture developed by researchers at the Visual Geometry Group (VGG) at the University of Oxford in 2014 [2]_.
 It became famous after performing very well on the ImageNet dataset, a common benchmark for image classification tasks that contains over 14 million images belonging to 1000 classes.
 
 VGG-Net comes in two main variants - VGG-16 and VGG-19, with 16 and 19 layers respectively.
 What makes VGG special is its straightforward design:
 
-**Input Layer**: The VGG-16 model takes in color images (RGB with 3 channels) that are 244 x 244 pixels in size.
+**Input Layer**: The VGG-16 model takes in color images (RGB with 3 channels) that are 224 x 224 pixels in size.
 
 **Convolutional Layers**: VGG-16 has 13 convolutional layers that are responsible for extracting features from the input images. 
 All convolutional layers use:
@@ -420,5 +420,5 @@ Below are some key factors to consider when choosing between architectures like 
 .. [5] He, K., Zhang, X., Ren, S., & Sun, J. (2015). Deep Residual Learning for Image Recognition. arXiv [Cs.CV]. Retrieved from http://arxiv.org/abs/1512.03385
 .. [6] Everton Gomede, P. (2024, January 6). Unraveling the vanishing gradient problem in neural networks. Medium. https://medium.com/aimonks/unraveling-the-vanishing-gradient-problem-in-neural-networks-3f58431de75f 
 .. [7] Riebesell, J. (2022, April 12). Janosh Riebesell. TikZ.net. https://tikz.net/skip-connection/ 
-.. [8] Srinivasan, Kathiravan & Garg, Lalit & Datta, Debajit & Alaboudi, Abdulellah & Jhanjhi, Noor & Agarwal, Rishav & Thomas, Anmol. (2021). Performance Comparison of Deep CNN Models for Detecting Driver’s Distraction. Computers, Materials & Continua. 68. 4109-4124. 10.32604/cmc.2021.016736. 
+.. [8] Srinivasan, Kathiravan & Garg, Lalit & Datta, Debajit & Alaboudi, Abdulellah & Jhanjhi, Noor & Agarwal, Rishav & Thomas, Anmol. (2021). Performance Comparison of Deep CNN Models for Detecting Driver's Distraction. Computers, Materials & Continua. 68. 4109-4124. 10.32604/cmc.2021.016736. 
 .. [9] Convolutional Neural Networks (cnns). Convolutional Neural Networks (CNNs) - COE 379L: Software Design For Responsible Intelligent Systems documentation. (n.d.). https://coe-379l-sp24.readthedocs.io/en/latest/unit03/cnn.html#lenet-5 
