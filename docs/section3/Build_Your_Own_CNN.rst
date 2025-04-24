@@ -13,6 +13,12 @@ We are given a dataset containing images of three different coral species:
 Our task is to build a Convolutional Neural Network (CNN) that can classify the coral images into the correct species. 
 This technology can help automate coral reef monitoring efforts and support conservation initiatives by enabling rapid, large-scale species identification.
 
+============================
+Tutorial Setup and Materials
+============================
+
+All materials and instructions for running this tutorial in the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ are available in our GitHub repository: `TACC Deep Learning Tutorials <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_.
+
 =====================================
 Part 1: Building a CNN Model from Scratch
 =====================================
@@ -30,15 +36,15 @@ This DataFrame will serve as the foundation for splitting our data into training
 -----------------------------------
 
 Before loading the images, we first want to inspect the directory structure to make sure everything is in the right place. 
-The code below lists the contents of the ``coral-species`` data directory to verity that the subdirectories for each coral species are present and correctly named:
+The code below lists the contents of the ``coral-species`` data directory to verify that the subdirectories for each coral species are present and correctly named:
 
 .. code-block:: python
 
     from pathlib import Path
 
     # Define the path to the dataset directory
-    # NOTE: Replace the path below with the full path to your scratch directory
-    dataset_dir = Path('/full/path/to/your/scratch/directory/coral-species-CNN-tutorial/data/coral-species')
+    # NOTE: Replace the path below with the full path to your scratch directory containing the training materials
+    dataset_dir = Path('/path/to/your/scratch/directory/tacc-deep-learning-tutorials/data/coral-species')
 
     # List the contents of the data directory
     print(list(dataset_dir.iterdir()))
@@ -189,7 +195,7 @@ If there are any corrupted images in your dataset, this code will automatically 
 1.5 Create a DataFrame of Image Paths and Labels
 -----------------------------------------------
 
-Now that we have taken a peak at the format of our data and have removed any corrupted images, we can start setting up our data for training.
+Now that we have taken a peek at the format of our data and have removed any corrupted images, we can start setting up our data for training.
 In this step, we build a ``pandas.DataFrame`` that organizes all the image data into two columns:
 
   1. **filepath**: The full path to each image file
@@ -324,7 +330,7 @@ We'll display a grid of randomly selected images, grouped by class.
    :width: 800px
    :align: center
 
-**Thought Challenge**: Try changing the ``random.seed`` value a few times to view different images from our dataset. What do you notice? Take a moment to write down your observations.
+**Thought Challenge**: Try changing the ``random.seed`` value a few times to view different images from the dataset. What do you notice? Take a moment to write down your observations.
 
 *Remember: the quality of a machine learning model is decided largely by the quality of the dataset it was trained on!*
 
@@ -1056,7 +1062,7 @@ Let's create new data generators for VGG19 using ``ImageDataGenerator`` with:
     from tensorflow.keras.applications.vgg19 import VGG19, preprocess_input
     from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-    # Contraints
+    # Constraints
     IMAGE_SIZE = (224, 224)
     BATCH_SIZE = 32
 
