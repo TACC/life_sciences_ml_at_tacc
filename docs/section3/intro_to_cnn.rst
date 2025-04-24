@@ -175,6 +175,7 @@ Adding a convolutional layer in TensorFlow Keras is straightforward, as you can 
 
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import Conv2D
+
     # Initializing a sequential model
     model = Sequential()
     model.add(Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=(28, 28, 1)))
@@ -192,6 +193,7 @@ After adding a convolutional layer we add a pooling layer, with either MaxPoolin
 .. code-block:: python3
 
     from tensorflow.keras.layers import MaxPooling2D
+
     model.add(MaxPooling2D((2, 2), padding = 'same'))
 
 We can keep adding a series of convolutional and pooling layers, before flattening the output and
@@ -211,16 +213,28 @@ The Flatten layer in a CNN is necessary to transition from the spatially structu
 .. code-block:: python3
 
     from tensorflow.keras.layers import Flatten, Dense
+
     # flattening the output of the conv layer after max pooling to make it ready for creating dense connections
     model.add(Flatten())
 
     # Adding a fully connected dense layer with 100 neurons
     model.add(Dense(100, activation='relu'))
 
-    # Adding the output layer with num_classes and activation functions as softmax for class classification problem
+    # Adding the output layer with num_classes and activation function as softmax for class classification problem
     model.add(Dense(num_classes, activation='softmax'))
 
-The formula for calculating trainable parameter in each layer is :math:`(Filter\_Size * Filter\_Size * Size\_of\_input\_channel +1 ) * number\_of\_filters`
+The formula for calculating trainable parameters in each layer is: 
+
+.. math::
+
+    (k_w * k_h * C_{in} +1 ) * C_{out}
+
+Where: 
+
+ - :math:`k_w` = kernel width
+ - :math:`k_h` = kernel height
+ - :math:`C_{in}` = number of input channels
+ - :math:`C_{out}` = number of filters (output channels)
 
 
 CNN Architectures
@@ -233,7 +247,7 @@ Different CNN architectures have emerged in the past, some of the popular ones a
 - Inception V3
 
 Each architecture has some specific use cases where they can be used.
-In this lecture, we will cover some basics of VGG16 and ResNet.
+In this lecture, we will cover some basics of VGG-Net and ResNet.
 
 ~~~~~~~~~~~~~~~~~~~
 VGG-Net
@@ -242,27 +256,27 @@ VGG-Net
 VGG-Net is a CNN architecture developed by researchers at the Visual Geometry Group (VGG) at the University of Oxford in 2014 [2]_.
 It became famous after performing very well on the ImageNet dataset, a common benchmark for image classification tasks that contains over 14 million images belonging to 1000 classes.
 
-VGG-Net comes in two main variants - VGG-16 and VGG-19, with 16 and 19 layers respectively.
+VGG-Net comes in two main variants: VGG-16 and VGG-19, with 16 and 19 layers respectively.
 What makes VGG special is its straightforward design:
 
-**Input Layer**: The VGG-16 model takes in color images (RGB with 3 channels) that are 224 x 224 pixels in size.
+ **Input Layer**: The VGG-16 model takes in color images (RGB with 3 channels) that are 224 x 224 pixels in size.
 
-**Convolutional Layers**: VGG-16 has 13 convolutional layers that are responsible for extracting features from the input images. 
-All convolutional layers use:
- - 3 x 3 filters (kernels)
- - Stride of 1 pixel (meaning the filter moves 1 pixel at a time)
- - Padding of 1 pixel (meaning that the input is padded with 1 pixel on all sides to preserve the spatial dimensions of the image)
- - ReLU activation function
-The number of filters in each convolutional layer increases as we go deeper into the network, from 64 filters (resulting in 64 feature maps) in the first few layers to 512 filters (resulting in 512 feature maps) in the later layers.
+ **Convolutional Layers**: VGG-16 has 13 convolutional layers that are responsible for extracting features from the input images. 
+ All convolutional layers use:
+  - 3 x 3 filters (kernels)
+  - Stride of 1 pixel (meaning the filter moves 1 pixel at a time)
+  - Padding of 1 pixel (meaning that the input is padded with 1 pixel on all sides to preserve the spatial dimensions of the image)
+  - ReLU activation function
+  The number of filters in each convolutional layer increases as we go deeper into the network, from 64 filters (resulting in 64 feature maps) in the first few layers to 512 filters (resulting in 512 feature maps) in the later layers.
 
-**Poolimg Layers**: After each block of convolutional layers, a max-pooling layer is applied. 
-The max-pooling layer uses a 2 x 2 window and a stride of 2, which means it takes the maximum value from a 2 x 2 region and reduces the feature map size by half to keep the network efficient and manageable.
+ **Pooling Layers**: After each block of convolutional layers, a max-pooling layer is applied. 
+ The max-pooling layer uses a 2 x 2 window and a stride of 2, which means it takes the maximum value from a 2 x 2 region and reduces the feature map size by half to keep the network efficient and manageable.
 
-**Fully Connected (Dense) Layers**: 
-After flattening the output of the last max-pooling layer, the 7 x 7 x 512 feature map is flattened into a 1D vector that is then fed into three fully connected dense layers:
- - 1st Dense Layer: 4096 perceptrons + ReLU
- - 2nd Dense Layer: 4096 perceptrons + ReLU
- - 3rd Dense Layer: 1000 perceptrons + Softmax (for classification into 1000 categories in ImageNet)
+ **Fully Connected (Dense) Layers**: 
+ After flattening the output of the last max-pooling layer, the 7 x 7 x 512 feature map is flattened into a 1D vector that is then fed into three fully connected dense layers:
+  - 1st Dense Layer: 4096 perceptrons + ReLU
+  - 2nd Dense Layer: 4096 perceptrons + ReLU
+  - 3rd Dense Layer: 1000 perceptrons + Softmax (for classification into 1000 categories in ImageNet)
 
 In total, VGG-16 has 13 convolutional layers and 3 dense layers, giving it a total of 16 trainable layers. 
 
@@ -281,18 +295,17 @@ VGG16 is available in the keras.applications package and can be imported using f
 
     from keras.applications.vgg16 import VGG16
 
-VGG16 model can be created this one line code
+The VGG16 model can be created in one line of code:
 
 .. code-block:: python3
 
     model_vgg16 = VGG16(weights='imagenet')
 
-To check the number of trainable parameters look at the summary of model
+You can examine the model architecture and number of trainable parameters by printing a summary:
 
 .. code-block:: python3
 
     model_vgg16.summary()
-
 
 ~~~~~~~~~~~~~~~~~~~
 ResNet
@@ -421,4 +434,4 @@ Below are some key factors to consider when choosing between architectures like 
 .. [6] Everton Gomede, P. (2024, January 6). Unraveling the vanishing gradient problem in neural networks. Medium. https://medium.com/aimonks/unraveling-the-vanishing-gradient-problem-in-neural-networks-3f58431de75f 
 .. [7] Riebesell, J. (2022, April 12). Janosh Riebesell. TikZ.net. https://tikz.net/skip-connection/ 
 .. [8] Srinivasan, Kathiravan & Garg, Lalit & Datta, Debajit & Alaboudi, Abdulellah & Jhanjhi, Noor & Agarwal, Rishav & Thomas, Anmol. (2021). Performance Comparison of Deep CNN Models for Detecting Driver's Distraction. Computers, Materials & Continua. 68. 4109-4124. 10.32604/cmc.2021.016736. 
-.. [9] Convolutional Neural Networks (cnns). Convolutional Neural Networks (CNNs) - COE 379L: Software Design For Responsible Intelligent Systems documentation. (n.d.). https://coe-379l-sp24.readthedocs.io/en/latest/unit03/cnn.html#lenet-5 
+.. [9] Convolutional Neural Networks (CNNs) - COE 379L: Software Design For Responsible Intelligent Systems documentation. (n.d.). https://coe-379l-sp24.readthedocs.io/en/latest/unit03/cnn.html#lenet-5 
