@@ -14,7 +14,13 @@ By the end of this excercise participants will be able to:
 4. Evaluate the model's performance on test data.
 
 ============================
-Step 1: Importing required libraries and data
+Tutorial Setup and Materials
+============================
+
+All materials and instructions for running this tutorial in the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ are available in our GitHub repository: `TACC Deep Learning Tutorials <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_.
+
+============================
+Step 1: Importing and examining the data
 ============================
 
 The Mushroom dataset is available in the University of California, Irvine Machine Learning Repository, which is a popular repository for machine learning datasets.
