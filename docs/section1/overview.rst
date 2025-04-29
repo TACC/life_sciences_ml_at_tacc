@@ -30,3 +30,5 @@ to use a Linux workstation or HPC cluster.
    07_executing
    08_managing
    09_requesting
+   10_Hands-On-CNN.rst
+ 
