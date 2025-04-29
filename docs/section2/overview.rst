@@ -1,8 +1,19 @@
 Introduction to Machine Learning
-================================
+===========================================================
 
-In this section we introduce the field of Machine Learning and develop techniques for unsupervised and
-supervised learning.
+
+In this unit we introduce the field of Machine Learning and develop the first set of 
+techniques for supervised learning.
+We will explore key machine learning (ML) concepts, including supervised classification, linear regression, and principal component analysis, with a focus on ML considerations and evaluation in life science applications. 
 
 .. toctree::
    :maxdepth: 1
+
+   ml_intro
+   linear_regression
+   linear_classification
+   model_quality
+   knn
+   log_regression_and_NB
+   decision_tree_and_random_forrest
+   data_standardization_and_pipelines
