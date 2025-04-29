@@ -24,6 +24,38 @@ Part 1: Building a CNN Model from Scratch
 =====================================
 
 ++++++++++++++++++++++++++++++++++++
+Step 0: Check GPU Availability and TensorFlow Version
+++++++++++++++++++++++++++++++++++++
+
+Before training deep learning models, it's important to check whether TensorFlow can access the GPU on your machine. Training on a GPU is significantly faster than on a CPU, especially for large image datasets. 
+
+If you've followed the setup instructions in the `TACC Deep Learning Tutorials README <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_, and you've run the ``install_kernel.sh`` script on **Frontera**, you should now be running this notebook inside a containerized Jupyter kernel that includes:
+
+ - TensorFlow v. 2.13.0 with GPU support
+ - CUDA libraries compatible with the system
+ - All required Python packages pre-installed
+
+This cell will confirm that your environment is correctly configured (TIP: Make sure you change your kernel to ``tf-213``).
+
+.. code-block:: python3
+
+    import tensorflow as tf
+
+    # Check if TensorFlow can detect a GPU
+    print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+
+    # Print TensorFlow version
+    print(tf.__version__)
+
+You should see the following output:
+
+.. code-block:: python-console
+
+    Num GPUs Available:  4
+    2.13.0
+
+
+++++++++++++++++++++++++++++++++++++
 Step 1: Data Loading and Organization
 ++++++++++++++++++++++++++++++++++++
 
@@ -35,8 +67,29 @@ This DataFrame will serve as the foundation for splitting our data into training
 1.1 List Dataset Directory Contents
 -----------------------------------
 
-Before loading the images, we first want to inspect the directory structure to make sure everything is in the right place. 
-The code below lists the contents of the ``coral-species`` data directory to verify that the subdirectories for each coral species are present and correctly named:
+Before loading the images, we first want to inspect the directory structure to make sure everything is in the right place.
+
+**Finding Your SCRATCH Directory Path:**
+
+On TACC systems, your scratch directory is a temporary storage space for computational work. To find the path to your scratch directory:
+
+1. After logging into **Frontera**, run this command to see your SCRATCH path:
+
+   .. code-block:: bash
+
+       echo $SCRATCH
+       # This will output something like: /scratch1/12345/username
+
+2. Verify that the coral-species dataset is in the correct location:
+
+   .. code-block:: bash
+
+       ls $SCRATCH/tacc-deep-learning-tutorials/data/coral-species
+       # You should see three directories: ACER, CNAT, and MCAV
+
+3. Use the full path shown by these commands in the code below.
+
+Now that you know your SCRATCH path, let's list the contents of the ``coral-species`` data directory to verify that the subdirectories for each coral species are present and correctly named:
 
 .. code-block:: python
 
@@ -44,13 +97,16 @@ The code below lists the contents of the ``coral-species`` data directory to ver
 
     # Define the path to the dataset directory
     # NOTE: Replace the path below with the full path to your scratch directory containing the training materials
-    dataset_dir = Path('/path/to/your/scratch/directory/tacc-deep-learning-tutorials/data/coral-species')
+    dataset_dir = Path('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species')
 
     # List the contents of the data directory
     print(list(dataset_dir.iterdir()))
 
-    # You should see something like this:
-    # [PosixPath('../data/coral-species/MCAV'), PosixPath('../data/coral-species/ACER'), PosixPath('../data/coral-species/CNAT')]
+You should see something like this:
+
+.. code-block:: python-console
+
+    [PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/CNAT'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/MCAV'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/ACER')]
     
 1.2 Check File Extensions
 --------------------------
@@ -87,16 +143,16 @@ The script below prints a summary and gives recommendations if inconsistencies a
     from pathlib import Path
     from collections import Counter
 
-    def explore_image_dataset(data_root):
+    def explore_image_dataset(dataset_dir):
         """
         Explore basic properties of images: size and color mode.
         """
         print("Starting image dataset exploration...\n")
-        
+
         # Gather all .jpg files in the dataset
-        image_files = list(Path(data_root).rglob('*.jpg'))
+        image_files = list(Path(dataset_dir).rglob('*.jpg'))
         print(f"Found {len(image_files)} image files\n")
-        
+
         # Track sizes and color modes
         image_sizes = []
         color_modes = []
@@ -104,8 +160,8 @@ The script below prints a summary and gives recommendations if inconsistencies a
         print("Checking image dimensions and color modes...\n")
         for img_path in image_files:
             with Image.open(img_path) as img:
-                image_sizes.append(img.size)   
-                color_modes.append(img.mode)  
+                image_sizes.append(img.size)
+                color_modes.append(img.mode)
 
         # Summarize image sizes
         size_counts = Counter(image_sizes)
@@ -127,19 +183,18 @@ The script below prints a summary and gives recommendations if inconsistencies a
             print(f"Images have different sizes. Consider resizing.")
         else:
             print("All images are the same size.")
-        
+
         if len(mode_counts) > 1:
             print("Images have different color modes. Consider converting to RGB.")
         else:
             print("All images share the same color mode.")
 
     # Run the function
-    data_root = Path('../data/coral-species')
-    explore_image_dataset(data_root)
+    explore_image_dataset(dataset_dir)
     
 Our dataset analysis reveals some important characteristics that we'll need to keep in mind as we proceed with the tutorial:
 
- 1. **Image Size Variation**: We have 451 total images in our dataset, with 88 different image sizes (dimensions). Also notice that some images are in portrait orientation (height > width) while others are landscape (width > height). CNNs expect all images to have the same dimensions, so we'll need to resize them to a standard size before training our model.
+ 1. **Image Size Variation**: We have 417 total images in our dataset, with 63 different image sizes (dimensions). Also notice that some images are in portrait orientation (height > width) while others are landscape (width > height). CNNs expect all images to have the same dimensions, so we'll need to resize them to a standard size before training our model.
 
  2. **Color Mode**: All images share the same color mode. Great!
 
@@ -207,6 +262,9 @@ This structured DataFrame is essential for training with Keras' ``flow_from_data
 
     import pandas as pd
 
+    # Set pandas to display full column content (no truncation)
+    pd.set_option('display.max_colwidth', None)
+
     # Build (filepath, label) pairs from valid image paths
     data = []
     for path in valid_images:
@@ -236,39 +294,42 @@ In this step we:
   1. Count how many images belong to each class
   2. Plot the class distribution as a pie chart and bar graph
 
-If the dataset is imbalanced (i.e., some classes have far more images than others), we may need to account for this later using **class weights** or **data augmentation**.
+If the dataset is imbalanced (i.e., some classes have far more images than others), we may need to account for this later using **class weights**.
 
 .. code-block:: python
 
     import matplotlib.pyplot as plt
 
-    # Count class distribution
+    # Count class distribution (counts how many times each unique value appears in the 'label' column of your DataFrame)
     counts = df['label'].value_counts()
 
-    # Create a 1-row, 2-column subplot
+    # Create a figure with two plots side-by-side (1-row, 2-columns; 12 inches wide, 5 inches tall)
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
-    # Define a color palette for consistency
-    colors = ['#8158ff', '#ff9423', '#7fcdbb'] 
+    # Define a color palette
+    colors = ['#8158ff', '#ff9423', '#7fcdbb']
 
-    # Pie chart
+    # Create a Pie chart in the first plot position (axes[0])
+    ## counts.values: The number of images for each class
+    ## counts.index: The class labels (e.g., 'ACER', 'CNAT', 'MCAV')
+    ## autopct='%1.1f%%': Display the percentage of images for each class
+    ## startangle=90: Start the pie chart at a 90-degree angle (rotated 90 degrees from the default)
+    ## colors: The colors to use for each class (defined earlier)
     axes[0].pie(counts.values, labels=counts.index, autopct='%1.1f%%', startangle=90, colors=colors)
-    axes[0].axis('equal')
     axes[0].set_title('Class Distribution (Percentage)')
 
-    # Bar chart
+    # Creates a Bar chart in the second plot position (axes[1])
     axes[1].bar(counts.index, counts.values, color=colors)
     axes[1].set_title('Class Distribution (Values)')
     axes[1].set_ylabel('Number of Images')
-    plt.setp(axes[1].get_xticklabels(), rotation=45, ha='right')
 
-    # Layout adjustment
-    plt.tight_layout()
+    # Display the figure with both charts
     plt.show()
 
     # Print label counts and percentages
     for label, count in counts.items():
-        print(f"{label}: {count} images ({count/len(df)*100:1f}%)")
+        print(f"{label}: {count} images ({count/len(df)*100:1.2f}%)")
+
 
 **Thought Challenge**: Describe the class distribution in your own words. How much of the dataset is made up by the largest class? The smallest class? Is there anything that we need to address before continuing?
 
@@ -286,7 +347,6 @@ We'll display a grid of randomly selected images, grouped by class.
 
 .. code-block:: python
 
-    import matplotlib.pyplot as plt
     from tensorflow.keras.preprocessing.image import load_img
     import random
 
@@ -308,7 +368,7 @@ We'll display a grid of randomly selected images, grouped by class.
         # Filter DataFrame to get only images from the current class
         class_df = df[df['label'] == label]
 
-        # Randomly select 3 images from the current class 
+        # Randomly select 3 images from the current class
         sample_paths = random.sample(list(class_df['filepath']), samples_per_class)
 
         # Create subplot for each image
@@ -321,12 +381,11 @@ We'll display a grid of randomly selected images, grouped by class.
             img = load_img(img_path)        # Load the image
             plt.imshow(img)                 # Display the image
             plt.title(label)                # Add species name as title
-            plt.axis('off') 
+            plt.axis('off')
 
-    plt.tight_layout()
     plt.show()
 
-.. image:: ./images/coral_species_images.png
+.. image:: ./images/coral-species-images.png
    :width: 800px
    :align: center
 
@@ -347,7 +406,7 @@ We are now ready to split our labeled image dataset into three parts:
   2. **Validation Set**: Used to tune hyperparameters and monitor model performance during training
   3. **Test Set**: Used to evaluate the final model's performance after training is complete
 
-We will use the ``train_test_split`` function from scikit-learn in two stages:
+We will use the ``train_test_split`` function from sklearn in two stages:
 
   1. First, we split the original dataset into **training + test** sets
   2. Then, we split the training set again into **training + validation** 
@@ -403,7 +462,7 @@ This is called **stratified sampling**.
 -------------------------
 
 If our dataset is imbalanced (i.e., some classes have many more images than others), the model may learn to favor those majority classes. 
-To address this, we can compute **class weights** based on the training data using the ``compute_class_weight`` function from scikit-learn.
+To address this, we can compute **class weights** based on the training data using the ``compute_class_weight`` function from sklearn.
 
 These weights:
 
@@ -430,13 +489,30 @@ While our dataset is quite balanced, we provide the code for computing class wei
         y=train_df['label']
     )
 
-    # Convert to a dictionary: {label: weight}
-    class_weight_dict = dict(zip(class_labels, class_weights))
+    # Convert to a dictionary: {index: weight}
+    class_weight_dict = dict(zip(range(len(class_labels)), class_weights))
 
     # Preview the result
     print("Computed class weights:")
-    for label, weight in class_weight_dict.items():
-        print(f"{label}: {weight:.2f}")
+    for index, weight in class_weight_dict.items():
+        print(f"{index}: {weight:.2f}")
+
+.. code-block:: python-console
+
+    Computed class weights:
+    0: 1.02
+    1: 1.08
+    2: 0.91
+
+In the above output, ``0`` corresponds to ``ACER``, ``1`` corresponds to ``CNAT``, and ``2`` corresponds to ``MCAV``. The class weights are inversely proportional to the number of samples in each class: classes with fewer samples get higher weights to compensate for their lower representation in the training data.
+
+We need to convert the string labels (like ``ACER``, ``CNAT``, and ``MCAV``) to integers (0, 1, 2) because the model expects numeric class indices. The ``class_weight_dict`` is a dictionary that maps each class index to its corresponding weight. 
+
+**Thought Challenge**: Look back at the pie chart and bar chart that we generated above. Do the class weights make sense? Why or why not?
+
+.. toggle:: Click to show
+
+    The class weights make sense because the class with the fewest samples (``CNAT``) has the highest weight (1.08), while the class with the most samples (``MCAV``) has the lowest weight (0.91). This means that the model will pay more attention to the ``CNAT`` class during training, which has fewer samples. 
 
 ++++++++++++++++++++++++++++++++++++
 Step 4: Image Preprocessing and Data Generators
@@ -483,10 +559,6 @@ We will define three separate ``ImageDataGenerator`` objects, one for each datas
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-    # Set image size and batch size
-    IMAGE_SIZE = (224, 224)
-    BATCH_SIZE = 32
-
     # Define training data generator
     train_datagen = ImageDataGenerator(
         rescale=1./255,             # Normalize pixel values to [0, 1]
@@ -510,6 +582,10 @@ Now that our preprocessing methods are defined, we can use ``flow_from_dataframe
 All generators return batches of preprocessed image tensors and their corresponding labels.
 
 .. code-block:: python
+
+    # Set image size and batch size
+    IMAGE_SIZE = (224, 224)
+    BATCH_SIZE = 32
 
     # Training generator
     train_generator = train_datagen.flow_from_dataframe(
@@ -567,9 +643,6 @@ Let's display a few images from the training geneator along with their decoded c
 
 .. code-block:: python
 
-    import matplotlib.pyplot as plt
-    import numpy as np
-
     # Get a fresh batch of images
     images, labels = next(train_generator)
 
@@ -579,20 +652,19 @@ Let's display a few images from the training geneator along with their decoded c
     # Show each image
     for i in range(6):
         plt.subplot(2, 3, i + 1)
-        
+
         # Get the species name
         species_names = list(train_generator.class_indices.keys())
         species = species_names[np.argmax(labels[i])]
-        
+
         # Show the image
         plt.imshow(images[i])
         plt.title(f"Species: {species}")
         plt.axis("off")
 
-    plt.tight_layout()
     plt.show()
 
-.. image:: ./images/corals_augmented.png
+.. image:: ./images/coral-species-augmented.png
    :width: 800px
    :align: center
 
@@ -629,7 +701,6 @@ Below, we define a model that consists of three main parts:
 .. code-block:: python
 
     from tensorflow.keras import models, layers
-    from tensorflow.keras.optimizers import RMSprop
 
     # Build a custom CNN architecture
     cnn_model = models.Sequential([
@@ -660,6 +731,8 @@ Below, we define a model that consists of three main parts:
 Once you have filled in the blanks and defined your model, let's compile it:
 
 .. code-block:: python
+
+    from tensorflow.keras.optimizers import RMSprop
 
     cnn_model.compile(
         optimizer=RMSprop(learning_rate=1e-4),
@@ -807,7 +880,7 @@ We also track the training history, which we'll use later to visualize performan
         train_generator,
         validation_data=val_generator,
         epochs=15,
-        class_weight=class_weight_dict # Computed in Step 4.2
+        class_weight=class_weight_dict # Computed in Step 3.2
     )
 
 Example output:
@@ -815,18 +888,18 @@ Example output:
 .. code-block:: python-console
 
     Epoch 1/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 8s 843ms/step - accuracy: 0.2970 - loss: 1.1531 - val_accuracy: 0.3889 - val_loss: 1.0936
+    9/9 [==============================] - 14s 2s/step - loss: 1.0338 - accuracy: 0.4737 - val_loss: 1.0179 - val_accuracy: 0.5075
     Epoch 2/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 7s 730ms/step - accuracy: 0.3414 - loss: 1.1029 - val_accuracy: 0.3472 - val_loss: 1.0883
+    9/9 [==============================] - 9s 1s/step - loss: 1.0466 - accuracy: 0.4436 - val_loss: 1.0264 - val_accuracy: 0.4627
     Epoch 3/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 7s 723ms/step - accuracy: 0.3875 - loss: 1.0959 - val_accuracy: 0.4167 - val_loss: 1.0886
+    9/9 [==============================] - 8s 905ms/step - loss: 1.0224 - accuracy: 0.4624 - val_loss: 0.9770 - val_accuracy: 0.5373
     Epoch 4/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 6s 697ms/step - accuracy: 0.3971 - loss: 1.0936 - val_accuracy: 0.4167 - val_loss: 1.0776
+    9/9 [==============================] - 11s 1s/step - loss: 1.0178 - accuracy: 0.4624 - val_loss: 1.0147 - val_accuracy: 0.4776
     Epoch 5/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 7s 729ms/step - accuracy: 0.4104 - loss: 1.0802 - val_accuracy: 0.4028 - val_loss: 1.0919
+    9/9 [==============================] - 9s 899ms/step - loss: 1.0065 - accuracy: 0.4699 - val_loss: 0.9736 - val_accuracy: 0.5075
     ...
     Epoch 15/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 7s 755ms/step - accuracy: 0.4277 - loss: 1.0193 - val_accuracy: 0.3889 - val_loss: 1.1392
+    9/9 [==============================] - 10s 1s/step - loss: 0.9717 - accuracy: 0.5038 - val_loss: 1.0668 - val_accuracy: 0.3731
 
 
 Visualizing Training History
@@ -838,8 +911,6 @@ These plots can help us identify overfitting, underfitting, or confirm that the 
 We use the ``cnn_history`` object returned by the ``fit()`` method to plot the training and validation accuracy and loss:
 
 .. code-block:: python
-
-    import matplotlib.pyplot as plt
 
     def plot_training_history(history, title_prefix="CNN"):
         acc = history.history['accuracy']
@@ -883,7 +954,7 @@ We use the ``cnn_history`` object returned by the ``fit()`` method to plot the t
     # Call the plotting function
     plot_training_history(cnn_history)
 
-.. image:: ./images/cnn_history.png
+.. image:: ./images/CNN-history.png
    :width: 800px
    :align: center
 
@@ -894,14 +965,16 @@ The plots above show the training and validation accuracy/loss over 15 epochs.
 .. toggle:: Click to show
 
     **Accuracy (Left Plot)**
-     - Training accuracy increases over time, reaching about 50% before declining again in the final epochs
-     - Validation accuracy remains low, indicating poor generalization
+     - Training accuracy starts around 47% and gradually improves to about 50% by the end of training
+     - Validation accuracy shows higher volatility - it remains above training accuracy for most epochs (reaching ~58% at epoch 11), but drops dramatically in the final epoch to ~37%
+     - The gap between training and validation accuracy varies significantly throughout training
 
     **Loss (Right Plot)**
-     - Training loss steadily decreases, showing that the model is fitting the training data
-     - Validation loss fluctuates and does not improve
+     - Training loss fluctuates but generally decreases over time from ~1.03 to ~0.97
+     - Validation loss is generally lower than training loss through most epochs, showing some instability
+     - There's a concerning spike in validation loss at the final epoch, jumping to ~1.07
 
-    **Interpretation**: The model is memorizing the training data, but is failing to learn patterns that generalize to unseen data. In other words, the model is **overfitting** to the training data.
+    **Interpretation**: The model shows signs of both underfitting and instability. The relatively low accuracy suggests the model struggles to learn effective patterns from the data. The final drop in validation accuracy paired with the spike in validation loss indicates potential overfitting or training instability in later epochs. The erratic validation metrics suggest the model may be sensitive to the specific examples in each validation batch.
 
 ++++++++++++++++++++++++++++++++++++
 Step 7: Evaluate the Model on the Test Set
@@ -926,10 +999,10 @@ Example output:
 
 .. code-block:: python-console
 
-    Test Accuracy: 40.66%
-    Test Loss: 1.1422
+    Test Accuracy: 34.52%
+    Test Loss: 1.1921
 
-Our model achieves a test accuracy of 40.66% and a test loss of 1.1422.
+Our model correctly classifies the test images about 35% of the time, and our loss is still quite high.
 While these numbers provide a snapshot of performance, they don't tell the whole story. Let's dig deeper with a confusion matrix.
 
 Visualize Predictions with a Confusion Matrix
@@ -941,7 +1014,6 @@ It helps identify which classes are being confused with each other.
 .. code-block:: python
 
     from sklearn.metrics import confusion_matrix
-    import matplotlib.pyplot as plt
     import seaborn as sns
 
     # Get predicted probabilities for each class
@@ -970,9 +1042,10 @@ It helps identify which classes are being confused with each other.
     plt.tight_layout()
     plt.show()
 
-.. image:: ./images/confusion_matrix.png
+.. image:: ./images/cnn-confusion-matrix.png
    :width: 800px
    :align: center
+
 
 Detailed Performance with a Classification Report
 ------------------------------------------------
@@ -994,13 +1067,13 @@ Example output:
     Classification Report:
                   precision    recall  f1-score   support
 
-            ACER       0.44      0.53      0.48        32
-            CNAT       0.25      0.04      0.06        28
-            MCAV       0.40      0.61      0.48        31
+            ACER       0.35      0.93      0.51        27
+            CNAT       0.38      0.12      0.18        26
+            MCAV       0.20      0.03      0.06        31
 
-        accuracy                           0.41        91
-       macro avg       0.36      0.39      0.34        91
-    weighted avg       0.37      0.41      0.35        91
+        accuracy                           0.35        84
+       macro avg       0.31      0.36      0.25        84
+    weighted avg       0.30      0.35      0.24        84
 
 Click below to see a brief explanation of the metrics in the classification report.
 
@@ -1108,9 +1181,9 @@ Step 2: Define and Train the VGG19 Model
 We now load the **VGG19 base model**, which has been pre-trained on ImageNet.
 We exclude the original classification head (``include_top=False``) and freeze all convolutional layers.
 
-Next, we stack a **custom classifier** on top using Keras’ ``Sequential`` API:
+Next, we stack a **custom classifier** on top using Keras' ``Sequential`` API:
 
-- Flatten the output of VGG19’s last convolutional layer
+- Flatten the output of VGG19's last convolutional layer
 - Add the same fully connected (dense) layers that we had in our original CNN built from scratch
 
 .. code-block:: python
@@ -1181,6 +1254,7 @@ Some common callbacks include:
         train_generator_vgg19,
         validation_data=val_generator_vgg19,
         epochs=15,
+        class_weight=class_weight_dict,
         callbacks=callbacks             # Pass the callbacks to the fit method
     )
 
@@ -1189,29 +1263,25 @@ Example Output:
 .. code-block:: python-console
 
     Epoch 1/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 29s 3s/step - accuracy: 0.4572 - loss: 5.0584 - val_accuracy: 0.6944 - val_loss: 1.5519 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 14s 1s/step - loss: 4.4430 - accuracy: 0.5188 - val_loss: 0.2631 - val_accuracy: 0.9104 - lr: 1.0000e-04
     Epoch 2/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 28s 3s/step - accuracy: 0.6513 - loss: 1.5908 - val_accuracy: 0.7500 - val_loss: 0.9063 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 7s 855ms/step - loss: 0.6687 - accuracy: 0.8271 - val_loss: 0.4558 - val_accuracy: 0.8806 - lr: 1.0000e-04
     Epoch 3/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.7646 - loss: 1.1652 - val_accuracy: 0.8056 - val_loss: 0.6648 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 6s 602ms/step - loss: 0.7846 - accuracy: 0.8308 - val_loss: 0.2493 - val_accuracy: 0.9254 - lr: 1.0000e-04
     Epoch 4/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.8072 - loss: 0.6574 - val_accuracy: 0.7639 - val_loss: 0.9794 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 7s 768ms/step - loss: 0.3062 - accuracy: 0.9023 - val_loss: 0.2185 - val_accuracy: 0.9403 - lr: 1.0000e-04
     Epoch 5/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.7946 - loss: 0.8754 - val_accuracy: 0.8333 - val_loss: 0.8113 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 8s 881ms/step - loss: 0.3746 - accuracy: 0.8947 - val_loss: 0.1510 - val_accuracy: 0.9552 - lr: 1.0000e-04
     Epoch 6/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.8660 - loss: 0.4163 - val_accuracy: 0.8194 - val_loss: 0.5671 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 6s 718ms/step - loss: 0.3481 - accuracy: 0.9023 - val_loss: 0.1624 - val_accuracy: 0.9552 - lr: 1.0000e-04
     Epoch 7/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.7877 - loss: 0.9008 - val_accuracy: 0.8889 - val_loss: 0.4990 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 7s 790ms/step - loss: 0.2909 - accuracy: 0.9323 - val_loss: 0.4297 - val_accuracy: 0.8955 - lr: 1.0000e-04
     Epoch 8/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.8594 - loss: 0.4907 - val_accuracy: 0.8611 - val_loss: 0.8336 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 7s 749ms/step - loss: 0.2124 - accuracy: 0.9474 - val_loss: 0.4730 - val_accuracy: 0.8955 - lr: 1.0000e-04
     Epoch 9/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 28s 3s/step - accuracy: 0.8471 - loss: 0.5522 - val_accuracy: 0.7917 - val_loss: 0.9105 - learning_rate: 1.0000e-04
+    9/9 [==============================] - 6s 643ms/step - loss: 0.2254 - accuracy: 0.9474 - val_loss: 0.3024 - val_accuracy: 0.9254 - lr: 5.0000e-05
     Epoch 10/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.8221 - loss: 0.5745 - val_accuracy: 0.8750 - val_loss: 0.5311 - learning_rate: 1.0000e-04
-    Epoch 11/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 27s 3s/step - accuracy: 0.9017 - loss: 0.3225 - val_accuracy: 0.8889 - val_loss: 0.4855 - learning_rate: 5.0000e-05
-    Epoch 12/15
-    9/9 ━━━━━━━━━━━━━━━━━━━━ 28s 3s/step - accuracy: 0.9296 - loss: 0.1915 - val_accuracy: 0.8750 - val_loss: 0.4505 - learning_rate: 5.0000e-05
+    9/9 [==============================] - 8s 861ms/step - loss: 0.2725 - accuracy: 0.9323 - val_loss: 0.4518 - val_accuracy: 0.8955 - lr: 5.0000e-05
 
 Visualizing Training History
 ------------------------------
@@ -1225,7 +1295,7 @@ Refer back to Section 1: Step 6 – *Visualizing Training History* for a refresh
     # Plot for VGG19
     plot_training_history(VGG19_history, title_prefix='VGG19')
 
-.. image:: ./images/VGG19_history.png
+.. image:: ./images/VGG19-history.png
    :width: 800px
    :align: center
 
@@ -1253,10 +1323,10 @@ Example output:
 
 .. code-block:: python-console
 
-    Test Accuracy: 86.81%
-    Test Loss: 0.6583
+    Test Accuracy: 92.86%
+    Test Loss: 0.2990
 
-Our model achieves a test accuracy of 86.81% and a test loss of 0.6583. What an improvement!
+Our model correctly classifies the test images about 93% of the time. What an improvement!
 
 Visualize Predictions with a Confusion Matrix
 ---------------------------------------------
@@ -1268,13 +1338,13 @@ Refer back to Section 1: Step 7 – *Visualize Predictions with a Confusion Matr
 .. code-block:: python
 
     # Get predicted probabilities for each class
-    pred_probs = # ... your code here ...
+    vgg19_pred_probs = # ... your code here ...
 
     # Convert to predicted class labels
-    y_pred = np.argmax(pred_probs, axis=1)
+    vgg19_y_pred = np.argmax(vgg19_pred_probs, axis=1)
 
     # Get true labels
-    y_true = # ... your code here ...
+    vgg19_y_true = # ... your code here ...
 
     # Create confusion matrix
     cm = # ... your code here ...
@@ -1293,7 +1363,7 @@ Refer back to Section 1: Step 7 – *Visualize Predictions with a Confusion Matr
     plt.tight_layout()
     plt.show()
 
-.. image:: ./images/vgg19_confusion_matrix.png
+.. image:: ./images/vgg19-confusion-matrix.png
    :width: 800px
    :align: center
 
@@ -1317,15 +1387,15 @@ Example output:
 .. code-block:: python-console
 
     Classification Report (VGG19):
-                  precision    recall  f1-score   support
+               precision    recall  f1-score   support
 
-            ACER       0.97      0.97      0.97        32
-            CNAT       0.84      0.75      0.79        28
-            MCAV       0.79      0.87      0.83        31
+         ACER       1.00      1.00      1.00        27
+         CNAT       0.83      0.96      0.89        26
+         MCAV       0.96      0.84      0.90        31
 
-        accuracy                           0.87        91
-       macro avg       0.87      0.86      0.86        91
-    weighted avg       0.87      0.87      0.87        91
+     accuracy                           0.93        84
+    macro avg       0.93      0.93      0.93        84
+ weighted avg       0.93      0.93      0.93        84
 
 **Thought Challenge**: Compare the performance of our VGG19 model to our previous CNN model. What are some major differences in the classification report? Are there still any problematic classes that the model is struggling with? If so, what do you think is causing this?
 
@@ -1333,15 +1403,51 @@ Example output:
 Step 4: Visualize Predictions from the Test Set
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
+First, let's take the raw predictions from our VGG19 model and organize them into a pandas DataFrame with four columns:
+
+ - ``Filepath``: Where each image is located
+ - ``True Label``: The actual species of coral in the image
+ - ``Predicted Label``: What our model thinks the species is
+ - ``Confidence``: How confident our model is in its prediction (0-1)
+
+This organized DataFrame makes it easy to save our model's predictions and create visualizations of the results. 
+
+.. code-block:: python
+
+    import os
+
+    # Create a mapping from class indices to class names
+    idx_to_class = {v: k for k, v in test_generator_vgg19.class_indices.items()}
+
+    # The filenames already contain the full paths, so we can use them directly
+    file_paths = test_generator_vgg19.filenames
+
+    # Convert class indices to class names
+    true_class_names = [idx_to_class[idx] for idx in vgg19_y_true]
+    pred_class_names = [idx_to_class[idx] for idx in vgg19_y_pred]
+
+    # Get the confidence scores for the predicted classes
+    confidence_scores = [vgg19_pred_probs[i][pred_idx] for i, pred_idx in enumerate(vgg19_y_pred)]
+
+    # Create the results DataFrame
+    vgg19_results_df = pd.DataFrame({
+        'Filepath': file_paths,
+        'True Label': true_class_names,
+        'Predicted Label': pred_class_names,
+        'Confidence': confidence_scores
+    })
+
+    # Display first few rows
+    print(vgg19_results_df.head())
+
+
 Let's display a few test images along with their predicted labels, true labels, and the model's confidence scores.
 
 This helps visually confirm whether predictions make sense – and helps identify patterns in misclassifications.
 
 .. code-block:: python
 
-    import matplotlib.pyplot as plt
-    import numpy as np
-    from tensorflow.keras.preprocessing.image import load_img, img_to_array
+    from tensorflow.keras.preprocessing.image import load_img
 
     # Number of test images to show
     num_images = 8
@@ -1354,24 +1460,23 @@ This helps visually confirm whether predictions make sense – and helps identif
     for i in range(num_images):
         row = sample_df.iloc[i]
         img = load_img(row['Filepath'], target_size=(224, 224))
-        
+
         plt.subplot(2, num_images // 2, i + 1)
         plt.imshow(img)
         plt.axis('off')
-        
+
         # Determine color based on prediction accuracy
         is_correct = row['Predicted Label'] == row['True Label']
         color = 'green' if is_correct else 'red'
-        
+
         # Create title with colored text
         title = f"Pred: {row['Predicted Label']}\nTrue: {row['True Label']}\nConf: {row['Confidence']:.2f}"
         plt.title(title, fontsize=10, color=color)
 
     plt.suptitle("Sample Predictions", fontsize=12)
-    plt.tight_layout()
     plt.show()
 
-.. image:: ./images/vgg19_sample_predictions.png
+.. image:: ./images/vgg19-sample-predictions.png
    :width: 800px
    :align: center
 
