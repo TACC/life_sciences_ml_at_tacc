@@ -1502,19 +1502,6 @@ To further enhance your model, consider the following ideas:
 - **Improve Image Quality**: Apply image cleaning or filtering techniques to enhance the quality of your dataset.
 - **Optimize Model Architecture**: Consider adding Batch Normalization, Dropout, or other regularization techniques to improve model generalization.
 
-Contribute to this Tutorial!
-----------------------------
-
-We encourage you to share your improvements and insights with the community. If you develop a model that surpasses our current implementation, we'd love to see it!
-
-Here's how you can contribute:
-
-- **Fork the Repository**: Create your own copy of the repository to work on.
-- **Enhance and Document**: Add your new model architecture, results, and any notes or observations.
-- **Submit a Pull Request**: Share your improvements by submitting a pull request to contribute to this tutorial.
-
-Let's see what you can build!
-
 ---
 
 Thank you for following along! You've made significant progress in understanding how deep learning can be applied to real-world biological data. Keep experimenting and learning!
