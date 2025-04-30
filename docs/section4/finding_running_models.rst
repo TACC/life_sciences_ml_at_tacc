@@ -31,7 +31,7 @@ using pip:
 
 .. code-block:: console
 
-    $ pip install tensorflow-hub 
+    $ pip install tensorflow-hub
 
 
 We're going to use the `MobileNet_V2 <https://www.kaggle.com/models/google/mobilenet-v2>`_ model from Tensorflow Hub. This model is a lightweight deep learning model
@@ -57,7 +57,7 @@ First, we will need to import tensorflow, tensorflow_hub, and a few other librar
     import numpy as np
     from PIL import Image
 
-Next, we will load the pre-trained model from Tensorflow Hub:
+Next, we will load the pre-trained model from Tensorflow Hub using information from the model card:
 
 .. code-block:: python
 
@@ -76,7 +76,7 @@ use the model to make a prediction:
     img = tf.keras.utils.get_file("image.jpg", img_url)
     img = Image.open(img).resize(img_shape)
     img = np.array(img) / 255.0
-    result = classifier.predict(img[np.newaxis, ...])   
+    result = classifier.predict(img[np.newaxis, ...])
 
 Finally, we'll map the prediction to a corresponding class label and print out the predicted class name:
 
@@ -109,7 +109,7 @@ pre-trained `ResNet18 <https://pytorch.org/hub/pytorch_vision_resnet/>`_ model f
    :width: 600
    :align: center
 
-   The resnet model card at PyTorch Hub.
+   The ResNet model card at PyTorch Hub.
 
 We don't need to repeat the example here, but we will show the relevant parts on how to load the model. Since this
 was a computer vision problem, we were able to use the `torchvision` library to load the
@@ -133,12 +133,7 @@ The `transformers` library from `Hugging Face <https://huggingface.co/>`_ provid
 models for natural language processing (NLP) tasks, including text classification, named entity recognition,
 and question answering as well as for other tasks such as Computer Vision, Multimodel (multiple types of data),
 and Audio. The library also provides a simple and efficient way to load pre-trained models and use them for
-inference and fine-tuning.  To use the `transformers` library, you need to install the library. You can do this
-using pip:
-
-.. code-block:: console
-
-    $ pip install transformers
+inference and fine-tuning.
 
 Brief Introduction to Transformers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,9 +142,88 @@ Transformers are a type of neural network architecture that has become the de fa
 They are based on the self-attention mechanism, which allows the model to weigh the importance of different
 words in a sentence when making predictions. This allows transformers to capture long-range dependencies and
 contextual information in text data. The `transformers` library provides a collection of pre-trained models
-that are based on the transformer architecture, including BERT, GPT-2, and RoBERTa. These models have been
-pre-trained on large text corpora and can be fine-tuned for specific tasks with relatively small amounts of
+that are based on the transformer architecture, including BERT [1]_, GPT-2 [2]_, and RoBERTa [3]_. These models have been
+pre-trained on a large corpus of text and can be fine-tuned for specific tasks with relatively small amounts of
 task-specific data.
+
+Timeline of NLP and Transformers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Transformers fit into the family of Natural Language Processing (NLP) models that have been developed over the years,
+starting with simple models like Bag of Words [4]_ and Word2Vec [5]_, and moving on to more complex models like BERT, GPT, and
+the newest Large Language Models (LLM).
+
+.. figure:: ../images/transformer_timeline.png
+   :width: 600
+   :align: center
+
+   Timeline of NLP models. Source: `A Brief Timeline of NLP from Bag of Words to the Transformer Family <https://medium.com/nlplanet/a-brief-timeline-of-nlp-from-bag-of-words-to-the-transformer-family-7caad8bbba56>`_.
+
+
+And because the strategy to increase the performance of these models is to increase the size of the model, the trend
+is to have larger and larger models.
+
+.. figure:: ../images/timeline-of-transformer-models.png
+   :width: 600
+   :align: center
+
+   Size of Transformer models. Source: `Hugging Face LLM Course <https://huggingface.co/learn/llm-course/chapter1/4?fw=pt>`_.
+
+Architecture
+^^^^^^^^^^^^
+
+The transformer architecture is based on the self-attention mechanism, which allows the model to weigh the
+importance of different words in a sentence when making predictions. This is the key to the transformer architecture
+and was pointed out by the title of the paper introducing it, "Attention Is All You Need" [6]_. The architecture consists of an encoder and
+decoder, each of which is made up of multiple layers. Each layer consists of a multi-head self-attention mechanism
+and a feed-forward neural network. The encoder processes the input text and generates a set of hidden states,
+which are then passed to the decoder. The decoder generates the output text based on the hidden states from the
+encoder and the previously generated output text. The self-attention mechanism allows the model to capture long-range
+dependencies and contextual information in the text data.
+
+.. figure:: ../images/general_transformer_architecture.png
+   :width: 600
+   :align: center
+
+   General Transformer architecture. Source: `Attention Is All You Need <https://arxiv.org/abs/1706.03762>`_.
+
+There are three main variations of the transformer architecture and the different models that are based on it are
+specialized for different tasks:
+
+1. **Encoder-only models**: These models are used for tasks that require understanding the input text, such as text
+   classification and named entity recognition. Examples include BERT, DistilBERT, RoBERTa, and ModernBERT.
+2. **Decoder-only models**: These models are used for tasks that require generating text, such as text generation,
+   language modeling, and conversational AI. Examples include GPT-(1,2,3,4) and LLaMa.
+3. **Encoder-decoder models**: These models are used for tasks that require both understanding and generating text,
+   such as machine translation and summarization. Examples include T5 and BART.
+
+Usage
+^^^^^
+
+To use the `transformers` library, you need to install the library. You can do this
+using pip:
+
+.. code-block:: console
+
+    $ pip install transformers
+
+
+The most convenient way to use the `transformers` library is to use the Pipeline API. The Pipeline API provides a
+simple and efficient way to load pre-trained models and use them for inference and fine-tuning. The API supports a
+wide range of tasks, including text classification, named entity recognition, question answering, and text generation.
+The API automatically handles the preprocessing and postprocessing of the input and output data, making it easy to use
+pre-trained models without having to worry about the details of the model architecture and implementation.
+
+To use the `transformers` library, you can load a pre-trained model and tokenizer using the following code:
+.. code-block:: python
+
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+    # Load the pre-trained model and tokenizer
+    model_name = "distilbert-base-uncased"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSequenceClassification.from_pretrained(model_name)
+
 
 Additional Resources
 --------------------
@@ -158,3 +232,16 @@ The material in this section is based on the following resources:
 
 * `Tensorflow Hub/Kaggle <https://www.tensorflow.org/hub>`_
 * `Dataiku Developer Guide Tensorflow Hub Tutorial <https://developer.dataiku.com/latest/tutorials/machine-learning/code-env-resources/tf-resources/index.html>`_
+* `A Brief Timeline of NLP from Bag of Words to the Transformer Family <https://medium.com/nlplanet/a-brief-timeline-of-nlp-from-bag-of-words-to-the-transformer-family-7caad8bbba56>`_.
+* `Hugging Face LLM Course <https://huggingface.co/learn/llm-course/chapter1/4?fw=pt>`_.
+
+
+**References:**
+
+.. [1] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019, June). Bert: Pre-training of deep bidirectional transformers for language understanding. In Proceedings of the 2019 conference of the North American chapter of the association for computational linguistics: human language technologies, volume 1 (long and short papers) (pp. 4171-4186) `arXiv:1810.04805 <https://arxiv.org/abs/1810.04805>`_.
+.. [2] Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., & Sutskever, I. (2019). Language Models are Unsupervised Multitask Learners. `Semantic Scholar <https://www.semanticscholar.org/paper/Language-Models-are-Unsupervised-Multitask-Learners-Radford-Wu/9405cc0d6169988371b2755e573cc28650d14dfe>`_.
+.. [3] Liu, Y., Ott, M., Goyal, N., Du, J., Joshi, M., Chen, D., ... & Stoyanov, V. (2019). Roberta: A robustly optimized bert pretraining approach. arXiv preprint `arXiv:1907.11692 <https://arxiv.org/abs/1907.11692>`_.
+.. [4] Harris, Z. S. (1954). Distributional Structure. WORD, 10(2–3), 146–162. https://doi.org/10.1080/00437956.1954.11659520.
+.. [5] Mikolov, T., Chen, K., Corrado, G., & Dean, J. (2013). Efficient estimation of word representations in vector space. arXiv preprint `arXiv:1301.3781 <https://arxiv.org/abs/1301.3781>`_.
+.. [6] Vaswani, A., Shankar, S., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., Kattner, K., Niki, J., & Kaiser, Ł. (2017). Attention is all you need. In Advances in neural information processing systems (pp. 5998-6008). `arXiv:1706.03762 <https://arxiv.org/abs/1706.03762>`_.
+
