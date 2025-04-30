@@ -30,5 +30,8 @@ to use a Linux workstation or HPC cluster.
    07_executing
    08_managing
    09_requesting
-   10_Hands-On-CNN.rst
- 
+   10_python_refresher.rst
+   11_TAP_Jupyter.rst
+   12_Hands-On-DeepLearning.rst
+
+   

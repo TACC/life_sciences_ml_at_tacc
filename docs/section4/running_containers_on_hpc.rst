@@ -554,6 +554,7 @@ The script also produces a scaling plot:
 
   Scaling plot for GPU
 
+.. _transfer-learning-label:
 
 Building a GPU aware container
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
