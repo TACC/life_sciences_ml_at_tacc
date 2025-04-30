@@ -13,15 +13,115 @@ By the end of this excercise participants will be able to:
 3. Build a sequential model neural network using TensorFlow Keras.
 4. Evaluate the model's performance on test data.
 
+
 ============================
+TensorFlow and Keras Fundamentals
+============================
+
+Before we dive into the hands-on exercise, let's briefly introduce the tools we'll be using.
+
+TensorFlow and Keras
+--------------------
+
+.. image:: ./images/TensorFlow-Icon.png
+    :width: 100px
+    :align: right
+
+`TensorFlow <https://www.tensorflow.org/>`_ is one of the most powerful open-source machine learning libraries available today. 
+Developed by Google, TensorFlow offers a wide range of tools and resources to help you build, train, and deploy neural networks, making it accessible to both beginners and experts.
+
+At its core, TensorFlow uses multi-dimensional arrays called *tensors* to represent:
+
+* Input data
+* Model parameters (weights and biases that the model learns)
+* Outputs (predictions from the model)
+
+.. list-table:: Common Tensor Types
+    :widths: 25 35 30
+    :align: center
+    :header-rows: 1
+
+    * - **Tensor Type**
+      - **Example**
+      - **Shape**
+    * - **Scalar (Rank-0)**
+      - ``5``
+      - ``()``
+    * - **Vector (Rank-1)**
+      - ``[1, 2, 3]``
+      - ``(3,)``
+    * - **Matrix (Rank-2)**
+      - ``[[1, 2, 3], [4, 5, 6]]``
+      - ``(2, 3)``
+
+
+`Keras <https://www.tensorflow.org/guide/keras>`_ is the high-level API of the TensorFlow platform. 
+It provides a simple and intuitive way to define neural network architectures, and it's designed to be easy to use and understand.
+
+Keras simplifies every step of the machine learning workflow, including data preprocessing, model building, training, and deployment.
+Unless you're developing custom tools on top of TensorFlow, you should use Keras as your default API for deep learning tasks. 
+
+Building Models with Keras
+-------------------------
+
+Keras offers three approaches to building neural networks, but we'll focus on the Sequential API, which is perfect for the linear stack of layers we need for our mushroom classifier.
+
+The basic workflow we'll follow is:
+
+1. **Define the model architecture**: Specify the layers, their sizes, and activation functions
+2. **Compile the model**: Set the optimizer, loss function, and metrics
+3. **Train the model**: Fit the model to our training data
+4. **Evaluate performance**: Test the model on unseen data
+
+Here's a preview of what our model code will look like:
+
+.. code-block:: python3
+
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.layers import Input, Dense
+
+    # 1. Define the model architecture
+    model = Sequential([
+        Input(shape=(number_of_features,)),    # Input layer matching our feature count
+        Dense(units=10, activation='relu'),    # Hidden layer with 10 neurons
+        Dense(units=1, activation='sigmoid')   # Outputs a probability between 0 and 1
+    ])
+
+    # 2. Compile the model
+    model.compile(                             
+        optimizer='adam',                      # Gradient-based optimizer
+        loss='binary_crossentropy',            # Loss function for binary classification
+        metrics=['accuracy']                   # Track accuracy during training
+    )
+
+    # Display model summary to understand its structure
+    model.summary()
+
+    # 3. Train the model
+    model.fit(
+        X_train, y_train,                      # Training data and labels
+        validation_split=0.2,                  # Use 20% of training data for validation
+        epochs=5,                              # Number of complete passes through the dataset
+        batch_size=32                          # Number of samples per gradient update
+    )
+
+    # 4. Evaluate model performance
+    test_loss, test_accuracy = model.evaluate(X_test, y_test)
+    print(f"Test accuracy: {test_accuracy:.4f}")
+
+With this foundation in place, let's start building our our own neural network!
+
+===========================================
+Building a Sequential Model Neural Network
+===========================================
+
 Tutorial Setup and Materials
-============================
+----------------------------
 
 All materials and instructions for running this tutorial in the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ are available in our GitHub repository: `TACC Deep Learning Tutorials <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_.
 
-============================
 Step 1: Importing and examining the data
-============================
+----------------------------------------
 
 The Mushroom dataset is available in the University of California, Irvine Machine Learning Repository, which is a popular repository for machine learning datasets.
 Conveniently, the ``ucimlrepo`` Python package provides a simple interface to download and load datasets directly from this repository.
@@ -186,9 +286,9 @@ With this insight into our dataset's structure, our next step is to prepare the 
 
 **Thought Challenge:** What are some things that you have noticed about the data that you think we will need to fix before feeding it to the neural network? Pause here and write down your thoughts before continuing.
 
-============================
+
 Step 2: Data pre-processing
-============================
+---------------------------
 
 Our exploration of the Mushroom dataset reveals a collection of 8124 samples with 22 features and a single target variable. Before proceeding with model development, several preprocessing challenges need to be addressed:
 
@@ -319,9 +419,9 @@ The code above divides our data into training and testing sets, creating four ob
 
 **Tip**: While our dataset has roughly balanced classes, stratification becomes especially important with imbalanced datasets. Always consider using ``stratify`` as a best practice.
 
-============================
+
 Step 3: Building a sequential model neural network 
-============================
+--------------------------------------------------
 
 Now we'll create a simple neural network for our mushroom classification task. The model will consist of:
 
@@ -513,9 +613,9 @@ Let's visualize our training progress before moving on:
 
 This high performance is promising, but we should verify it on our completely separate test set, which the model has never seen during training. This will give us the most reliable measure of how well our model might perform in real-world scenarios.
 
-============================
+
 Step 4: Evaluate the model's performance on test data
-============================
+-----------------------------------------------------
 
 The true test of our model's capabilities comes from evaluating it on our completely separate test dataset. Let's see how our neural network performs when classifying mushrooms it has never encountered before!
 
