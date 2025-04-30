@@ -214,15 +214,62 @@ wide range of tasks, including text classification, named entity recognition, qu
 The API automatically handles the preprocessing and postprocessing of the input and output data, making it easy to use
 pre-trained models without having to worry about the details of the model architecture and implementation.
 
-To use the `transformers` library, you can load a pre-trained model and tokenizer using the following code:
+We will first use a `transformers` pipeline to do a text summarization task based on a short article from
+`GenomeWeb <https://www.genomeweb.com/>`_ that we stored as a text file. Let's import the necessary libraries:
+
+.. code-block:: python
+
+    from transformers import pipeline
+    import requests
+
+Now we will grab the text file and store it as a string:
+
+.. code-block:: python
+
+    url = "https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/scripts/genomeweb_story.txt"
+    response = requests.get(url)
+    text = response.text
+    print(text)
+
+Finally, we will load the summarization pipeline and use it to summarize the text:
+
+.. code-block:: python
+
+    summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+
+    summary = summarizer(text, max_length=150, min_length=50)
+    print(summary)
+
+The `transformers` pipeline also allows for more customization, such as specifying the model and tokenizer to use.
+For example, let's switch to doing some sentiment analysis using the
+`nlptown/bert-base-multilingual-uncased-sentiment <https://huggingface.co/nlptown/bert-base-multilingual-uncased-sentiment>`_ model.
+This model was finetuned for sentiment analysis of product reviews in several languages. It predicts the review as a
+number of stars from 1-5. We'll up the ante by specifying the "review" in another language, French. First, we will need
+to load in the required libraries and set the model name:
+
 .. code-block:: python
 
     from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-    # Load the pre-trained model and tokenizer
-    model_name = "distilbert-base-uncased"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model_name = "nlptown/bert-base-multilingual-uncased-sentiment"
+
+
+Next, we will load the model and tokenizer:
+
+.. code-block:: python
+
     model = AutoModelForSequenceClassification.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+Finally, we will use the model to predict the sentiment of a piece of French text:
+
+.. code-block:: python
+
+    text = "La bibliothèque Transformers est fantastique."
+    classifier = pipeline("sentiment-analysis", model= model, tokenizer=tokenizer)
+    result = classifier(text)
+    print(result)
+    [{'label': '5 stars', 'score': 0.7264368534088135}]
 
 
 Additional Resources
@@ -231,6 +278,8 @@ Additional Resources
 The material in this section is based on the following resources:
 
 * `Tensorflow Hub/Kaggle <https://www.tensorflow.org/hub>`_
+* `PyTorch Hub <https://pytorch.org/hub/>`_
+* `Hugging Face <https://huggingface.co/>`_
 * `Dataiku Developer Guide Tensorflow Hub Tutorial <https://developer.dataiku.com/latest/tutorials/machine-learning/code-env-resources/tf-resources/index.html>`_
 * `A Brief Timeline of NLP from Bag of Words to the Transformer Family <https://medium.com/nlplanet/a-brief-timeline-of-nlp-from-bag-of-words-to-the-transformer-family-7caad8bbba56>`_.
 * `Hugging Face LLM Course <https://huggingface.co/learn/llm-course/chapter1/4?fw=pt>`_.
