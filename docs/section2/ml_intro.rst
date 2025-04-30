@@ -67,15 +67,10 @@ All ML techniques require input data. In supervised learning, the dataset provid
 algorithm comes with *labels*, that is, the values we wish the ML model to predict, for a set 
 of "real" samples. 
 
-For example, if we want to train an ML model to learn to distinguish healthy vs diseased crops, 
-a supervised learning approach would provide the model with a collection of images of crops, 
-some that were healthy and some that had diseases, as well as the appropriate label 
-("healthy" or "diseased") for each image. 
-
-Similarly, if we want to train an ML model to learn the value of real estate properties, with
-supervised learning methods we would provide data on a set of examples of actual real estate 
-properties, both their attributes (address, square footage, etc.) as well as the market 
-value. 
+For example, if we want to train an ML model to learn to distinguish benign vs malignant tumor cells, 
+a supervised learning approach would provide the model with a collection of features from histology images, 
+some that were benign and some that are malignant, as well as the appropriate label 
+for each type. 
 
 By contrast, with unsupervised learning the ML model is trained with data, but the data do not 
 contain labels. Without labels, the ML model must "learn" patterns in the abstract. 
@@ -90,7 +85,7 @@ the landscape images will not have any of these features.
 
 Unsupervised learning techniques are powerful because they do not require labelling, which can 
 be a time-consuming process, at best, and one that requires an expert to distinguish different 
-label values (e.g., the difference between a healthy and diseased crop). 
+label values (e.g., the difference between a benign and malignant tumor). 
 
 Nevertheless, due to time constraints we will focus on supervised learning in this course.
 
@@ -102,7 +97,7 @@ We can further categorize supervised learning models as classification or regres
 To understand the distinction, it is helpful to first introduce independent and dependent 
 variables. 
 
-In a ML setting, the *dependent variable* is the value the model is trying to predeict, and 
+In a ML setting, the *dependent variable* is the value the model is trying to predict, and 
 the *independent variables* are the values the model is using to predict the dependent variable. 
 
 Continuing with our examples above, we can identify the independent and dependent variables as 
@@ -128,7 +123,7 @@ follows:
 6. Given an image of a crop, determine if the crop has a disease; similarly, determine if the crop
    requires irrigation. 
 
-**Class Exercise and Discussion.** What would the data types (i.e., String, Boolean, etc.) be for 
+**Exercise and Discussion.** What would the data types (i.e., String, Boolean, etc.) be for 
 the independent and dependent variables in each of the examples above?
 
 Classification and Regression
@@ -155,7 +150,7 @@ values. Example 5) provides an example of a regression model -- the market value
 properties are dollar amounts that are unbounded (in practice, they are bounded by very large 
 values but it can simplify our thinking to consider them unbounded).
 
-**Class Exercise and Discussion.** In each of the following examples, decide whether the 
+**Exercise and Discussion.** In each of the following examples, decide whether the 
 ML problem is a supervised learning or unsupervised learning problem. For the supervised learning, 
 additionally decide whether the problem is a classification or regression problem.
 

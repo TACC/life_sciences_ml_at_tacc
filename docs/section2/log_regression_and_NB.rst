@@ -72,10 +72,10 @@ Logistic Regression in Sklearn
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The sklearn package provides the ``LogisticRegression`` class from the 
-``sklearn.linear_model`` module. More details are provided in [1]/ 
+``sklearn.linear_model`` module. 
 
 Let's use this class to develop a 
-logistic regression model for the Spambase dataset we looked at in the hands-on 
+logistic regression model for the cancer dataset we looked at in the hands-on 
 lab. 
 
 We'll begin by importing the required libraries, as usual: 
@@ -84,20 +84,18 @@ We'll begin by importing the required libraries, as usual:
 
     import numpy as np
     import pandas as pd
-    from sklearn.model_selection import train_test_split    
+    from sklearn.model_selection import train_test_split 
+    from sklearn.datasets import load_breast_cancer
 
-Here's a condensed version of the pre-processing code. We load the data, take care of 
-duplicate rows, create the independent and dependent variables, and split the data between 
-training and testing. For details, see the Spambase `solution <spambase_solution.html>`_.  
+And then load the data and create our train/test split: 
  
 .. code-block:: python3
 
-    # Data load and pre-processing
-    data = pd.read_csv("spambase.csv")
-    data=data.drop_duplicates()
-    # x are the dependent variables and y is the target variable
-    X = data.drop('Class',axis=1)
-    y = data['Class']
+
+    data = load_breast_cancer()
+    X = data.data
+    y = data.target
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=1)
     
 We can now use the ``LogisticRegression`` model. We proceed in a similar way as with other models. 
@@ -126,36 +124,38 @@ For simplicity, you can just ignore the class 0 values.
     model = LogisticRegression(random_state=1, max_iter=1000).fit(X_train, y_train)
     # print the report
     print(f"Performance on TEST\n*******************\n{classification_report(y_test, model.predict(X_test))}")
-    print(f"Performance on TRAIN\n********************\n{classification_report(y_train, model.predict(X_train))}")    
+    print(f"Performance on TRAIN\n********************\n{classification_report(y_train, model.predict(X_train))}")
 
     Performance on TEST
     *******************
-                precision    recall  f1-score   support
+                  precision    recall  f1-score   support
 
-            0       0.93      0.95      0.94       759
-            1       0.93      0.89      0.91       504
+              0       0.95      0.92      0.94        64
+              1       0.95      0.97      0.96       107
 
-    accuracy                            0.93      1263
-    macro avg       0.93      0.92      0.93      1263
-    weighted avg    0.93      0.93      0.93      1263
+        accuracy                           0.95       171
+      macro avg       0.95      0.95      0.95       171
+    weighted avg       0.95      0.95      0.95       171
 
     Performance on TRAIN
     ********************
-                precision    recall  f1-score   support
+                  precision    recall  f1-score   support
 
-            0       0.92      0.95      0.94      1772
-            1       0.92      0.88      0.90      1175
+              0       0.96      0.94      0.95       148
+              1       0.96      0.98      0.97       250
 
-    accuracy                            0.92      2947
-    macro avg       0.92      0.91      0.92      2947
-    weighted avg    0.92      0.92      0.92      2947
+        accuracy                           0.96       398
+      macro avg       0.96      0.96      0.96       398
+    weighted avg       0.96      0.96      0.96       398
+ 
 
-The performance we see on the Spambase dataset is quite good, with:
 
-* Precision: 93% on test; 92% on train.
-* Recall: 89% on test; 88% on train.
-* F1-score: 91% on test; 90% on train.
-* Accuracy: 93% on test; 92% on train.
+The performance we see on the cancer dataset is quite good, with:
+
+* Precision: 95% on test; 96% on train.
+* Recall: 97% on test; 98% on train.
+* F1-score: 96% on test; 97% on train.
+* Accuracy: 95% on test; 96% on train.
 
 
 Additional Attributes of the ``LogisticRegression`` Model 
@@ -174,29 +174,43 @@ Examples:
 .. code-block:: python3 
 
   >>> model.coef_
-  array([[-9.29814189e-02,  9.92573753e-02,  1.09152790e-01,  8.96019796e-01, ... 
+  array([[1.799e+01, 1.038e+01, 1.228e+02, ..., 2.654e-01, 4.601e-01,
+          1.189e-01],
+        [2.057e+01, 1.777e+01, 1.329e+02, ..., 1.860e-01, 2.750e-01,
+          8.902e-02],
+        [1.969e+01, 2.125e+01, 1.300e+02, ..., 2.430e-01, 3.613e-01,
+          8.758e-02],
+        ...,
+        [1.660e+01, 2.808e+01, 1.083e+02, ..., 1.418e-01, 2.218e-01,
+          7.820e-02],
+        [2.060e+01, 2.933e+01, 1.401e+02, ..., 2.650e-01, 4.087e-01,
+          1.240e-01],
+        [7.760e+00, 2.454e+01, 4.792e+01, ..., 0.000e+00, 2.871e-01,
+          7.039e-02]], shape=(569, 30))
 
   >>> model.intercept_
-  array([-1.20439078])
+  array([18.82533262])
 
-  >>> model.decision_function(X.iloc[0:30])
-    array([ 0.44253113,  3.29796463,  9.78664297,  1.27385669,  1.27435141,
-            1.30753829,  1.42185792,  1.33587747,  7.63445158,  1.55576244,
-            1.75783096,  0.28563902,  0.43062415,  1.87945063,  5.92703366,
-            2.47824842,  0.48599367,  3.1695837 ,  0.54082181,  4.94680336,
-           -1.36835159,  2.23581157,  2.04519452,  1.00424771, -1.51608141,
-            2.23537993,  3.52236714,  1.28034749,  6.99194046, -0.86387585])
+  >>> model.decision_function(X[0:30])
+  array([-37.50155217, -14.75203776, -17.05788567,   0.57214522,
+       -11.22699773,  -1.45778081, -13.02507044,  -4.68089914,
+        -2.62129355,  -6.41207649,  -6.23024417, -11.46582777,
+       -12.27306369,   1.03957452,  -2.37747547,  -7.81454901,
+        -7.76769613, -12.48215485, -34.0382094 ,   4.16659662,
+         5.32451617,  11.01281779,  -4.67487841, -32.61813604,
+       -34.72687955, -19.24160889,  -4.98111518, -11.77709786,
+       -15.73240047,  -4.85708105])
 
   # Compute the dot product and add the intercept "by hand"
   # Note: output agrees with first output from decision function above. 
-  >>> np.sum( model.coef_*X.iloc[0:1].values) + model.intercept_
-  array([0.44253113])
+  >>> np.sum( model.coef_*X[0:1]) + model.intercept_
+  array([-37.50155217])
 
   # Predict the first 30 samples; note that the prediction agrees with the sign 
   # of the decision function. 
-  >>> model.predict(X.iloc[0:30])
-  array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-       1, 1, 0, 1, 1, 1, 1, 0])
+  >>> model.predict(X[0:30])
+  array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1,
+       0, 0, 0, 0, 0, 0, 0, 0])
 
 
 Logistic Regression: Strengths and Weaknesses 
@@ -236,7 +250,7 @@ For example, the following pairs of variables could be considered independent:
 
  * student height and course grade 
  * car color and car fuel efficiency
- * petal length and petal color (probably? but I am not a botanist...)
+ * petal length and petal color
 
 On the other hand, the following variables are unlikely to be independent:
 
