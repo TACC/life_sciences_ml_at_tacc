@@ -81,97 +81,217 @@ The basic architecture of a perceptron is depicted below:
 Activation Functions
 ---------------------
 
-Below are some of the most common activation functions used in deep learning.
+Activation functions are the critical components that give neural networks their power to learn.
 
-The `sigmoid` Activation Function
+Without them, neural networks would be limited to learning only linear relationships. Most real-world problems are far more complex than this, and activation functions introduce this essential non-linearity.
+
+You can think of activation functions like switches that decide if and how strongly a neuron "fires" based on its inputs. They also transform incoming signals into outputs in non-linear ways. Different activation functions behave differently, and understanding them is key to choosing the right one for your task. 
+
+Let's explore three key activation functions through hands-on examples to develop intuition about how they work.
+
+The ``sigmoid`` Activation Function
 ++++++++++++++++++++++++++++++++++
 
-Mathematically, the `sigmoid` function is defined as:
+The ``sigmoid`` function takes any number and "squashes" it into a value between 0 and 1. That makes it perfect for representing probabilities.
+
+Mathematically, the ``sigmoid`` function is defined as:
 
 .. math::
     f(x) = \frac{1}{1 + e^{-x}}
 
-When plotted, the sigmoid function looks like this:
+.. admonition:: Python Hands-On: Visualizing Sigmoid
 
+   Let's code our own sigmoid function and see how it transforms different inputs.
+
+**Step 1: Define the sigmoid function**
+
+.. code-block:: python3
+
+   import numpy as np
+
+   # Define the sigmoid function
+   def sigmoid(x):
+      return 1.0 / (1 + np.exp(-x))
+
+**Step 2: Generate inputs and plot the function**
+
+.. code-block:: python3
+
+   import matplotlib.pyplot as plt
+
+   # Create 100 x-values evenly spaced between -10 and 10
+   x = np.linspace(-10, 10, 100)
+
+   # Apply the sigmoid function to each x-value
+   y = sigmoid(x)
+
+   # Plot the results
+   plt.plot(x, y)
+   plt.xlabel("x")
+   plt.ylabel("Sigmoid(x)")
+   plt.title("Sigmoid Activation Function")
+   plt.show()
+   
 .. figure:: ./images/Sigmoid-Function.png
-    :align: center
-    :width: 500px
+   :align: center
+   :width: 500px
+   :alt: Sigmoid function graph showing S-shaped curve from 0 to 1
 
-The output of the sigmoid function always falls between 0 and 1. As ``x`` becomes very negative, the output approaches 0, and as ``x`` becomes very positive, the output approaches 1. Around ``x=0``, the function is at its steepest—this is where the function is most sensitive to changes in ``x``. These properties make the sigmoid function useful for **binary classification** problems, where we want to model probabilities between 0 and 1. 
+**Key Properties of Sigmoid**:
 
-The `softmax` Activation Function
+1. **Bounded Output**: The ``sigmoid`` function always outputs values between 0 and 1, making it ideal for representing probabilities.
+
+2. **S-shaped Curve**: Around the midpoint (x=0), small changes in input produce the largest changes in output. This is where the neuron is most responsive to its input.
+
+3. **Saturates at Extremes**: At the extremes of the curve, the function becomes very flat, meaning that large changes in input produce only tiny changes in output.
+
+**In Neural Networks**: ``Sigmoid`` is often used in the *output layer* of a neural network when you're solving a binary classification problem (e.g., "Is this image a cat?" → 0.92 means "92% confident it's a cat").
+
+The ``softmax`` Activation Function
 ++++++++++++++++++++++++++++++++++
 
-The `softmax` function is often used in the output layer of neural networks for **multi-class classification** tasks.
-It converts raw output scores (called *logits*) into probabilities that sum to 1.
+The ``softmax`` function is often used in the output layer of a neural network when you have more than two classes. 
 
-Mathematically, for an input vector :math:`z`, the `softmax` of element :math:`i` is defined as:
+It turns a list of numbers (a vector) into a *probability distribution*:
 
-.. math:: \text{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j} e^{z_j}}
+ - All output values are between 0 and 1
+ - All outputs *sum to 1*
+ - The largest value in the input vector gets the highest probability
 
-When plotted, the `softmax` function shows how it distributes probability across multiple classes:
+Mathematically, for a vector :math:`z = [z_1, z_2, ..., z_n]`, the `softmax` of element :math:`i` is defined as:
 
-.. figure:: ./images/softmax-function.png
-    :align: center
-    :width: 700px
+.. math:: \text{softmax}(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{n} e^{z_j}}
 
-Softmax converts raw scores (logits) into a probability distribution. When input values differ slightly (left), probabilities are distributed more evenly. When differences are amplified (right), the highest value dominates the distribution, showing how softmax helps neural networks make confident predictions.
+.. admonition:: Python Hands-On: Exploring Softmax
+
+   Let's see how softmax turns raw scores into probabilities across multiple classes.
+
+**Step 1: Define the softmax function**
+
+.. code-block:: python3
+
+   import numpy as np
+
+   def softmax(z):
+      # Calculate e^(z_i) for each element in z
+      exps = np.exp(z)
+
+      # Divide each exponential by the sum of all exponentials
+      return exps / np.sum(exps)
+
+**Step 2: Generate inputs and plot the function**
+
+.. code-block:: python3
+
+   # Example 1: Increasing values
+   print("softmax([1, 2, 3]) ->", softmax(np.array([1, 2, 3])))
+
+   # Example 2: Identical values
+   print("softmax([3, 3, 3]) ->", softmax(np.array([3, 3, 3])))
+
+   # Example 3: One dominant class
+   print("softmax([10, 0, 0]) ->", softmax(np.array([10, 0, 0])))
+   
+This code will output:
+
+.. code-block:: python-console
+
+   softmax([1, 2, 3]) -> [0.09003057 0.24472847 0.66524096]
+   softmax([3, 3, 3]) -> [0.33333333 0.33333333 0.33333333]
+   softmax([10, 0, 0]) -> [9.99909208e-01 4.53958078e-05 4.53958078e-05]
+
+**Key Properties of Softmax**:
+
+1. **Probability Distribution**: Outputs sum to exactly 1.0
+2. **Preserves Ranking**: Highest input gets highest probability
+3. **Relative Differences Matter**: Amplifies differences between inputs
+
+**In Neural Networks**: ``Softmax`` is used in the output layer for multi-class classification problems, like identifyig which animal species (cat, dog, bird) is in an image.
 
 
-**Thought Challenge:** Why might `softmax` be better than using `sigmoid` when we have multiple classes?
+The ``ReLU`` Activation Function
+++++++++++++++++++++++++++++++++++
 
-.. toggle:: Click to show the answer
-
-    `softmax` is better than `sigmoid` for multi-class problems because it looks at all the output perceptrons together, rather than independently, and **forces the model to choose the most likely class**. 
-
-    For example, imagine you are building a model to classify a cancer sample into one of three cancer types. You wouldn't want the model to say: "It's 90% likely to be a sarcoma, 70% likely to be a carcinoma, and 50% likely to be a lymphoma."
-    That is confusing–and not very useful!
-
-    Instead, with `softmax`, the model would say: "Given all the evidence, I'm 95% confident that this is a sarcoma, 5% that it's a carcinoma, and 0% that it's a lymphoma."
-
-The `ReLU` (Rectified Linear Unit) Activation Function
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-The `ReLU` function is the most popular activation function in deep learning.
-It is used in almost all Convolutional Neural Networks (CNNs), which we will talk about later in the course.
+The ``ReLU`` (Rectified Linear Unit) function is the most widely used activation function in modern neural networks, especially for hidden layers. 
 
 Mathematically, the `ReLU` function is defined as:
 
 .. math::
     f(x) = max(0, x)
 
-This means that our range of output is from 0 to infinity:
-`ReLU` returns the input value if it's positive, and 0 if it's negative or zero. 
+This means:
+ 
+ - If the input is positive, the output it as-is
+ - If the input if negative or zero, output is 0
 
-.. figure:: ./images/ReLU-function.png
-    :align: center
-    :width: 500px
+.. admonition:: Python Hands-On: Visualizing ReLU
 
-Unlike the `sigmoid` function, the `ReLU` function does not flatten out in the positive region.
-`ReLU` is also computationally efficient and straightforward to implement, involving only a simple thresholding operation where negative values and zero are set to zero.
+   Let's implement and explore the ReLU activation function.
 
-These properties make `ReLU` a popular choice for hidden layers in deep neural networks.
+**Step 1: Define the ReLU function**
 
-.. list-table:: Activation Function Comparison
-   :widths: 15 20 25 25
+.. code-block:: python3
+
+   import numpy as np
+
+   # Define the ReLU function
+   def relu(x):
+      return np.maximum(0, x)
+
+**Step 2: Generate inputs and plot the function**
+
+.. code-block:: python3
+
+   import matplotlib.pyplot as plt
+
+   # Create 100 x-values evenly spaced between -10 and 10
+   x = np.linspace(-10, 10, 100)
+
+   # Apply the ReLU function to each x-value
+   y = relu(x)
+
+   # Plot the results
+   plt.plot(x, y)
+   plt.xlabel("x")
+   plt.ylabel("ReLU(x)")
+   plt.title("ReLU Activation Function")
+   plt.show()
+
+.. figure:: ./images/ReLU-Function.png
+   :align: center
+   :width: 500px
+   :alt: ReLU function graph showing linear output for positive values and 0 for negative values
+
+**Key Properties of ReLU**:
+
+1. **Fast Computation**: The ``ReLU`` function just returns 0 or the input, making it easy to compute. 
+
+2. **Sparse Activation**: Only perceptrons with positive inputs are activated, making the network sparser and more efficient.
+
+3. **No Upper Bound**: Unlike sigmoid, ReLU can output any positive value, which allows for more flexibility in the network's output range.
+
+**In Neural Networks**: ``ReLU`` is most commonly used in the *hidden layers* of deep neural networks because it helps the network learn quickly and efficiently by only activating neurons when they have a positive input.
+
+.. list-table:: Key Activation Function Properties
+   :widths: 10 20 25 25
    :header-rows: 1
 
    * - Function
-     - Range
-     - Typical Use
+     - Output Range
+     - Best Used For
      - Key Advantage
    * - Sigmoid
      - 0 to 1
-     - Binary classification output
-     - Smooth probability output
+     - Binary classification outputs
+     - Outputs interpretable as probabilities
    * - Softmax
-     - Multiple values that sum to 1
-     - Multi-class classification output
-     - Proper probability distribution
+     - 0 to 1 (sum = 1)
+     - Multi-class classification outputs
+     - Creates a probability distribution
    * - ReLU
      - 0 to infinity
      - Hidden layers
-     - Computational efficiency
+     - Fast computation, no saturation for positive values
 
 Network Architecture
 -----------------------------------
@@ -291,92 +411,6 @@ The network then produces a predicted classification: whether the gene expressio
 
 This is the stage where the neural network becomes practically useful: once trained, it can analyze and interpret new biological data to support tasks like diagnosis, prognosis, or treatment decision-making.
 
-======================================
-Introduction to TensorFlow and Keras
-======================================
-
-TensorFlow
-----------
-
-.. image:: ./images/TensorFlow-Icon.png
-    :width: 150px
-    :align: right
-
-`TensorFlow <https://www.tensorflow.org/>`_ is one of the most powerful open-source machine learning libraries available today. 
-Developed by Google, TensorFlow offers a wide range of tools and resources to help you build, train, and deploy neural networks, making it accessible to both beginners and experts.
-
-At its core, TensorFlow uses multi-dimensional arrays called *tensors* to represent data:
-
-.. list-table:: 
-
-    * - **Tensor Type**
-      - **Example**
-      - **Shape**
-    * - **Scalar (Rank-0)**
-      - ``5``
-      - ``()``
-    * - **Vector (Rank-1)**
-      - ``[1, 2, 3]``
-      - ``(3,)``
-    * - **Matrix (Rank-2)**
-      - ``[[1, 2, 3], [4, 5, 6]]``
-      - ``(2, 3)``
-
-With TensorFlow, tensors are used to represent:
-
- * Input data (e.g., images, text, audio, etc.)
- * Weights (parameters the model learns)
- * Outputs (predictions from the model)
-
-Every layer in a neural network takes tensors as input, applies mathematical operations on those tensors, and produces tensors as output.
-
-
-Keras
------
-
-`Keras <https://www.tensorflow.org/guide/keras>`_ is the high-level API of the TensorFlow platform. 
-It provides a simple and intuitive way to define neural network architectures, and it's designed to be easy to use and understand.
-
-Keras simplifies every step of the machine learning workflow, including data preprocessing, model building, training, and deployment.
-Unless you're developing custom tools on top of TensorFlow, you should use Keras as your default API for deep learning tasks. 
-
-**Core Concepts: Models and Layers**
-
-Keras is built around two key concepts: ``Layers`` and ``Models``. 
-
-**1. Layers**
-
-The ``tf.keras.layers.Layer`` class is the fundamental abstraction in Keras.
-A ``Layer`` is a building block of a neural network. It takes input tensors, applies some transformation, and produces output tensors.
-Weights created by layers can be trainable or non-trainable. 
-You can also use layers to handle data preprocessing tasks like normalization and text vectorization. 
-
-**2. Models**
-
-A ``Model`` is an object that groups layers together and that can be trained on data.
-There are three types of models in Keras:
-
- * **Sequential Model**: The simplest type of model, where layers are stacked linearly (one after another). 
- * **Functional API**: Allows for more complex model architectures, including multi-input and multi-output models. 
- * **Model Subclassing**: Provides full flexibility for custom model development by subclassing the ``tf.keras.Model`` class. 
-
-
-The code example demonstrates the simplicity of building neural networks with Keras:
-
-.. code-block:: python3
-
-    from keras.layers import Input, Dense
-    from keras.models import Sequential
-
-    model = Sequential([                   
-        Input(shape=(28,)),              # Input layer expecting 28 features (as a Rank-1 tensor)
-        Dense(64, activation='relu'),    # First hidden layer with 64 neurons and ReLU activation
-        Dense(32, activation='relu'),    # Second hidden layer with 32 neurons and ReLU activation
-        Dense(2, activation='sigmoid')   # Output layer for binary classification
-    ])
-
-With just these few lines, we've created a complete sequential neural network with two hidden layers and an output layer that can classify data into two categories. 
-
 In the next session, we'll apply these concepts hands-on by building our own neural network from scratch.
 
 **Reference List**
@@ -385,4 +419,3 @@ In the next session, we'll apply these concepts hands-on by building our own neu
 .. [2] McCulloch, W.S., Pitts, W. A logical calculus of the ideas immanent in nervous activity. Bulletin of Mathematical Biophysics 5, 115–133 (1943). https://doi.org/10.1007/BF02478259
 .. [3] Zhang, Q., Yu, H., Barbiero, M. et al. Artificial neural networks enabled by nanophotonics. Light Sci Appl 8, 42 (2019). https://doi.org/10.1038/s41377-019-0151-0
 .. [4] Beardall, William A.V., Guy-Bart Stan, and Mary J. Dunlop. Deep Learning Concepts and Applications for Synthetic Biology. GEN Biotechnology 1, 360–71 (2022). https://doi.org/10.1089/genbio.2022.0017.
-.. [5] Keras Documentation: Model fit. https://www.tensorflow.org/api_docs/python/tf/keras/Model#fit
