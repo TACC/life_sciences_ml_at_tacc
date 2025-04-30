@@ -147,7 +147,7 @@ pre-trained on a large corpus of text and can be fine-tuned for specific tasks w
 task-specific data.
 
 Timeline of NLP and Transformers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Transformers fit into the family of Natural Language Processing (NLP) models that have been developed over the years,
 starting with simple models like Bag of Words [4]_ and Word2Vec [5]_, and moving on to more complex models like BERT, GPT, and
@@ -170,7 +170,7 @@ is to have larger and larger models.
    Size of Transformer models. Source: `Hugging Face LLM Course <https://huggingface.co/learn/llm-course/chapter1/4?fw=pt>`_.
 
 Architecture
-^^^^^^^^^^^^
+~~~~~~~~~~~~
 
 The transformer architecture is based on the self-attention mechanism, which allows the model to weigh the
 importance of different words in a sentence when making predictions. This is the key to the transformer architecture
@@ -198,7 +198,7 @@ specialized for different tasks:
    such as machine translation and summarization. Examples include T5 and BART.
 
 Usage
-^^^^^
+~~~~~
 
 To use the `transformers` library, you need to install the library. You can do this
 using pip:
