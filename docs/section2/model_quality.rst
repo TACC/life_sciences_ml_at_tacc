@@ -31,31 +31,30 @@ might be more important to get right than others.
 
 Furthermore, accuracy can be a poor measure of a model in cases where the dataset is imbalanced. 
 
-**Example: Spam Email**
+**Example: Breast Cancer**
 
-For example, we looked at spam email detection in the last unit. Our model tried to determine if an email was 
-spam or not. There are four cases, two cases where our model predicts correctly and two cases where it 
-does now: 
+For example, we looked at tumor malignancy detection in the last unit. Our model tried to determine if an tumor was benign or malignant. 
+There are four cases, two cases where our model predicts correctly and two cases where it 
+does not: 
 
 Correct: 
 
-1. The email was spam, and our model predicted it was spam. 
-2. The email was not spam, and our model predicted it was not spam. 
+1. The biopsy was malignant, and our model predicted it was malignant. 
+2. The biopsy was not malignant, and our model predicted it was not malignant. 
 
 Incorrect:
 
-3. The email was not spam, but our model predicted it was spam. 
-4. The email was spam, but our model predicted it was not spam. 
+3. The biopsy was not malignant, but our model predicted it was. 
+4. The biopsy was malignant, but our model predicted it was not. 
 
 *Discussion:* Of the two incorrect cases, would you say that the one type of error is "worse" than the other or would you say 
-they are both equally bad? If this were your email inbox, which would be more annoying for you? 
+they are both equally bad? If this were your biopsy, which would be more troubling for you? 
 
 In many cases, as with virtually all other features and behaviors, this issue comes down to *requirements* for 
-the software. It is possible that, given a choice of case 3 or 4, a majority of people would prefer case 4 errors 
-to case 3 errors. If an email was actually spam but it was not flagged as such, the worst thing that happens 
-is that I have to see the email and delete it. This is the case 4 error. On the other hand, with a case 3 error, 
-my email client has filtered an email that was not spam into the spam folder, or even worse, deleted the email 
-right away. What if this was an important email? 
+the software. It is possible that, given a choice of case 3 or 4, a majority of people would prefer case 3 errors 
+to case 4 errors. If an biopsy was actually benign but it was flagged as malignant, the worst part would be the distress 
+of dealing with that diagnosis. This is the case 3 error. On the other hand, with a case 4 error, 
+the biopsy was marked as benign but it was actually malignant, that could delay potentially life saving treatment.
 
 
 **Example: Diabetes Detection** 
@@ -101,18 +100,18 @@ To introduce them, we first need to introduce some additional terminology:
 * False Negatives (FN) -- The number of times the model *incorrectly* predicted that a sample was 
   not in a class. 
 
-For example, in the case of spam email: 
+For example, in the case of tumor detection: 
 
-* True Positives: Total number of emails the model correctly predicted were spam. 
-* True Negatives: Total number of emails the model correctly predicted were not spam. 
-* False Positives: Total number of emails the model incorrectly predicted were spam (i.e., 
-  the model predicted they were spam but in fact they were not).  
-* False Negatives: Total number of emails the model incorrectly predicted were not spam. (i.e., 
-  the model predicted they were not spam but in fact they were).
+* True Positives: Total number of samples the model correctly predicted were malignant. 
+* True Negatives: Total number of sample the model correctly predicted were not malignant. 
+* False Positives: Total number of samples the model incorrectly predicted were malignant (i.e., 
+  the model predicted they were malignant but in fact they were not).  
+* False Negatives: Total number of samples the model incorrectly predicted were not malignant. (i.e., 
+  the model predicted they were benign but in fact they were malignant).
 
 Conceptually, FPs and FNs represent the two kinds of ways our model can be wrong. For certain problems, 
 FPs might be worse than FNs and vice versa. For example, with spam email detection, we already observed 
-that FPs (falsely detecting an email to be spam) would likely be considered worse than FNs. 
+that FNs (falsely detecting an sample was benign) would likely be considered worse than FPs. 
 
 .. note:: 
 
@@ -144,15 +143,16 @@ but it is not impacted by false negatives.
 
 *Discussion:* Given these definitions, which do you think is more important in the following cases:
 
-* Spam email detection?
-* Diabetes detection? 
+* Cancer detection?
+* Spam email detection? 
+
+For tumor malignancy, it would likely be more important to improve recall (i.e., reduce FNs) because 
+not diagnosing someone with a malignant tumor is likely more detrimental than diagnosing someone as having 
+malignancy when they do not. 
 
 For spam email, it would likely be more important to improve precision (i.e. reduce FPs) because falsely 
-labeling an email as spam is worse than falsely labeling an email as not spam. 
+labeling an email as spam is worse than falsely labeling an email as not spam.
 
-For the diabetes example, it would likely be more important to improve recall (i.e., reduce FNs) because 
-not diagnosing someone with diabetes is likely more detrimental than diagnosing someone as having 
-diabetes that does not. 
 
 Note also that, without improving the overall accuracy of a model, if a model's recall improves then its
 precision necessarily gets worse and vice versa. 
@@ -203,15 +203,14 @@ Let's compute these for the Spambase linear classifier we created last time.
     >>> print(f"precision score on test: {precision_test}, precision score on train: {precision_train}")
     >>> print(f"f1_score on test: {f1_test}, f1 score on train: {f1_train}")
 
-    recall score on test: 0.7301587301587301, recall score on train: 0.7004255319148937
-    precision score on test: 0.7063339731285988, precision score on train: 0.6718367346938775
-    f1_score on test: 0.7180487804878047, f1 score on train: 0.6858333333333333
+    recall score on test: 0.9906542056074766, recall score on train: 0.988
+    precision score on test: 0.8907563025210085, precision score on train: 0.8790035587188612
+    f1_score on test: 0.9380530973451328, f1 score on train: 0.9303201506591338
 
 
-We see that precision is worse than accuracy recall for our spam detector, at 70.6% on the 
-test dataset as compared to 73%. This agrees with our confusion matrix where we saw that 
+We see that precision is worse than accuracy recall for our malignancy detector, at 89% on the 
+test dataset as compared to 99%. This agrees with our confusion matrix where we saw that 
 there were more false positives than false negatives. 
-
 
 References and Additional Resources
 -----------------------------------
