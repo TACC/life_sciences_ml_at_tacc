@@ -815,7 +815,7 @@ Finally, let's display our model architecture and parameter count:
 
 
 Calculating Parameters in CNNs
-++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's break down the parameter calculation for our model.
 
@@ -909,7 +909,7 @@ Example output:
 
 
 Visualizing Training History
-++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After training the model, we can visualize the accuracy and loss over time to better understand how the model is learning.
 These plots can help us identify overfitting, underfitting, or confirm that the model is learning as expected.
@@ -990,7 +990,7 @@ Now that we've trained our model, it's time to evaluate its performance on the t
 This step is crucial because it helps us understand how well the model generalizes to new, unseen data, which is a good indicator of its real-world performance.
 
 Evaluate Test Accuracy and Loss
-+++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We use ``model.evaluate()`` to calculate the test accuracy and loss. These metrics give us a quick overview of the model's performance.
 
@@ -1012,7 +1012,7 @@ Our model correctly classifies the test images about 35% of the time, and our lo
 While these numbers provide a snapshot of performance, they don't tell the whole story. Let's dig deeper with a confusion matrix.
 
 Visualize Predictions with a Confusion Matrix
-+++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A confusion matrix provides a detailed breakdown of the model's predictions compared to the true labels.
 It helps identify which classes are being confused with each other.
@@ -1054,7 +1054,7 @@ It helps identify which classes are being confused with each other.
 
 
 Detailed Performance with a Classification Report
-+++++++++++++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The classification report provides precision, recall, and F1-scores for each class, offering a more nuanced view of model performance.
 

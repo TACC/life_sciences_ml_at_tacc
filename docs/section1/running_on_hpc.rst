@@ -122,7 +122,7 @@ To exit an interactive session, you can use the command ``logout``.
 Attention
 ~~~~~~~~~
 
-In case you didn't donwload the code in the section :doc:`Transferring Files<transfering>`, you can download by doing:
+In case you didn't donwload the code in the previous section, you can download by doing:
 
 .. code-block:: console
 
@@ -151,7 +151,7 @@ This process is called **batch job submission**.
 
 There are several queues available on Frontera. It is important to understand the queue limitations
 and pick a queue that is appropriate for your job.  Documentation can be found
-`here <https://docs.tacc.utexas.edu/hpc/frontera/#running-queues>`_. 
+`here <https://docs.tacc.utexas.edu/hpc/frontera/#running-queues>`__. 
 Today, we will be using the ``development`` queue which has a max runtime of 2 hours, and users can
 only submit one job at a time.
 

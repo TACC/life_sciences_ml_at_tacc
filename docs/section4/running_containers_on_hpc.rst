@@ -369,8 +369,8 @@ starting points.
 
 Alternatively, the `NVIDIA GPU Cloud <https://ngc.nvidia.com/>`_ (NGC) has a large number of pre-built
 containers for deep learning and HPC applications including
-`PyTorch <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch>`_ and
-`Tensorflow <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorflow>`_ (full-featured, large,
+`PyTorch <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch>`__ and
+`Tensorflow <https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorflow>`__ (full-featured, large,
 and include ARM64/aarch64 versions).
 
 For instance, we can use a tool like ``gpustat`` to poke at the GPU on TACC systems as follows:
@@ -423,7 +423,7 @@ As previously mentioned, the main requirement for GPU-enabled containers to work
 NVIDIA host driver on the system supports the version of the CUDA library inside the container.
 
 For some more exciting examples, lets look at two of the most popular Deep Learning frameworks for
-Python, `Tensorflow <https://www.tensorflow.org/>`_ and `PyTorch <https://pytorch.org/>`_.
+Python, `Tensorflow <https://www.tensorflow.org/>`__ and `PyTorch <https://pytorch.org/>`__.
 
 First, we'll run a simple script (`tf_test.py <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/scripts/tf_test.py>`_)
 that uses Tensorflow to show the GPUs and then creates two tensors and multiplies them together.
@@ -1130,8 +1130,8 @@ The material in this section is based on the following resources:
 * `Apptainer Documentation <https://apptainer.org/docs/user/latest/>`_
 * `NVIDIA CUDA Toolkit <https://developer.nvidia.com/cuda-toolkit>`_
 * `NVIDIA NGC Catalog <https://ngc.nvidia.com/>`_
-* `PyTorch <https://pytorch.org/>`_
-* `Tensorflow <https://www.tensorflow.org/>`_
+* `PyTorch <https://pytorch.org/>`__
+* `Tensorflow <https://www.tensorflow.org/>`__
 * `nvidia/cuda on Docker Hub <https://hub.docker.com/r/nvidia/cuda>`_
 * `PyTorch transfer learning tutorial <https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html>`_
 * `CS231n: Deep Learning for Computer Vision at Stanford <https://cs231n.github.io/>`_

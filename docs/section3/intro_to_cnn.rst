@@ -265,10 +265,9 @@ VGG networks (developed by Oxford's Visual Geometry Group (VGG) in 2014 [2]_) be
 VGG-16 (16 layers) achieves remarkable performance despite its straightforward architecture, though it requires significant computational resources (138M parameters).
 
 .. figure:: ./images/VGG-architecture.png
-    
-    :width: 500px
-    :align: center
-    :alt:
+   :width: 500px
+   :align: center
+   :alt:
 
    VGG-16 Architecture. Adapted from: [3]_
 

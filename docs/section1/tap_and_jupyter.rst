@@ -35,6 +35,7 @@ scheduling jobs.
    :target: ./images/1TAP.png
    :alt:  Figure 1. TAP Home Screen
 
+
 Submitting a Job
 ~~~~~~~~~~~~~~~~
 
@@ -126,13 +127,12 @@ Utilities
 
     <span style="text-align: justify;font-size: 16px;line-height:24px;">TAP provides certain useful diagnostic and logistic utilities on the Utilities page. Access the Utilities page by selecting the <b>Utilities</b> <span    style="background-color:#FF7F00; color:#FFFFFF;"><b>&nbsp( 9 ) </b></span> &nbsp;button on the Home Screen page. 
 
-| 
+
 .. image::  ./images/4TAP.png
    :target: ./images/3TAP.png
    :align: center
    :alt:  e 4. TAP Utilities
 
-|
 
 
 Configuring Jupyter Notebook
@@ -178,24 +178,22 @@ In VNC, open the control bar on the left side of the screen, then click the Full
 Troubleshooting 
 ~~~~~~~~~~~~~~~
 
-* **No Allocation Available**  
-If TAP cannot find an allocation for your account on a supported system, you will see the message below. If the issue persists, [create a ticket][HELPDESK] in the TACC Consulting System.
+* **No Allocation Available** If TAP cannot find an allocation for your account on a supported system, you will see the message below. If the issue persists, [create a ticket][HELPDESK] in the TACC Consulting System.
 
 .. image::  ./images/7TAP.png
    :target: ./images/7TAP.png
    :align: center
    :alt:  Figure 7. TAP Error: No Allocation
 
-* **Job Submission returns PENDING**  
-If the job does not start immediately, TAP will load a status page with some diagnostic information. If the job status is "PENDING", the job was successfully submitted and has not yet started running. If Slurm can predict when the job will start, that information will be in the `squeue --start` output in the message window. Clicking the "Check Status" button will update the job status. When the job has started, TAP will show a "Connect" button.
+* **Job Submission returns PENDING** If the job does not start immediately, TAP will load a status page with some diagnostic information. If the job status is "PENDING", the job was successfully submitted and has not yet started running. If Slurm can predict when the job will start, that information will be in the `squeue --start` output in the message window. Clicking the "Check Status" button will update the job status. When the job has started, TAP will show a "Connect" button.
 
 .. image::  ./images/8TAP.png
    :target: ./images/8TAP.png
    :align: center
    :alt:  Figure 8. TAP Error: PENDING
-|
-* **Job Submission returns ERROR**  
-If the TAP status page shows that the job status is "ERROR", then there was an issue with the Slurm submission, and the message box will contain details. If you have difficulty interpreting the error message or resolving the issue, please create a ticket in the TACC Consulting System and include the TAP message.
+
+
+* **Job Submission returns ERROR** If the TAP status page shows that the job status is "ERROR", then there was an issue with the Slurm submission, and the message box will contain details. If you have difficulty interpreting the error message or resolving the issue, please create a ticket in the TACC Consulting System and include the TAP message.
  
 .. image::  ./images/9TAP.png
    :target: ./images/9TAP.png
@@ -372,8 +370,7 @@ c. Final Steps:
    :target: ./images/TAP_6.jupyter.trusted.png
    :alt:  Figure 6 Kernel trusted
 
--  The Jupyer notebook will be ready to be run.
-Note: The kernel may take a few moments to initialize on first use.
+-  The Jupyer notebook will be ready to be run. Note: The kernel may take a few moments to initialize on first use.
 
 
 

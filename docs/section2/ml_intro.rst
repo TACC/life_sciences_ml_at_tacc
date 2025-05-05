@@ -106,20 +106,25 @@ follows:
 1. Given a string of text, predict the next word. 
 
    *The text string is the independent variable and the next word is the dependent variable.*
+
 2. Given an image, determine if it contains a human face. 
 
    *The image is the independent variable and whether it contains a face is the dependent variable.*
+
 3. Given an image of a home or building from the aftermath of a storm, classify the damage done 
    to the structure as "none", "small", or "large".
 
    *The image is the independent variable and the dame label ("none", "small", or "large") is the dependent variable.*
+
 4. Given a text description of an image, generate an image that "matches" the description. 
 
   *The text description is the independent variable and the image is the dependent variable.*
+
 5. Given details about a real estate property, such as address, square footage, number of rooms, 
    etc., predict its market value. 
 
    *The property details (address, square footage, etc.) are the independent variables and the market value is the dependent variable.*
+
 6. Given an image of a crop, determine if the crop has a disease; similarly, determine if the crop
    requires irrigation. 
 

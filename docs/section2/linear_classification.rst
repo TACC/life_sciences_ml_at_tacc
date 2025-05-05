@@ -566,7 +566,7 @@ Setosa two times.
 
 
 Hands-on Lab: Linear Classification of Breast Cancer Malignancy 
-------------------------------------
+---------------------------------------------------------------
 
 In this section, we guide you through developing a linear classifier for the breast cancer example above.
 We'll use the "load_breast_cancer()" from SciKitLearn datasets module.

@@ -430,7 +430,7 @@ colon would be ``/scratch1/03302/lconcia/frontera/my_file``.
 Instead of files, full directories can be copied using the "recursive" flag (``scp -r ...``). 
 
 This is just the basics of copying files. See example ``scp`` usage
-`here <https://en.wikipedia.org/wiki/Secure_copy>`_.
+`here <https://en.wikipedia.org/wiki/Secure_copy>`__.
 
 
 EXERCISE

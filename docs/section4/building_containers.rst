@@ -206,7 +206,7 @@ developing with on your local workstation? If not, make sure to install the
 correct version of python.
 
 The next step is to install the dependencies for our code. In this case, we
-need to install the `torch` and `torchvision` packages from `PyTorch <https://pytorch.org/get-started/locally/>`_.
+need to install the `torch` and `torchvision` packages from `PyTorch <https://pytorch.org/get-started/locally/>`__.
 We are going to install version 2.5.1:
 
 .. code-block:: console

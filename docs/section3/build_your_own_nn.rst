@@ -639,6 +639,7 @@ For a binary classification problem like our (poisonous vs edible), the model ou
 
 This shows the probability for the first mushroom sample in the test set.
 The output is a single value between 0 and 1, where:
+
  - Values closer to 1 indicate the model is more confident that the sample is poisonous.
  - Values closer to 0 indicate the model is more confident that the sample is edible.
 
