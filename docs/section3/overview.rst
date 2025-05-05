@@ -1,12 +1,16 @@
-Deep Learning
-=============
+Hands-on Deep Learning
+======================
 
-In this section we introduce deep learning and neural networks.
+In this unit we introduce the field of Deep Learning (DL). We will gain hands on experience with
+key DL concepts, including neural networks, and convolutional neural networks.
+We will also explore the use of DL in life science applications, including image classification and
+natural language processing.
+
 
 .. toctree::
    :maxdepth: 2
 
    intro_to_dl
-   Build_Your_Own_NN
+   build_your_own_nn
    intro_to_cnn
-   Build_Your_Own_CNN
+   build_your_own_cnn

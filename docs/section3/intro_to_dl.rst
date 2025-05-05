@@ -1,5 +1,5 @@
 Intro to Deep Learning
-=============
+======================
 
 Deep learning has revolutionized the way computers learn and process information. 
 It has become one of the most powerful tools for complex data analysis and automated decision-making.
@@ -30,9 +30,9 @@ Deep learning is driving breakthroughs in life sciences research, including:
 
 The range of deep learning applications is extensive, making it an exciting field for researchers to explore. 
 
-=============
+
 Understanding Neural Networks
-=============
+-----------------------------
 
 Artificial Neural Networks, or just *neural networks* for short, are the backbone of deep learning.
 They consist of artificial neurons called **perceptrons**, which process information in a way inspired by biological neurons in the human brain.
@@ -48,7 +48,7 @@ Similarly, perceptrons take in multiple inputs, apply weights to them to signal 
     Biological neuron (a) vs. artificial neuron (b). Source: Zhang et al. 2019 [3]_
 
 Perceptrons: The Building Blocks of Neural Networks
---------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 **1. Inputs and Weights**
 
@@ -62,6 +62,7 @@ During *training*, these weights are adjusted to improve accuracy; during *testi
 Each input is multiplied by its corresponding weight, and then all of the weighted inputs are summed together via a **linear summation function**: 
 
     .. math:: Sum = (w_1x_1) + (w_2x_2) + (w_3x_3) + w_0
+
 A **bias** term, :math:`w_0`, is also added to the linear combination.
 The bias is like the intercept in a linear equation–it allows the perceptron to make predictions even when all inputs are zero.
 Together, the weights and bias (:math:`w_0, w_1, w_2,...`) are called the **parameters** of the perceptron.
@@ -79,7 +80,7 @@ The basic architecture of a perceptron is depicted below:
     :align: center
 
 Activation Functions
----------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Activation functions are the critical components that give neural networks their power to learn.
 
@@ -90,7 +91,7 @@ You can think of activation functions like switches that decide if and how stron
 Let's explore three key activation functions through hands-on examples to develop intuition about how they work.
 
 The ``sigmoid`` Activation Function
-++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``sigmoid`` function takes any number and "squashes" it into a value between 0 and 1. That makes it perfect for representing probabilities.
 
@@ -148,7 +149,7 @@ Mathematically, the ``sigmoid`` function is defined as:
 **In Neural Networks**: ``Sigmoid`` is often used in the *output layer* of a neural network when you're solving a binary classification problem (e.g., "Is this image a cat?" → 0.92 means "92% confident it's a cat").
 
 The ``softmax`` Activation Function
-++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``softmax`` function is often used in the output layer of a neural network when you have more than two classes. 
 
@@ -210,7 +211,7 @@ This code will output:
 
 
 The ``ReLU`` Activation Function
-++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``ReLU`` (Rectified Linear Unit) function is the most widely used activation function in modern neural networks, especially for hidden layers. 
 
@@ -294,7 +295,8 @@ This means:
      - Fast computation, no saturation for positive values
 
 Network Architecture
------------------------------------
+^^^^^^^^^^^^^^^^^^^^
+
 A neural network is made up of *layers of perceptrons*, where each perceptron applies a mathematical function to its inputs and passes the result to the next layer.
 These layers include:
 
@@ -312,8 +314,9 @@ The basic architecture of a neural network is depicted below:
 Each perceptron in a layer is connected to perceptrons in the next layer, and these *connections have weights*, which determine the influence of each input.
 During training, these weights are adjusted to improve accuracy. 
 
-Putting it all together
-++++++++++++++++++++++++++++
+Putting it all Together
+^^^^^^^^^^^^^^^^^^^^^^^
+
 To summarize, the perceptron takes in multiple inputs (as many as you want) and assigns weights to them. 
 It calculates a weighted sum of the inputs, adds a bias term, and then passes the result through an activation function to produce an output.
 When multiple perceptrons are connected, they form a neural network that can learn complex decision boundaries.
@@ -326,9 +329,9 @@ When multiple perceptrons are connected, they form a neural network that can lea
 
     Multilayer perceptron. Adapted from: Beardall et al. 2022 [4]_
 
-=============
+
 Training and Inference
-=============
+----------------------
 
 Deep learning involves two main phases: **training** and **inference**.
 Broadly speaking, *training* involves multiple iterations of feeding data into a neural network and adjusting its parameters to minimize prediction errors.
@@ -336,7 +339,7 @@ This process requires large amounts of data and computational resources to fine-
 Once trained, the model enters the *inference* phase, where it applies its learned knowledge to new, unseen data to make predictions. 
 
 Training
---------------
+^^^^^^^^
 
 How do we choose values for the parameters (i.e., the :math:`w_0, w_1, ..., w_n` in each perceptron) to make a neural network accurately predict an outcome?
 
@@ -394,7 +397,7 @@ This is where *inference* comes in.
 
 
 Inference
---------------
+^^^^^^^^^
 
 Inference is the process of using a trained neural network to make predictions on new, unseen data. 
 During inference, the model does not update its weights — it simply applies the learned weights to the new data to generate a prediction.
@@ -413,8 +416,11 @@ This is the stage where the neural network becomes practically useful: once trai
 
 In the next session, we'll apply these concepts hands-on by building our own neural network from scratch.
 
-**Reference List**
- * The material in this module is based on `COE 379L: Software Design for Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/unit03/neural_networks.html>`_
+References and Additional Resources
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* The material in this module is based on `COE 379L: Software Design for Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/unit03/neural_networks.html>`_
+
 .. [1] Jumper, J., Evans, R., Pritzel, A. et al. Highly accurate protein structure prediction with AlphaFold. Nature 596, 583–589 (2021). https://doi.org/10.1038/s41586-021-03819-2
 .. [2] McCulloch, W.S., Pitts, W. A logical calculus of the ideas immanent in nervous activity. Bulletin of Mathematical Biophysics 5, 115–133 (1943). https://doi.org/10.1007/BF02478259
 .. [3] Zhang, Q., Yu, H., Barbiero, M. et al. Artificial neural networks enabled by nanophotonics. Light Sci Appl 8, 42 (2019). https://doi.org/10.1038/s41377-019-0151-0

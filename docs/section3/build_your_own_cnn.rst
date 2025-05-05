@@ -1,5 +1,5 @@
 Build Your Own Convolutional Neural Network
-=====================================
+===========================================
 
 Coral reefs are among the most diverse and valuable ecosystems on Earth, providing habitat for 25% of all marine species and supporting the livelihoods of over half a billion people worldwide.
 However, these ecosystems face unprecedented threats from climate change, ocean acidification, and other human activities, with many species now endangered.
@@ -13,19 +13,19 @@ We are given a dataset containing images of three different coral species:
 Our task is to build a Convolutional Neural Network (CNN) that can classify the coral images into the correct species. 
 This technology can help automate coral reef monitoring efforts and support conservation initiatives by enabling rapid, large-scale species identification.
 
-============================
+
 Tutorial Setup and Materials
-============================
+----------------------------
 
 All materials and instructions for running this tutorial in the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ are available in our GitHub repository: `TACC Deep Learning Tutorials <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_.
 
-=====================================
-Part 1: Building a CNN Model from Scratch
-=====================================
 
-++++++++++++++++++++++++++++++++++++
+Part 1: Building a CNN Model from Scratch
+------------------------------------------
+
+
 Step 0: Check GPU Availability and TensorFlow Version
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Before training deep learning models, it's important to check whether TensorFlow can access the GPU on your machine. Training on a GPU is significantly faster than on a CPU, especially for large image datasets. 
 
@@ -55,9 +55,9 @@ You should see the following output:
     2.13.0
 
 
-++++++++++++++++++++++++++++++++++++
+
 Step 1: Data Loading and Organization
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this step, we load all coral images from the dataset directory and organize them into a DataFrame. 
 Each image is assigned a label based on the name of the directory it's stored in (i.e., 'ACER' - *Acropora cervicornis*, 'CNAT' - *Colpophyllia natans*, 'MCAV' - *Montastraea cavernosa*). 
@@ -65,7 +65,7 @@ Each image is assigned a label based on the name of the directory it's stored in
 This DataFrame will serve as the foundation for splitting our data into training, validation, and test sets later in the tutorial.
 
 1.1 List Dataset Directory Contents
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Before loading the images, we first want to inspect the directory structure to make sure everything is in the right place.
 
@@ -109,7 +109,7 @@ You should see something like this:
     [PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/CNAT'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/MCAV'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/ACER')]
     
 1.2 Check File Extensions
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Next, we scan the dataset directory and all its subdirectories to find out what types of image files are present. 
 This helps us catch unexpected or unsupported file types (e.g., GIFs, txt files, etc.), which could cause problems later when loading images. 
@@ -129,7 +129,7 @@ This also allows us to see if the images are all in the same format or not.
 **Question**: What file extensions are present in the dataset? Write down your answer.
 
 1.3 Explore Image Dimensions and Color Modes
---------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Before feeding images into a CNN, it's important to understand the basic properties of the dataset.
 In this step, we examine the **dimensions** (width x height) as well as the **color mode** (e.g., RGB, RGBA, grayscale) of each image.
@@ -201,7 +201,7 @@ Our dataset analysis reveals some important characteristics that we'll need to k
 We will address these issues in Step 4 when we prepare our data for input into the CNN. 
 
 1.4 Check for Corrupted Images
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Before continuing, we want to make sure that all images files are readable. 
 Corrupted files can break your model training or cause unexpected errors during preprocessing. 
@@ -248,7 +248,7 @@ This ensures we only keep clean, valid images for training.
 If there are any corrupted images in your dataset, this code will automatically remove them. 
 
 1.5 Create a DataFrame of Image Paths and Labels
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now that we have taken a peek at the format of our data and have removed any corrupted images, we can start setting up our data for training.
 In this step, we build a ``pandas.DataFrame`` that organizes all the image data into two columns:
@@ -280,12 +280,12 @@ This structured DataFrame is essential for training with Keras' ``flow_from_data
     # Show a preview of the DataFrame
     df.head()
     
-++++++++++++++++++++++++++++++++++++
+
 Step 2: Visualize the Data
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 2.1 Visualize the Class Distribution
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Before training our CNN, it's important to understand how many images we have for each class (i.e., coral species in this case).
 
@@ -334,7 +334,7 @@ If the dataset is imbalanced (i.e., some classes have far more images than other
 **Thought Challenge**: Describe the class distribution in your own words. How much of the dataset is made up by the largest class? The smallest class? Is there anything that we need to address before continuing?
 
 2.2 Visualize Images from the Dataset
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It's helpful to look at a few images from each class to get a better understanding of the dataset.
 This will give us a better sense of:
@@ -393,12 +393,12 @@ We'll display a grid of randomly selected images, grouped by class.
 
 *Remember: the quality of a machine learning model is decided largely by the quality of the dataset it was trained on!*
 
-++++++++++++++++++++++++++++++++++++
+
 Step 3: Split the Dataset and Handle Class Imbalance
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 3.1 Split the Dataset into Training, Validation, and Test Sets
--------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We are now ready to split our labeled image dataset into three parts:
 
@@ -459,7 +459,7 @@ This is called **stratified sampling**.
     Try running the full training pipeline multiple times with different ``random_state`` values. Do your metrics stay stable? What might that tell you about the robustness of your model?
 
 3.2 Compute Class Weights
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If our dataset is imbalanced (i.e., some classes have many more images than others), the model may learn to favor those majority classes. 
 To address this, we can compute **class weights** based on the training data using the ``compute_class_weight`` function from sklearn.
@@ -514,9 +514,9 @@ We need to convert the string labels (like ``ACER``, ``CNAT``, and ``MCAV``) to 
 
     The class weights make sense because the class with the fewest samples (``CNAT``) has the highest weight (1.08), while the class with the most samples (``MCAV``) has the lowest weight (0.91). This means that the model will pay more attention to the ``CNAT`` class during training, which has fewer samples. 
 
-++++++++++++++++++++++++++++++++++++
+
 Step 4: Image Preprocessing and Data Generators
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As we discovered in Step 1.3, we need to prepare our images before feeding them into the CNN. 
 This step involves two key concepts:
@@ -548,7 +548,7 @@ Each of these modifications creates a new, slightly different version of our tra
 
 
 4.1 Define Image Preprocessing and Augmentation
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We will define three separate ``ImageDataGenerator`` objects, one for each dataset split (train, val, test):
 
@@ -575,7 +575,7 @@ We will define three separate ``ImageDataGenerator`` objects, one for each datas
     test_datagen = ImageDataGenerator(rescale=1./255)
     
 4.2 Load Images Using ``flow_from_dataframe()``
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now that our preprocessing methods are defined, we can use ``flow_from_dataframe()`` to load images in batches directly from our labeled Dataframes (``train_df``, ``val_df``, and ``test_df``).
 
@@ -612,7 +612,7 @@ All generators return batches of preprocessed image tensors and their correspond
     )
 
 Sanity Check: Inspect a Batch from the Training Generator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Let's inspect the output of the ``train_generator`` to make sure it's working as expected.
 
@@ -637,7 +637,7 @@ In the code below, we:
 
 
 Visualize a Few Images from the Training Generator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Let's display a few images from the training geneator along with their decoded class labels.
 
@@ -674,9 +674,9 @@ What do you notice about the images that you didn't see before (in Step 3)?
 Do you notice any differences in the images each time you run the cell? 
 Think about why this might be happening. 
 
-++++++++++++++++++++++++++++++++++++
+
 Step 5: Define Your CNN Model Architecture
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Congratulations! Our data is now ready to be used to train a Convolutional Neural Network to classify our coral images.
 
@@ -815,7 +815,7 @@ Finally, let's display our model architecture and parameter count:
 
 
 Calculating Parameters in CNNs
-------------------------------
+++++++++++++++++++++++++++++++
 
 Let's break down the parameter calculation for our model.
 
@@ -832,14 +832,17 @@ The formula for calculating the number of parameters in a convolutional layer is
     **Convolutional Layers**
 
     1. First Conv2D:
+
      * 3x3 kernel, 3 input channels (RGB), 32 filters
      * (3 x 3 x 3 x 32) + 32 = 896 parameters
 
     2. Second Conv2D:
+
      * 3x3 kernel, 32 input channels, 64 filters
      * ( 3 x 3 x 32 x 64) + 64 = 18,496 parameters
 
     3. Third Conv2D:
+
      * 3x3 kernel, 64 input channels, 128 filters
      * (3 x 3 x 64 x 128) + 128 = 73,856 parameters
 
@@ -850,20 +853,23 @@ The formula for calculating the number of parameters in a convolutional layer is
     - the ``+ perceptrons`` part is for the bias term (one per perceptron)
 
     1. First Dense:
+
      * 100352 inputs (flattened), 128 perceptrons
      * (100352 x 128) + 128 = 12,845,184 parameters
 
     2. Second Dense:
+
      * 128 inputs, 64 perceptrons
      * (128 x 64) + 64 = 8,256 parameters
 
     3. Output Dense:
+    
      * 64 inputs, 3 perceptrons (one per coral species)
      * (64 x 3) + 3 = 195 parameters
 
-++++++++++++++++++++++++++++++++++++
+
 Step 6: Train the CNN Model
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now that our CNN architecture is defined, we can train the model using the ``fit()`` method. 
 
@@ -903,7 +909,7 @@ Example output:
 
 
 Visualizing Training History
-------------------------------
+++++++++++++++++++++++++++++
 
 After training the model, we can visualize the accuracy and loss over time to better understand how the model is learning.
 These plots can help us identify overfitting, underfitting, or confirm that the model is learning as expected.
@@ -976,15 +982,15 @@ The plots above show the training and validation accuracy/loss over 15 epochs.
 
     **Interpretation**: The model shows signs of both underfitting and instability. The relatively low accuracy suggests the model struggles to learn effective patterns from the data. The final drop in validation accuracy paired with the spike in validation loss indicates potential overfitting or training instability in later epochs. The erratic validation metrics suggest the model may be sensitive to the specific examples in each validation batch.
 
-++++++++++++++++++++++++++++++++++++
+
 Step 7: Evaluate the Model on the Test Set
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  
 Now that we've trained our model, it's time to evaluate its performance on the test set.
 This step is crucial because it helps us understand how well the model generalizes to new, unseen data, which is a good indicator of its real-world performance.
 
 Evaluate Test Accuracy and Loss
--------------------------------
++++++++++++++++++++++++++++++++
 
 We use ``model.evaluate()`` to calculate the test accuracy and loss. These metrics give us a quick overview of the model's performance.
 
@@ -1006,7 +1012,7 @@ Our model correctly classifies the test images about 35% of the time, and our lo
 While these numbers provide a snapshot of performance, they don't tell the whole story. Let's dig deeper with a confusion matrix.
 
 Visualize Predictions with a Confusion Matrix
----------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++
 
 A confusion matrix provides a detailed breakdown of the model's predictions compared to the true labels.
 It helps identify which classes are being confused with each other.
@@ -1048,7 +1054,7 @@ It helps identify which classes are being confused with each other.
 
 
 Detailed Performance with a Classification Report
-------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The classification report provides precision, recall, and F1-scores for each class, offering a more nuanced view of model performance.
 
@@ -1099,9 +1105,9 @@ Click below to see a brief explanation of the metrics in the classification repo
 **Thought Challenge**: Critically assess the performance of our model based on the accuracy/loss values, confusion matrix, and classification report. 
 Are there any classes that the model is particularly good or bad at predicting? Think about the data and why the model might be performing better or worse for certain classes.
 
-=====================================
+
 Part 2: Transfer Learning with VGG19
-=====================================
+------------------------------------
 
 In this section, we apply a technique called **transfer learning** to improve model performance on our coral species classification task.
 
@@ -1113,12 +1119,12 @@ This is especially useful when you have a limited dataset, you want to train a m
 We will use the **VGG19 model**, a classic convolutional neural network architecture developed by researchers at Oxford University.
 It was trained on the **ImageNet** dataset, which contains over 14 million images across 1000 classes. 
 
-++++++++++++++++++++++++++++++++++++
+
 Step 1: Prepare Data for VGG19
-++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1.1 Define Image Preprocessing and Augmentation
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 VGG19 expects input images to be preprocessed in a very specific way because of the way it was trained.
 We use the ``preprocess_input()`` function from ``tensorflow.keras.applications.vgg19`` to preprocess our images. 
@@ -1154,7 +1160,7 @@ Let's create new data generators for VGG19 using ``ImageDataGenerator`` with:
     vgg19_test_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
 1.2 Load Images Using ``flow_from_dataframe()``
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Just like we did for our CNN model, we can use ``flow_from_dataframe()`` to load images in batches directly from our labeled Dataframes (``train_df``, ``val_df``, and ``test_df``).
 
@@ -1171,12 +1177,12 @@ Just like we did for our CNN model, we can use ``flow_from_dataframe()`` to load
     test_generator_vgg19 = _____
 
 
-+++++++++++++++++++++++++++++++++++++++++
+
 Step 2: Define and Train the VGG19 Model
-+++++++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 2.1 Load VGG19 Base Model and Stack a Custom Classifier
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We now load the **VGG19 base model**, which has been pre-trained on ImageNet.
 We exclude the original classification head (``include_top=False``) and freeze all convolutional layers.
@@ -1220,7 +1226,7 @@ Now, let's compile the model with the same optimizer and loss function as our pr
     )
 
 2.2 Define Training Callbacks
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Next, let's define some **training callbacks**. 
 Callbacks are functions executed during training that allow the training process to change its behavior dynamically.
@@ -1284,7 +1290,7 @@ Example Output:
     9/9 [==============================] - 8s 861ms/step - loss: 0.2725 - accuracy: 0.9323 - val_loss: 0.4518 - val_accuracy: 0.8955 - lr: 5.0000e-05
 
 Visualizing Training History
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Just like we did for our first CNN model, let's plot the training and validation performance over time. 
 
@@ -1301,14 +1307,14 @@ Refer back to Section 1: Step 6 – *Visualizing Training History* for a refresh
 
 **Thought Challenge**: Compare the performance of our VGG19 model to our previous CNN model. What are some major differences in the training curves?
 
-++++++++++++++++++++++++++++++++++++++++++++++++
+
 Step 3: Evaluate the VGG19 Model on the Test Set
-++++++++++++++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Just like we did for our first CNN model, let's evaluate the VGG19 model on the test set.
 
 Evaluate Test Accuracy and Loss
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First, let's calculate the test accuracy and loss. Can you recall how to do this?
 
@@ -1329,7 +1335,7 @@ Example output:
 Our model correctly classifies the test images about 93% of the time. What an improvement!
 
 Visualize Predictions with a Confusion Matrix
----------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now, let's visualize the predictions of our VGG19 model on the test set with a confusion matrix.
 
@@ -1371,7 +1377,7 @@ Notice how the confusion matrix shows a distinct diagonal pattern, where the tru
 This indicates that our model is performing well on all classes. Nice!
 
 Detailed Performance with a Classification Report
-------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Finally, let's print out the full classification report.
 
@@ -1399,9 +1405,9 @@ Example output:
 
 **Thought Challenge**: Compare the performance of our VGG19 model to our previous CNN model. What are some major differences in the classification report? Are there still any problematic classes that the model is struggling with? If so, what do you think is causing this?
 
-++++++++++++++++++++++++++++++++++++++++++++++++
+
 Step 4: Visualize Predictions from the Test Set
-++++++++++++++++++++++++++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 First, let's take the raw predictions from our VGG19 model and organize them into a pandas DataFrame with four columns:
 
@@ -1480,9 +1486,9 @@ This helps visually confirm whether predictions make sense – and helps identif
    :width: 800px
    :align: center
 
-++++++++++++++++++++++++
+
 Final Thoughts and Wrap-Up
-++++++++++++++++++++++++
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Congratulations!
 
@@ -1492,7 +1498,7 @@ Congratulations!
 - You gained insights into the practical application of deep learning in biological data analysis.
 
 Next Steps
-----------
+~~~~~~~~~~
 
 To further enhance your model, consider the following ideas:
 

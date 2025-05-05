@@ -1,5 +1,5 @@
 Build Your Own Neural Network
-============================
+=============================
 
 In this section we will build a simple neural network, train it and validate it on a sample test data.
 For this exercise, we will use the `Mushroom dataset from the Audobon Society Field Guide <https://archive.ics.uci.edu/dataset/73/mushroom>`_.
@@ -14,14 +14,14 @@ By the end of this excercise participants will be able to:
 4. Evaluate the model's performance on test data.
 
 
-============================
+
 TensorFlow and Keras Fundamentals
-============================
+---------------------------------
 
 Before we dive into the hands-on exercise, let's briefly introduce the tools we'll be using.
 
 TensorFlow and Keras
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 .. image:: ./images/TensorFlow-Icon.png
     :width: 100px
@@ -62,7 +62,7 @@ Keras simplifies every step of the machine learning workflow, including data pre
 Unless you're developing custom tools on top of TensorFlow, you should use Keras as your default API for deep learning tasks. 
 
 Building Models with Keras
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Keras offers three approaches to building neural networks, but we'll focus on the Sequential API, which is perfect for the linear stack of layers we need for our mushroom classifier.
 
@@ -111,17 +111,17 @@ Here's a preview of what our model code will look like:
 
 With this foundation in place, let's start building our our own neural network!
 
-===========================================
+
 Building a Sequential Model Neural Network
-===========================================
+------------------------------------------
 
 Tutorial Setup and Materials
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 All materials and instructions for running this tutorial in the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ are available in our GitHub repository: `TACC Deep Learning Tutorials <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_.
 
 Step 1: Importing and examining the data
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Mushroom dataset is available in the University of California, Irvine Machine Learning Repository, which is a popular repository for machine learning datasets.
 Conveniently, the ``ucimlrepo`` Python package provides a simple interface to download and load datasets directly from this repository.
@@ -288,7 +288,7 @@ With this insight into our dataset's structure, our next step is to prepare the 
 
 
 Step 2: Data pre-processing
----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Our exploration of the Mushroom dataset reveals a collection of 8124 samples with 22 features and a single target variable. Before proceeding with model development, several preprocessing challenges need to be addressed:
 
@@ -421,7 +421,7 @@ The code above divides our data into training and testing sets, creating four ob
 
 
 Step 3: Building a sequential model neural network 
---------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now we'll create a simple neural network for our mushroom classification task. The model will consist of:
 
@@ -558,15 +558,18 @@ Below shows the output of the training process:
 Let's understand what this output tells us:
 
 1. **Progress metrics**:
+
   - ``143/143``: Shows progress through the training batches; 143 batches were completed out of 143, and each batch contains 32 samples (as specified by ``batch_size=32``)
   - ``0s``: Indicates the time taken for each epoch; here, the first epoch took <1 second to complete.
   - ``3ms/step``: This indicates the average time taken per training step (one forward and backward pass through a single batch) during training.
 
 2. **Training metrics**:
+
   - ``accuracy: 0.8709``: Represents the accuracy of the model on the training dataset. The accuracy value of approximately 0.8709 indicates that the model correctly predicted 87.09% of the training samples.
   - ``loss: 0.3543``: Represents the training loss value (using binary cross-entropy loss function) on the training dataset. Higher loss values indicate that the model's predictions are further from the true labels.
 
 3. **Validation metrics**:
+
   - ``val_accuracy: 0.9569``: Represents the accuracy of the model on the validation dataset. The accuracy value of approximately 0.9569 indicates that the model correctly predicted 95.69% of the validation samples.
   - ``val_loss: 0.1458``: Represents the validation loss value (using binary cross-entropy loss function) on the validation dataset. Lower loss values indicate that the model's predictions are closer to the true labels.
 
@@ -615,7 +618,7 @@ This high performance is promising, but we should verify it on our completely se
 
 
 Step 4: Evaluate the model's performance on test data
------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The true test of our model's capabilities comes from evaluating it on our completely separate test dataset. Let's see how our neural network performs when classifying mushrooms it has never encountered before!
 

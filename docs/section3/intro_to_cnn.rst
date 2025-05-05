@@ -1,5 +1,5 @@
 Intro to Convolutional Neural Networks
-================================================
+======================================
 
 In the previous section, we learned how to classify mushrooms based on their physical characteristics.
 In this section, we will introduce Convolutional Neural Networks (CNNs), a specialized class of deep neural networks that excel in tasks involving spatial data, particularly image recognition and computer vision.
@@ -11,9 +11,9 @@ By the end of this exercise participants will be able to:
 - Explain what makes CNNs a better choice for solving image classification problems
 - Understand different CNN architectures, such as VGG16 and LeNet-5 
 
-====================
+
 Why CNNs?
-====================
+---------
 
 To illustrate the advantages of CNNs, let's consider a common example in machine learning: the MNIST dataset, which consists of images of handwritten digits.
 
@@ -56,9 +56,10 @@ This number grows quadratically with image size, making training on larger image
     :alt: 
 
 
-====================
+
 How CNNs Process Grid Data
-====================
+--------------------------
+
 Convolutional Neural Networks (CNNs) are specifically designed for processing structured grid data, such as images, time-series data and videos.
 Their key capability is identifying object locations in images through a mathematical operation called **convolution**.
 This allows CNNs to handle variations in object position, making them ideal for computer vision tasks like image classification, object detection, face recognition, and autonomous driving.
@@ -66,7 +67,7 @@ This allows CNNs to handle variations in object position, making them ideal for 
 Their utility comes from two simple, yet powerful layers of CNNs, known as the **convolutional** and **pooling** layers.
 
 Convolutional Layer:
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 The convolutional layer is the first layer of a CNN.
 It performs *feature extraction* by applying a convolutional kernel (also known as a filter) to the input image.
@@ -119,7 +120,7 @@ Multiple convolutional layers detect increasingly complex features: early layers
         :alt: 
 
 Pooling Layer
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 In CNNs, pooling layers are used to reduce the dimensionality of the feature maps produced by the convolutional layers.
 They help in reducing the number of parameters in the model, thereby reducing the computational complexity and the risk of overfitting.
@@ -144,9 +145,9 @@ Two popular methods of pooling are:
 
 Now that we understand Convolutional and Pooling Layers, let's explore how these building blocks come together to construct a complete CNN model.
 
-====================
+
 Basic CNN Architecture
-====================
+----------------------
 
 Convolutional Neural Networks (CNNs) are built from several key components: convolutional layers, pooling layers, flatten layers, and fully connected (dense) layers.
 
@@ -165,7 +166,7 @@ Convolutional Neural Networks (CNNs) are built from several key components: conv
 
 
 Adding CNN Layers in TensorFlow Keras
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Here's a complete CNN model implementation in TensorFlow Keras:
 
@@ -251,13 +252,13 @@ Fortunately, the deep learning community has developed several proven CNN archit
 
 Let's explore some of these influential CNN architectures, beginning with VGG-Net, which we'll use in our upcoming classification project.
 
-====================
+
 Popular CNN Architectures
-====================
+-------------------------
 
 
 VGG-Net
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^
 
 VGG networks (developed by Oxford's Visual Geometry Group (VGG) in 2014 [2]_) became famous after performing very well on the ImageNet dataset, a common benchmark for image classification tasks that contains over 14 million images belonging to 1000 classes.
 
@@ -280,7 +281,8 @@ VGG-16 (16 layers) achieves remarkable performance despite its straightforward a
   - Stride of 1 pixel (meaning the filter moves 1 pixel at a time)
   - Padding of 1 pixel (meaning that the input is padded with 1 pixel on all sides to preserve the spatial dimensions of the image)
   - ReLU activation function
-  The number of filters in each convolutional layer increases as we go deeper into the network, from 64 filters (resulting in 64 feature maps) in the first few layers to 512 filters (resulting in 512 feature maps) in the later layers.
+  
+The number of filters in each convolutional layer increases as we go deeper into the network, from 64 filters (resulting in 64 feature maps) in the first few layers to 512 filters (resulting in 512 feature maps) in the later layers.
 
 **Pooling Layers**: After each block of convolutional layers, a max-pooling layer is applied. 
 
@@ -314,8 +316,11 @@ VGG-16 is available in the keras.applications package and can be imported using 
 - **MobileNet**: Designed for mobile and embedded devices with limited computational resources.
 
 
-**Reference List**
- * The material in this module is based on `COE 379L: Software Design for Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/unit03/neural_networks.html>`_
+References and Additional Resources
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* The material in this module is based on `COE 379L: Software Design for Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/unit03/neural_networks.html>`_
+
 .. [1] Minfei, L., Yidong, G., Ze, C., Zhi, W., Erik, S., & Branko, Š. (2022). Microstructure-informed deep convolutional neural network for predicting short-term creep modulus of cement paste. Cement and Concrete Research, 152, 106681. doi:10.1016/j.cemconres.2021.106681
 .. [2] Simonyan, K., & Zisserman, A. (2015). Very Deep Convolutional Networks for Large-Scale Image Recognition. arXiv [Cs.CV]. Retrieved from http://arxiv.org/abs/1409.1556
 .. [3] Learning, G. (2021, September 23). Everything you need to know about VGG16. Medium. https://medium.com/@mygreatlearning/everything-you-need-to-know-about-vgg16-7315defb5918 
