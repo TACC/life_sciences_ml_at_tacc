@@ -1,138 +1,26 @@
+Exploratory Data Analysis
+=========================
 
-=====================================================
-Setup of the CNN Tutorial   
-=====================================================
+We will begin by giving a high-level overview of the kinds of data analysis 
+tasks we will be performing and why they are important. We'll also introduce 
+the ``numpy`` python package and work through some examples in a Jupyter notebook.
 
-On Day 3 we will run a hands-on Convolutional Neural Network (CNN) tutorial.
-Here we provide the instruction to retrieve the necessary files and set up the enviroment.
+By the end of this module, you should be able to: 
 
-1. Accessing Frontera
-^^^^^^^^^^^^^^^^^^^^^
-
-Log in to Frontera using SSH:
-
-.. code-block:: bash
-    
-    ssh username@frontera.tacc.utexas.edu
-    (username@frontera.tacc.utexas.edu) Password: 
-    (username@frontera.tacc.utexas.edu) TACC Token Code:
-
-    # ------------------------------------------------------------------------------
-    # Welcome to the Frontera Supercomputer
-    # Texas Advanced Computing Center, The University of Texas at Austin
-    # ------------------------------------------------------------------------------
-
-2. Getting the Tutorial Materials
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Navigate to your $SCRATCH directory and clone the tutorial repository:
-
-.. code-block:: bash
-
-    cds  # shortcut for cd $SCRATCH
-    git clone git@github.com:kbeavers/coral-species-CNN-tutorial.git
-
-3. Environment Setup
-^^^^^^^^^^^^^^^^^^^^
-a) Start an Interactive Session:
-
-.. code-block:: bash
-
-    cds
-    idev -m 20
-
-b) Set up the Container Environment:
-
-.. code-block:: bash
-
-    # Load the apptainer module
-    module load tacc-apptainer
-
-    # Pull the Docker container image created for this tutorial
-    apptainer pull docker://kbeavers/tf-cuda101-frontera:0.1
-
-    # Run the kernel setup script
-    bash ./coral-species-CNN-tutorial/scripts/install_kernel.sh
-
-4. Dataset Preparation
-^^^^^^^^^^^^^^^^^^^^^^
-Extract the provided coral species image dataset:
-
-.. code-block:: bash
-
-    cd coral-species-CNN-tutorial
-    bash ./scripts/download_dataset.sh
-
-5. Launching the Tutorial
-^^^^^^^^^^^^^^^^^^^^^^^^^
-a) Copy the tutorial notebook to your $HOME directory:
-
-.. code-block:: bash
-
-    cp ./tutorials/Coral-CNN.ipynb $HOME/
-
-b) Access the TACC Analysis Portal and configure your session as follows:
-
-   - System: Frontera
-   - Application: Jupyter Notebook
-   - Project: <your-allocation>
-   - Queue: rtx
-   - Job Name: CNN-Training
-   - Time Limit: 2:0:0
-   - Reservation: <your-reservation>
-
-c) Final Steps:
-
-   - Click 'Submit' and wait for the job to start
-   - Click 'Connect' when available
-   - Open ``Coral-CNN.ipynb`` in your $HOME directory
-   - Change your kernel to ``tf-cuda101``
-   - Trust the kernel if necessary
-
-Note: The kernel may take a few moments to initialize on first use. 
-
-..
- =====================================
- Step 0: Check GPU Availability
- =====================================
-
-6. Check GPU Availability
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Before training deep learning models on HPC systems, it's important to check whether TensorFlow can access the GPU. 
-Training on a GPU is significantly faster than on a CPU, especially for large image datasets.
-
-If you've followed the setup instructions in the previous section, and you've run the ``install_kernel.sh`` script on Frontera, you should now be running the tutorial notebook inside a containerized Jupyter kernel that includes:
-
-- TensorFlow (v. _____) with GPU support
-- CUDA libraries compatible with the system 
-- All required Python packages pre-installed
-
-To confirm that your environment is correctly configured, run the following code cell in the tutorial notebook (TIP: Make sure to change your kernel to ``tf-cuda101``):
-
-.. code-block:: python
-
-    import tensorflow as tf
-
-    # Check if TensorFlow can detect the GPU
-    print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-
-    # Print TensorFlow version
-    print(tf.__version__)
+* Understand what data analysis is and why (at a high level) it is important. 
+* Have a basic understanding of the different kinds of tasks we will perform and what libraries 
+  we will use for each kind of task. 
+* (Numpy) Understand the primary differences between the ``ndarray`` object from ``numpy`` and basic Python 
+  lists, and when to use each.
+* (Numpy) Utilize ``ndarray`` objects to perform various computations, including linear algebra calculations 
+  and statistical operations. 
 
 
 
 
 
-
-
-
-
-
-..
-
- =====================================
- Step 1: Data Loading and Organization
- =====================================
+Step 1: Data Loading and Organization
+-------------------------------------
 
 ..
  In this step, we load all coral images from the dataset directory and organize them into a DataFrame. 
@@ -140,8 +28,8 @@ To confirm that your environment is correctly configured, run the following code
 ..
  This DataFrame will serve as the foundation for splitting our data into training, validation, and test sets later in the tutorial.
 
- 1.1 List Dataset Directory Contents
- -----------------------------------
+1.1 List Dataset Directory Contents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  Before loading the images, we first want to inspect the directory structure to make sure everything is in the right place. 
  The code below lists the contents of the ``coral-species`` data directory to verity that the subdirectories for each coral species are present and correctly named:
@@ -160,8 +48,8 @@ To confirm that your environment is correctly configured, run the following code
     # You should see something like this:
     # [PosixPath('../data/coral-species/MCAV'), PosixPath('../data/coral-species/ACER'), PosixPath('../data/coral-species/CNAT')]
     
- 1.2 Check File Extensions
- --------------------------
+1.2 Check File Extensions
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
  Next, we scan the dataset directory and all its subdirectories to find out what types of image files are present. 
  This helps us catch unexpected or unsupported file types (e.g., GIFs, txt files, etc.), which could cause problems later when loading images. 
@@ -180,8 +68,8 @@ To confirm that your environment is correctly configured, run the following code
 
  **Question**: What file extensions are present in the dataset? Write down your answer.
 
- 1.3 Explore Image Dimensions and Color Modes
- --------------------------------------------
+1.3 Explore Image Dimensions and Color Modes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  Before feeding images into a CNN, it's important to understand the basic properties of the dataset.
  In this step, we examine the **dimensions** (width x height) as well as the **color mode** (e.g., RGB, RGBA, grayscale) of each image.
@@ -253,8 +141,8 @@ To confirm that your environment is correctly configured, run the following code
 
  We will address these issues in Step 5 when we prepare our data for input into the CNN. 
 
- 1.4 Check for Corrupted Images
- ------------------------------
+1.4 Check for Corrupted Images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  Before continuing, we want to make sure that all images files are readable. 
  Corrupted files can break your model training or cause unexpected errors during preprocessing. 
@@ -300,8 +188,8 @@ To confirm that your environment is correctly configured, run the following code
  
  If there are any corrupted images, in your dataset, this code will automatically remove them. 
 
- 1.5 Create a DataFrame of Image Paths and Labels
- -----------------------------------------------
+1.5 Create a DataFrame of Image Paths and Labels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  Now that we have a good idea of what our data looks like and have removed any corrupted images, we can start setting up our data for training.
  In this step, we build a ``pandas.DataFrame`` that organizes all the image data into two columns:
@@ -330,9 +218,9 @@ To confirm that your environment is correctly configured, run the following code
     # Show a preview of the DataFrame
     df.head()
     
- ========================================
- Step 2: Visualize the Class Distribution
- ========================================
+ 
+Step 2: Visualize the Class Distribution
+----------------------------------------
 
  Before training our CNN, it's important to understand how many images we have for each class (i.e., coral species in this case).
 
@@ -377,9 +265,9 @@ To confirm that your environment is correctly configured, run the following code
 
  **Thought Challenge**: Describe the class distribution in your own words. How much of the dataset is made up by the largest class? The smallest class? Is there anything that we need to address before continuing?
 
- ===========================================
- Step 3: Visualizing Images from the Dataset
- ===========================================
+
+Step 3: Visualizing Images from the Dataset
+-------------------------------------------
 
  It's helpful to look at a few images from each class to get a better understanding of the dataset.
  This will give us a better sense of:
@@ -440,12 +328,12 @@ To confirm that your environment is correctly configured, run the following code
 
  *Remember: the quality of a machine learning model is decided largely by the quality of the dataset it was trained on!*
 
- ====================================================
- Step 4: Split the Dataset and Handle Class Imbalance
- ====================================================
 
- 4.1 Split the Dataset into Training, Validation, and Test Sets
- -------------------------------------------------------------
+Step 4: Split the Dataset and Handle Class Imbalance
+----------------------------------------------------
+
+4.1 Split the Dataset into Training, Validation, and Test Sets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  We are now ready to split our labeled image dataset into three parts:
 
@@ -505,8 +393,8 @@ To confirm that your environment is correctly configured, run the following code
 
     Try running the full training pipeline multiple times with different ``random_state`` values. Do your metrics stay stable? What might that tell you about the robustness of your model?
 
- 4.2 Compute Class Weights
- -------------------------
+4.2 Compute Class Weights
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
  If our dataset is imbalanced (i.e., some classes have many more images than others), the model may learn to favor those majority classes. 
  To address this, we can compute **class weights** based on the training data using the ``compute_class_weight`` function from scikit-learn.

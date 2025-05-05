@@ -1,8 +1,9 @@
 Python Refresher
 ================
 
-Later in this workshop we will run some analysis using python. 
-Here we will cover basic pythn concepts including:
+In this workshop we will primarily be using Python to prepare our data, and build, train, and test
+our models. After going through this section, you should be familiar with basic Python concepts
+including:
 
 * Data types and variables (ints, floats, bools, strings, type(), print())
 * Arithmetic operations (+, -, \*, /, \*\*, %, //)
@@ -12,49 +13,6 @@ Here we will cover basic pythn concepts including:
 * File handling (open, with, read(), readline(), strip(), write())
 * Importing libraries (import, random, names, pip)
 
-.. 
-    * Write and execute Python code on the class server
-    * Use variables, lists, and dictionaries in Python
-    * Write conditionals using a variety of comparison operators
-    * Write useful while and for loops
-    * Arrange code into clean, well organized functions
-    * Read input from and write output to a file
-    * Import and use standard and non-standard Python libraries
-
-   Log in to the Class Server
-   --------------------------
-   
-   To log in to ``isp02.tacc.utexas.edu``, follow the instructions for your operating
-   system or ssh client below.
-   
-   .. note::
-   
-      Replace ``username`` with your TACC username.
-   
-   **Mac / Linux**
-   
-   .. code-block:: console
-   
-      Open the application 'Terminal'
-      ssh username@isp02.tacc.utexas.edu
-      (enter password)
-      (enter token)
-   
-   **Windows (use WSL or an SCP client like PuTTY)**
-   
-   .. code-block:: console
-   
-      Open the application 'PuTTY'
-      enter Host Name: isp02.tacc.utexas.edu
-      (click 'Open')
-      (enter username)
-      (enter password)
-      (enter token)
-   
- 
- If you can't access the class server yet, a local or web-based Python 3
- environment will work for this guide. However, you will need to access the class
- server for future lectures.
 
 .. note::
 
@@ -62,7 +20,6 @@ Here we will cover basic pythn concepts including:
    in *interactive mode* to try out different things. Later on when we get to
    more complex code, we will run commands in a precompiled `Jupyter notebook. <https://jupyter.org/try>`_
 
-If you do not have python installed on your laptop, you can use this `Python 3 environment in a browser <https://www.katacoda.com/scenario-examples/courses/environment-usages/python>`_.
 
 Data Types and Variables
 ------------------------
@@ -71,9 +28,9 @@ Start up the interactive Python interpreter:
 
 .. code-block:: console
 
-   [isp02]$ python3
-   Python 3.6.8 (default, Aug  7 2019, 17:28:10)
-   [GCC 4.8.5 20150623 (Red Hat 4.8.5-39)] on linux
+   [frontera]$ python3
+   Python 3.7.0 (default, Jun  4 2019, 10:47:24)
+   [GCC Intel(R) C++ gcc 8.3 mode] on linux
    Type "help", "copyright", "credits" or "license" for more information.
    >>>
 
@@ -446,7 +403,7 @@ On the command line, use a text editor to start writing a Python script:
 
 .. code-block:: console
 
-   [isp02]$ vim function_test.py
+   [frontera]$ vim function_test.py
 
 
 Enter the following text into the script:
@@ -464,7 +421,7 @@ compiled - just run the raw script with the ``python3`` executable):
 
 .. code-block:: console
 
-   [isp02]$ python3 function_test.py
+   [frontera]$ python3 function_test.py
    Hello, world!
 
 
@@ -696,7 +653,7 @@ code, you would do the following:
 
 .. code-block:: bash
 
-   [isp02]$ pip3 install --user names
+   [frontera]$ pip3 install --user names
    Collecting names
      Downloading https://files.pythonhosted.org/packages/44/4e/f9cb7ef2df0250f4ba3334fbdabaa94f9c88097089763d8e85ada8092f84/names-0.3.0.tar.gz (789kB)
        100% |████████████████████████████████| 798kB 1.1MB/s
@@ -727,28 +684,6 @@ in your own home directory.
    Jonathan Henry
 
 
-Exercises
----------
-
-Test your understanding of the materials above by attempting the following
-exercises.
-
-* Create a list of ~10 different integers. Write a function (using modulus and
-  conditionals) to determine if each integer is even or odd. Print to screen
-  each digit followed by the word 'even' or 'odd' as appropriate.
-* Using nested for loops and if statements, write a program that iterates over
-  every integer from 3 to 100 (inclusive) and prints out the number only if it
-  is a prime number.
-* Create three lists containing 10 integers each. The first list should contain
-  all the integers sequentially from 1 to 10 (inclusive). The second list
-  should contain the squares of each element in the first list. The third list
-  should contain the cubes of each element in the first list. Print all three
-  lists side-by-side in three columns. E.g. the first row should contain 1, 1, 1
-  and the second row should contain 2, 4, 8.
-* Write a script to read in /usr/share/dict/words and print just the last 10
-  lines of the file. Write another script to only print words beginning with the
-  letters "pyt".
-
 
 
 
@@ -759,3 +694,4 @@ Additional Resources
 * `PEP 8 Python Style Guide <https://www.python.org/dev/peps/pep-0008/>`_
 * `Python3 environment in a browser <https://www.katacoda.com/scenario-examples/courses/environment-usages/python>`_
 * `Jupyter Notebooks in a browser <https://jupyter.org/try>`_
+* `Jupyter Notebooks on TACC systems <https://tap.tacc.utexas.edu/>`_
