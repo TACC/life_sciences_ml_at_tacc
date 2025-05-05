@@ -1,8 +1,8 @@
 Nearest Neighbor Classification
 ===============================
 
-In this module, we look at the Nearest Neighbor classification method. We also introduce the 
-concept of overfitting. By the end of this module, students should be able to:
+In this section, we look at the Nearest Neighbor classification method. We also introduce the 
+concept of overfitting. By the end of this section, students should be able to:
 
 1. Describe the k-nearest Neighbor Algorithm
 2. Describe overfitting and recognize it when it occurs in ML model training. 
@@ -85,6 +85,7 @@ In general, the 1-Nearest Neighbor model is susceptible to overfitting.
 
 K-Nearest Neighbor 
 ------------------
+
 We can modify the 1-Nearest Neighbor algorithm to be less susceptible to overfitting by looking at 
 the closest :math:`k` data points in the training set, for some integer, :math:`k\geq 1`, instead 
 of just the single closest data point in the training set. 
@@ -315,6 +316,7 @@ ans training data set. As before, we'll use the ``accuracy_score`` convenience f
 
 Cross-Validation
 ----------------
+
 Let's return to the matter of deterining the value for the *k* in the KNN model. In the code above, 
 we simply chose a value of *k=3* without any thought. We can do better. 
 

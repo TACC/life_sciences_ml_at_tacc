@@ -1,11 +1,11 @@
 Data Standardization And Pipelines
 ==================================
 
-In this module, we motivate and introduce additional data pre-processing techniques that involve 
+In this section, we motivate and introduce additional data pre-processing techniques that involve 
 transforming the input dataset before fitting our model. We also introduce the ``Pipeline`` 
 class from sklearn for chaining multiple transformations together. 
 
-By the end of this module, students should be able to: 
+By the end of this section, students should be able to: 
 
 1. Understand data pre-processing techniques that tranform the dataset such as standardization,
    maxabs Scaler and robust Scaler.
@@ -151,6 +151,7 @@ With a robust Scaler, the median is removed, and scaling is performed based on s
 
 ``RobustScaler`` in sklearn 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 The ``RobustScaler`` class in sklearn provides the same methods as the ``StandardScaler`` we just 
 looked at. Just like before, we'll follow the following steps: 
 
@@ -404,7 +405,7 @@ Note that the optimal ``n_neighbors`` was 19, different from the optimal value o
 
 
 Pipeline With A Custom sklearn Model to Search Across Models
--------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section, we provide an example of writing a custom model in sklearn. 
 The idea is to allow us to search across models and hypyerparemeters within a 

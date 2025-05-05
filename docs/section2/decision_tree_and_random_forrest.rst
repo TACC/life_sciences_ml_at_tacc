@@ -1,11 +1,11 @@
 Decision Tree and Random Forrest
 ================================
 
-In this module we introduce the Decision Tree and Random Forrest classifiers. We discuss 
+In this section we introduce the Decision Tree and Random Forrest classifiers. We discuss 
 general guidelines for when to use each. Finally, we show how to implement 
 Decision Tree and Random Forrest classifiers using sklearn.
 
-By the end of this module, students should be able to:
+By the end of this section, students should be able to:
 
 1. Describe how the Decision Tree and Random Forrest classifier models work 
    at a high level.
@@ -14,6 +14,7 @@ By the end of this module, students should be able to:
 
 Decision Tree
 -------------
+
 A decision tree uses a tree structure of "decision rules" -- i.e., simple "IF ... THEN" 
 statements -- to model a dataset and predict future values. 
 
@@ -49,7 +50,8 @@ Note that in general, a decision tree can have many levels of decision nodes, an
 "feature" used as part of a decision rule could be comprised of several independent variables. 
 
 Algorithms For Constructing Decision Trees
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 How are decision trees constructed? We will not give a complete treatment here but will 
 sketch some of the basic ideas used. 
 
@@ -80,7 +82,8 @@ There are many excellent online resources that provide more details about Decisi
 algorithms; see, for example, [1].
 
 Decision Trees: Interpretable Results 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 One of the main advantages of Decision Tress is their ability to explain how they 
 arrive at their classification result. 
 
@@ -103,7 +106,7 @@ humans to build trust in the models, particularly when deployed in production se
 and used on novel data. 
 
 Decision Trees in Sklearn
-~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The sklearn package provides the ``DecisionTreeClassifier`` class from the 
 ``sklearn.tree`` module. We will use this class to develop a decision tree model for the 
@@ -196,12 +199,14 @@ We see that the tree is rather complex and this could in part explain the overfi
 
 
 Decision Trees: Strengths and Weaknesses 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 In this section we discuss the strengths and weaknesses of the Decision Tree model at a 
 high level. 
 
 Decision Tree Strengths
-^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~
+
 * *Interpretable results*: A major strength of decision trees is that it is easy to understand 
   *how* the model arrived at the prediction. 
 * *Non-linear decision boundaries*: Decision trees are capable of producing non-linear decision 
@@ -221,7 +226,8 @@ Decision Tree Strengths
     Comparison of decision boundary for example decision tree and linear classifier. Citation: [1]
 
 Decision Tree Weaknesses
-^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 * *Relatively poor predictors*: In general, decision trees tend to perform worse than other 
   (even classical) models. The following additional weaknesses help to explain why. 
 * *Prone to overfitting*: The ability to create arbitrarily complex decision boundaries can also 
@@ -267,7 +273,7 @@ We won't go into more of the details behind the algorithms for random forrest, b
 there are many good online resources; for example, [2]. 
 
 Random Forrest in Sklearn
-~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The sklearn package provides the ``RandomForestClassifier`` class from the 
 ``sklearn.ensemble`` module. We will use this class to develop a random forrest model for the 

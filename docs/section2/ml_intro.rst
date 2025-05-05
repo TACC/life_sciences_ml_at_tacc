@@ -1,8 +1,8 @@
 Introduction to Machine Learning
 =================================
 
-This module begins our treatment of Machine Learning. By the end of this module, 
-students should:
+This section begins our treatment of Machine Learning. By the end of this section, 
+you should:
 
 1. Have a basic understanding of the idea of machine learning and the process used to 
    create and deploy an ML model. 
@@ -128,6 +128,7 @@ the independent and dependent variables in each of the examples above?
 
 Classification and Regression
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 When plotting independent and dependent variables, by convention, we put independent variables on the
 *x* axis and dependent variables on the *y* axis. 
 

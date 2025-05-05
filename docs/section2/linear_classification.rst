@@ -1,11 +1,11 @@
 Classification: A First Look
 ============================
 
-In this module we introduce the classification problem, work with some initial examples, and 
+In this section we introduce the classification problem, work with some initial examples, and 
 describe the training and testing phases involved in creating a classifier. We also 
 take a first look at validation and overfitting. 
 
-By the end of this module, students should be able to:
+By the end of this section, students should be able to:
 
 1. Describe the classification problem. 
 2. Describe at a high level the linear classifier and the perceptron algorithm.
@@ -99,7 +99,8 @@ exists a linear decision function that separates all data points that are in cla
 points not in :math:`C`.
 
 Perceptron Algorithm 
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
+
 We'll begin by looking at the Perceptron Algorithm which was originally conceived of by Frank Rosenblatt 
 in his 1956 PhD thesis [2]. For linear classifiers, it can be slow to train, 
 but it can be proven mathematically to always find a correct linear classifier when the data are 
@@ -161,6 +162,7 @@ Gradient Decent can be used to find an optimal :math:`m`.
 
 Linear Classification with Scikit Learn
 ---------------------------------------
+
 Next we look at implementing a linear classifier using the ``sklearn`` package. In this first example, we'll 
 illustrate the techniques on a classic dataset that describes iris flowers. We'll also introduce
 helper functions for splitting data into a training data and testing data and computing the accurary of our
@@ -173,7 +175,8 @@ iris: setosa, virginica and versicolor. The features are: sepal length, sepal wi
 all measured in cm.
 
 Loading the Data
-~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^
+
 First, let us begin by loading the dataset. We'll use a Jupyter notebook for this portion since we will want 
 to make use of some visualization. 
 
@@ -250,7 +253,8 @@ Note that we have organized the data into the objects ``X`` and ``y`` for the in
 respectively. This is a common convention we will use throughout the course. 
 
 Training the Model
-~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^
+
 Let us take a moment to recall the general strategy for working with ML models. 
 
 1. Collect and prepare data with labels.
@@ -329,7 +333,8 @@ The ``clf`` object is the trained model, and it can be used to predict the speci
 ``clf.predict()`` method`. 
 
 Validation 
-~~~~~~~~~~
+^^^^^^^^^^
+
 Now that the model has been trained we can proceed to step 3 -- validation. Our goal here is to compute the 
 accuracy of our model against the test dataset (i.e., the ``test_`` data objects above). We'll also compute 
 the accuracy of the model against the training data to see how they compare. 
@@ -371,7 +376,7 @@ In fact, our model was perfect on both the test and training data! One way to un
 the data -- the Iris dataset is linearly separable, as we will see. 
 
 Additional Properties of the Model
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * ``clf.classes_``: These are the possible target class values the model is trying to predict. 
 * ``clf.decision_function()``: This function computes the actual decision value for a given `X`
@@ -429,7 +434,7 @@ Examples:
 
 
 Visualizing the Decision Boundary
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We'll use the ``DecisionBoundaryDisplay`` class from the ``sklearn.inspection`` in conjunction with ``matplotlib``
 to create a visualization of the decision boundary.
@@ -493,7 +498,7 @@ The result should look similar to the following:
     Resulting plot of the linear decision boundary for the Iris dataset. 
 
 Training on the Full Dataset 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Let's go back and train on the full dataset with all of the features. 
 
@@ -531,7 +536,8 @@ How does the accuracy compare with the previous version?
 
 
 Visualizing the Confusion Matrix 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 A confusion matrix is a useful tool for understanding the performance of a model beyond 
 just the accuracy rate. 
 
@@ -561,6 +567,7 @@ Setosa two times.
 
 Hands-on Lab: Linear Classification of Breast Cancer Malignancy 
 ------------------------------------
+
 In this section, we guide you through developing a linear classifier for the breast cancer example above.
 We'll use the "load_breast_cancer()" from SciKitLearn datasets module.
 
@@ -647,6 +654,7 @@ dataset from sklearn
 
 References and Additional Resources
 -----------------------------------
+
 1. UC Berkeley CS189/289A: Introduction to Machine Learning. https://people.eecs.berkeley.edu/~jrs/papers/machlearn.pdf
 2. Professor’s perceptron paved the way for AI – 60 years too soon. https://news.cornell.edu/stories/2019/09/professors-perceptron-paved-way-ai-60-years-too-soon
 3. R. A. Fisher (1936). "The use of multiple measurements in taxonomic problems". Annals of Eugenics. 7 (2): 179–188. doi:10.1111/j.1469-1809.1936.tb02137.x. hdl:2440/15227

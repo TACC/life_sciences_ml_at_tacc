@@ -1,11 +1,11 @@
 Linear Regression
 =================
 
-In this module, we introduce our first ML algorithm called Linear Regression. We also 
+In this section, we introduce our first ML algorithm called Linear Regression. We also 
 introduce the SciKit Learn Python library which provides an implementation of Linear 
 Regression and many other ML algorithms. 
 
-By the end of this module, students should be able to:
+By the end of this section, students should be able to:
 
 1. Understand the basics of the Linear Regression model and which ML problems it could
    potentially be applied to. 
@@ -228,6 +228,7 @@ The main package is the ``sklearn`` package; check your installation:
 
 Linear Regression in Sklearn: First Steps
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 As a first step, let's create a linear regression model using our real-estate data from above. 
 
 
@@ -355,7 +356,7 @@ non-numeric data.
 
 
 We've made an updated version of the dataset available on the class git repository inside unit02 folder.
-You can `download it here <https://raw.githubusercontent.com/JoshuaUrrutia/life_sciences_ml_at_tacc/refs/heads/development/docs/section2/dna_melting_points.csv>`_.
+You can `download it here <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/development/docs/section2/files/dna_melting_points.csv>`_.
 
 Either create your own csv from your pre-processing notebook or download the new csv from the website 
 and read it into a DataFrame. 

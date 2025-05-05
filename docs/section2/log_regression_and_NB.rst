@@ -1,11 +1,11 @@
 Logistic Regression and Naive Bayes
 ===================================
 
-In this module we introduce the Logistic Regression and Naive Bayes classifiers. We discuss 
+In this section we introduce the Logistic Regression and Naive Bayes classifiers. We discuss 
 general guidelines for when to use each. Finally, we show how to implement 
 Logistic Regression and Naive Bayes using sklearn.
 
-By the end of this module, students should be able to:
+By the end of this section, students should be able to:
 
 1. Describe how the logistic regression and Naive Bayes classifier models work 
    at a high level.
@@ -14,6 +14,7 @@ By the end of this module, students should be able to:
 
 Logistic Regression
 -------------------
+
 In this section, we introduce the Logistic Regression model. As with the other methods in this 
 unit, we will not cover all details but instead will give just a basic sense of the ideas 
 involved. 
@@ -43,7 +44,8 @@ to a probability, i.e., a value between 0 and 1.
 
 
 Example: Diabetes vs Glucose  
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 For simplicity, let's assume we have a binary classification problem with just one independent 
 variable. For example, suppose we are trying to predict whether a person has diabetes based 
 only on their glucose level. We know the higher a person's glucose, the more likely they are 
@@ -69,7 +71,7 @@ and use it to define a cost function which we can then minimize using an algorit
 as gradient descent. 
 
 Logistic Regression in Sklearn
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The sklearn package provides the ``LogisticRegression`` class from the 
 ``sklearn.linear_model`` module. 
@@ -159,7 +161,7 @@ The performance we see on the cancer dataset is quite good, with:
 
 
 Additional Attributes of the ``LogisticRegression`` Model 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The ``LogisticRegression`` model has properties that correspond to those in the 
 ``LinearRegression`` model. For example: 
@@ -214,14 +216,15 @@ Examples:
 
 
 Logistic Regression: Strengths and Weaknesses 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Here we try to summarize the strengths and weaknesses of the Logistic Regression model. Keep in 
 mind, these are general statement that *tend to apply* to most datasets. 
 
 
 Logistic Regression Strengths
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 * *Easy to understand and interpret:* Logistic Regression models tend to be relatively easy to understand and interpret, as they 
   produce probabilities that are foundational in statistics. 
 
@@ -229,7 +232,8 @@ Logistic Regression Strengths
   logistic regression models to avoid overfitting. 
 
 Logistic Regression Weaknesses
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 * *Cannot learn non-linear decision boundaries:* Like all linear models, the big disadvantage here 
   is that logistic regression models cannot learn non-linear decision boundaries. For many real-world
   datasets, this is a show stopper. 
@@ -241,6 +245,7 @@ Logistic Regression Weaknesses
 
 Naive Bayes 
 -----------
+
 The next type of ML model we will discuss is the Naive Bayes model. 
 
 This model is based on a simple (i.e., "naive") assumption that that feature variables 
@@ -307,7 +312,7 @@ want to spend on it, but hopefully this gives you a general sense of the ideas i
 
 
 Types of Naive Bayes Models 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There are several types of Naive Bayes Models. Here we mention just a few:
 
@@ -331,7 +336,8 @@ There are several types of Naive Bayes Models. Here we mention just a few:
 All of these types and others are supported by sklearn; for more details, see [2].
 
 Naive Bayes in sklearn
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
+
 Let's return to our Iris dataset and use Naive Bayes. As with the previous models, the 
 pattern will be similar. For expediency, we do not discuss in detail the data analysis 
 and pre-processing. For details, see our original discussion of the Iris dataset in the 
@@ -375,13 +381,14 @@ As before, we'll use ``classification_report`` to report the performance:
 
 
 Naive Bayes: Strengths and Weaknesses 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Here we try to summarize the strengths and weaknesses of the Naive Bayes model. Keep in 
 mind, these are general statement that *tend to apply* to most datasets. 
 
 Naive Bayes Strengths
-^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~
+
 * *Conceptually easy:* Like, Logistic Regression, the Naive Bayes model is conceptually 
   relatively easy to understand and implement. 
 * *Good scaling:* Naive Bayes tends to be faster and more efficient to implement than 
@@ -390,7 +397,8 @@ Naive Bayes Strengths
   text classification) than other classifiers. 
 
 Naive Bayes Weaknesses
-^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~
+
 * *Poor accuracy when assumptions fail:* When the pair-wise conditional independence assumption
   fails, the performance of Naive Bayes classifiers can suffer. 
 * *Zero frequency issue:* Given that the probabilities are multiplied together in the equation 

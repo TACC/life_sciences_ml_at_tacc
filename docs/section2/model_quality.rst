@@ -6,7 +6,7 @@ extent to which a classification model is valid, but is model accuracy on the te
 lecture, we look at additional measures and techniques for ensuring the quality of a 
 classification model. 
 
-By the end of this module, students should be able to:
+By the end of this section, students should be able to:
 
 1. Understand the difference between accuracy, recall, precision and F1-score, and when to use
    each. 
@@ -18,7 +18,7 @@ different measures (for example, Mean Squared Error, r2-score; see [1] if you ar
 learning about metrics for regression models). 
 
 Limitations of Accuracy
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
 With accuracy, we are simply measuring the proportion of data points we classified correctly. 
 
@@ -87,7 +87,8 @@ data.
 
 
 Recall and Precision
-~~~~~~~~~~~~~~~~~~~~
+--------------------
+
 Recall, Precision and F1-score are three measures designed to help with the above issues. 
 To introduce them, we first need to introduce some additional terminology:
 
@@ -158,7 +159,7 @@ Note also that, without improving the overall accuracy of a model, if a model's 
 precision necessarily gets worse and vice versa. 
 
 :math:`F1`-score
-~~~~~~~~~~~~~~~~
+----------------
 
 The :math:`F_1`-score (or just, *F*-score for short) is the *harmonic mean* of the precision and recall, 
 that is, a certain kind of average, and is thus given by the following formula: 
@@ -178,7 +179,7 @@ which student athlete will go onto win the olympic gold medal might be one such 
 
 
 Computing Recall, Precision and :math:`F_1` with ``sklearn``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------------
 
 The sklearn package has convenience functions for computing recall, precision and :math`F_1` score
 within the ``sklearn.metrics`` module. Each of these functions provides the same, simple API taking 
