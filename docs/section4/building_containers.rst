@@ -107,9 +107,9 @@ Since this code is an image classifier, we will need some images to classify. Yo
 
   $ pwd
   /Users/username/image-classifier/
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/images/dog.jpg
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/images/strawberries.jpg
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/images/automotive.jpg
+  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/images/dog.jpg
+  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/images/strawberries.jpg
+  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/images/automotive.jpg
 
 Finally, your folder should look like this:
 
@@ -228,7 +228,7 @@ However, we can make it executable and add it to the user's `PATH`.
 
 Now test with the following:
 
-.. figure:: ../images/dog.jpg
+.. figure:: ./images/dog.jpg
    :width: 400
    :align: center
 

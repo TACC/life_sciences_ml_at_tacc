@@ -41,7 +41,7 @@ hypervisor (high overhead). Multiple VMs can run on the same physical
 infrastructure - from a few to dozens depending on resources. VMs take up more
 disk space and have long start up times (~minutes).
 
-.. figure:: ../images/arch_vm.png
+.. figure:: ./images/arch_vm.png
    :width: 400
    :align: center
 
@@ -52,7 +52,7 @@ operating system. Many containers can run on the same physical infrastructure -
 up to 1,000s depending on resources. Containers take up less disk space than VMs
 and have very short start up times (~100s of ms).
 
-.. figure:: ../images/arch_container.png
+.. figure:: ./images/arch_container.png
    :width: 400
    :align: center
 
@@ -75,7 +75,7 @@ Container Technologies
 Docker
 ~~~~~~
 
-.. figure:: ../images/docker_logo.jpg
+.. figure:: ./images/docker_logo.jpg
    :height: 180
    :width: 200
    :align: right
@@ -158,7 +158,7 @@ work with containers. First you must either *build* an image from a
 Dockerfile, or *pull* an image from a public registry. Then, you can *run*
 (or deploy) an instance of your image as a container.
 
-.. figure:: ../images/docker_workflow.png
+.. figure:: ./images/docker_workflow.png
    :width: 600
    :align: center
 

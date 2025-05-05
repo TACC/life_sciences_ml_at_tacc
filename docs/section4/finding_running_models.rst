@@ -15,7 +15,7 @@ Setup
 To run the code examples in this section, you will need to open a `Jupyter Notebook <https://jupyter.org/>`_ on
 the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ using the Vista compute cluster.
 
-.. figure:: ../images/tap_vista.png
+.. figure:: ./images/tap_vista.png
    :width: 600
    :align: center
 
@@ -38,7 +38,7 @@ We're going to use the `MobileNet_V2 <https://www.kaggle.com/models/google/mobil
 that is designed for mobile and embedded vision applications. It is a popular choice for image classification tasks
 and is known for its speed and accuracy. The model is pre-trained on the ImageNet dataset.
 
-.. figure:: ../images/mobilenet_v2.png
+.. figure:: ./images/mobilenet_v2.png
    :width: 600
    :align: center
 
@@ -105,7 +105,7 @@ need to install the library. You can do this using pip:
 In the previous section, we built a :ref:`Transfer learning <transfer-learning-label>` example that used the
 pre-trained `ResNet18 <https://pytorch.org/hub/pytorch_vision_resnet/>`_ model from PyTorch Hub as a starting point.
 
-.. figure:: ../images/pytorch_hub_resnet.png
+.. figure:: ./images/pytorch_hub_resnet.png
    :width: 600
    :align: center
 
@@ -153,7 +153,7 @@ Transformers fit into the family of Natural Language Processing (NLP) models tha
 starting with simple models like Bag of Words [4]_ and Word2Vec [5]_, and moving on to more complex models like BERT, GPT, and
 the newest Large Language Models (LLM).
 
-.. figure:: ../images/transformer_timeline.png
+.. figure:: ./images/transformer_timeline.png
    :width: 600
    :align: center
 
@@ -163,7 +163,7 @@ the newest Large Language Models (LLM).
 And because the strategy to increase the performance of these models is to increase the size of the model, the trend
 is to have larger and larger models.
 
-.. figure:: ../images/timeline-of-transformer-models.png
+.. figure:: ./images/timeline-of-transformer-models.png
    :width: 600
    :align: center
 
@@ -181,7 +181,7 @@ which are then passed to the decoder. The decoder generates the output text base
 encoder and the previously generated output text. The self-attention mechanism allows the model to capture long-range
 dependencies and contextual information in the text data.
 
-.. figure:: ../images/general_transformer_architecture.png
+.. figure:: ./images/general_transformer_architecture.png
    :width: 600
    :align: center
 

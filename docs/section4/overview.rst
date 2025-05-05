@@ -8,7 +8,7 @@ If you don't have one already, please create an account on `Docker Hub <https://
 and `GitHub <https://github.com/>`_.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    intro_containers
    building_containers

@@ -330,7 +330,7 @@ following Slurm script.
   apptainer run docker://eriksf/lolcow:latest
 
   echo "grabbing image dog.jpg:"
-  wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/images/dog.jpg
+  wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/images/dog.jpg
 
   echo "classify image dog.jpg:"
   apptainer exec --nv docker://USERNAME/image-classifier:0.1 image_classifier.py dog.jpg
@@ -509,7 +509,7 @@ It can be tested as follows:
 
 The script also produces a scaling plot:
 
-.. figure:: ../images/scaling_plot_cpu.png
+.. figure:: ./images/scaling_plot_cpu.png
   :align: center
 
   Scaling plot for CPU
@@ -549,7 +549,7 @@ The script also produces a scaling plot:
 
 The script also produces a scaling plot:
 
-.. figure:: ../images/scaling_plot.png
+.. figure:: ./images/scaling_plot.png
   :align: center
 
   Scaling plot for GPU
@@ -583,7 +583,7 @@ that is designed to learn features from images.  The model is available in the `
 library, which is a package that provides popular datasets, model architectures, and common image transformations
 for computer vision.
 
-.. figure:: ../images/The-architecture-of-ResNet18.png
+.. figure:: ./images/The-architecture-of-ResNet18.png
    :width: 600
    :align: center
 
@@ -1063,7 +1063,7 @@ Once you have your node, pull the image and run it as follows:
 
 Before the training started, the script created a grid of the training images and saved it to ``test_grid.png``.
 
-.. figure:: ../images/test_grid.png
+.. figure:: ./images/test_grid.png
   :align: center
 
   Example training data grid
@@ -1071,7 +1071,7 @@ Before the training started, the script created a grid of the training images an
 After the training was complete, the script saved the model to ``hymenoptera-finetuning.pt`` and created a
 prediction image for the validation set and saved it to ``resnet18-finetuned_predictions.png``.
 
-.. figure:: ../images/resnet18-finetuned_predictions.png
+.. figure:: ./images/resnet18-finetuned_predictions.png
   :align: center
 
   Prediction image for 'finetuning' model
@@ -1117,7 +1117,7 @@ Now that we have a trained model, we can use it to make predictions (run inferen
 
 This script also creates an image based on the prediction and saves it to ``hymenoptera-finetuning_prediction_silver-tailed_petalcutter_bee.png``.
 
-.. figure:: ../images/hymenoptera-finetuning_prediction_silver-tailed_petalcutter_bee.png
+.. figure:: ./images/hymenoptera-finetuning_prediction_silver-tailed_petalcutter_bee.png
   :align: center
 
   Predicted image for 'silver-tailed_petalcutter_bee.png'
