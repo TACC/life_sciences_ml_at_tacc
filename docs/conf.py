@@ -22,7 +22,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'Life Sciences ML@TACC'
+project = 'ML for Life Sciences @ TACC'
 copyright = '2025, Texas Advanced Computing Center'
 author = 'Texas Advanced Computing Center'
 
@@ -137,7 +137,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'LifeSciencesMLTACC.tex', 'Life Sciences ML@TACC Documentation',
+    (master_doc, 'LifeSciencesMLTACC.tex', 'ML for Life Sciences @ TACC Documentation',
      'Texas Advanced Computing Center', 'manual'),
 ]
 
@@ -147,7 +147,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'lifesciencesmltacc', 'Life Sciences ML@TACC Documentation',
+    (master_doc, 'lifesciencesmltacc', 'ML for Life Sciences @ TACC Documentation',
      [author], 1)
 ]
 
@@ -158,7 +158,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'LifeSciencesMLTACC', 'Life Sciences ML@TACC Documentation',
+    (master_doc, 'LifeSciencesMLTACC', 'ML for Life Sciences @ TACC Documentation',
      author, 'LifeSciencesMLTACC', 'One line description of project.',
      'Miscellaneous'),
 ]
