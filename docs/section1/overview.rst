@@ -8,7 +8,7 @@ Mastery of these concepts is essential for successful completion of the hands-on
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    intro_to_hpc
    running_on_hpc

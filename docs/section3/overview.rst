@@ -8,7 +8,7 @@ natural language processing.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    intro_to_dl
    build_your_own_nn

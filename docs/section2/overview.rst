@@ -7,7 +7,7 @@ linear regression, and principal component analysis, with a focus on ML consider
 evaluation in life science applications. 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    ml_intro
    linear_regression
