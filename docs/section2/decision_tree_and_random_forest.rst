@@ -1,13 +1,13 @@
-Decision Tree and Random Forrest
-================================
+Decision Tree and Random Forest
+===============================
 
-In this section we introduce the Decision Tree and Random Forrest classifiers. We discuss 
+In this section we introduce the Decision Tree and Random Forest classifiers. We discuss 
 general guidelines for when to use each. Finally, we show how to implement 
-Decision Tree and Random Forrest classifiers using sklearn.
+Decision Tree and Random Forest classifiers using sklearn.
 
 By the end of this section, students should be able to:
 
-1. Describe how the Decision Tree and Random Forrest classifier models work 
+1. Describe how the Decision Tree and Random Forest classifier models work 
    at a high level.
 2. Describe when each model is most appropriate to use (and why).
 3. Implement each using the sklearn package. 
@@ -243,8 +243,8 @@ Decision Tree Weaknesses
 
 
 
-Random Forrest
---------------
+Random Forest
+-------------
 
 As mentioned above, decision trees tend to be relatively poor performers compared to other 
 methods. One of the major issues with decision trees is the high degree of variance relative 
@@ -265,18 +265,18 @@ This replicated a similar study from a 1906 county fair in England where partici
 the weight of a 1,200 pound ox. The median of all of the guesses was less than 1% off, beating 
 the guesses of the "experts".
 
-The idea with random forrest is similar: instead of building one tree, build a bunch of 
+The idea with random forest is similar: instead of building one tree, build a bunch of 
 trees based on a radnom sampling of the features, and then create a single model which takes 
 an "average" of all of the trees. 
 
-We won't go into more of the details behind the algorithms for random forrest, but again, 
+We won't go into more of the details behind the algorithms for random forest, but again, 
 there are many good online resources; for example, [2]. 
 
-Random Forrest in Sklearn
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Random Forest in Sklearn
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 The sklearn package provides the ``RandomForestClassifier`` class from the 
-``sklearn.ensemble`` module. We will use this class to develop a random forrest model for the 
+``sklearn.ensemble`` module. We will use this class to develop a random forest model for the 
 Pima Indians diabetes dataset. See [4] for details.
 
 There are some important hyperparameters for the ``RandomForestClassifier``. 
@@ -388,4 +388,4 @@ References and Additional Resources
 1. Lecture 14 (March 8): Decision trees; UC Berkeley CS189/289A: Introduction to Machine Learning. https://people.eecs.berkeley.edu/~jrs/189/lec/14.pdf
 2. Breiman, “Random Forests”, Machine Learning, 45(1), 5-32, 2001. *Available online:* https://link.springer.com/article/10.1023/A:1010933404324
 3. Decision Tree Classifier in SKlearn. https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier
-4. Random Forrest Classifier in SKlearn. https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
+4. Random Forest Classifier in SKlearn. https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html

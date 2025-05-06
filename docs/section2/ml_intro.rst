@@ -171,3 +171,7 @@ additionally decide whether the problem is a classification or regression proble
 
 References and Additional Resources
 -----------------------------------
+
+.. warning::
+
+   Add some additional resources here

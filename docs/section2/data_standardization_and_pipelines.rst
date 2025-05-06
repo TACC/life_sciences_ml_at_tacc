@@ -150,7 +150,7 @@ With a robust Scaler, the median is removed, and scaling is performed based on s
 
 
 ``RobustScaler`` in sklearn 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The ``RobustScaler`` class in sklearn provides the same methods as the ``StandardScaler`` we just 
 looked at. Just like before, we'll follow the following steps: 
@@ -267,7 +267,7 @@ the ``Pipeline()`` constructor (from the same module) directly. We will need to 
 when we want to combine pipelines with ``GridSearchCV``, for example. 
 
 An Initial Pipeline 
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 
 Let's first build a pipeline to apply a scaler to the Pima Indians Diabetes dataset 
 before fitting a KNN classifier model. In this first approach, we will hard code the 
@@ -342,7 +342,7 @@ Note also that the other methods are available, such as ``predict()``, on our
 
 
 Pipeline with Named Steps and ``GridSearchCV``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We already saw some improvements with the simple pipeline above, but we can do better. 
 We can search for the optimal hyperparameters (in our case, the ``n_neighbors``) 
