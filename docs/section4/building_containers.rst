@@ -89,7 +89,7 @@ You can cut and paste the code block above into a new file called, e.g.,
 
   $ pwd
   /Users/username/image-classifier/
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/scripts/image_classifier.py
+  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/image_classifier.py
 
 Now, you should have two files and nothing else in this folder:
 

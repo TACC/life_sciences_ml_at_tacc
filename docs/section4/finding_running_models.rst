@@ -226,7 +226,7 @@ Now we will grab the text file and store it as a string:
 
 .. code-block:: python
 
-    url = "https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/scripts/genomeweb_story.txt"
+    url = "https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section4/files/genomeweb_story.txt"
     response = requests.get(url)
     text = response.text
     print(text)
