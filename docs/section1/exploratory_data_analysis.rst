@@ -1,26 +1,35 @@
 Exploratory Data Analysis
 =========================
 
-We will begin by giving a high-level overview of the kinds of data analysis 
-tasks we will be performing and why they are important. We'll also introduce 
-the ``numpy`` python package and work through some examples in a Jupyter notebook.
+The success of a machine learning model is heavily dependent on the quality of the data it is
+trained on. An important first step in a machine learning project is to familiarize yourself with
+the dataset you will be using. This is a process called **exploratory data analysis (EDA)**. We will
+mostly be using Python and the ``pandas`` library for this. We will perform these steps in a Jupyter
+notebook for convenience, but this can also be done in a standard Python script.
 
-By the end of this module, you should be able to: 
+By the end of this section, you should be able to: 
 
-* Understand what data analysis is and why (at a high level) it is important. 
-* Have a basic understanding of the different kinds of tasks we will perform and what libraries 
-  we will use for each kind of task. 
-* (Numpy) Understand the primary differences between the ``ndarray`` object from ``numpy`` and basic Python 
-  lists, and when to use each.
-* (Numpy) Utilize ``ndarray`` objects to perform various computations, including linear algebra calculations 
-  and statistical operations. 
-
+* Load your data into a pandas DataFrame and explore its contents
+* Investigate the types, ranges, and distributions of data in your dataset
+* Drop unnecessary columns and perform type conversions where necessary
+* Visualize the data using histograms, scatter plots, and other methods
 
 
+EDA Introduction
+----------------
 
+.. warning::
+
+    Add some content here on EDA with pandas, generically. 
+
+
+
+
+Hands-on EDA with Coral Species Dataset
+---------------------------------------
 
 Step 1: Data Loading and Organization
--------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ..
  In this step, we load all coral images from the dataset directory and organize them into a DataFrame. 
@@ -220,7 +229,7 @@ Step 1: Data Loading and Organization
     
  
 Step 2: Visualize the Class Distribution
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
  Before training our CNN, it's important to understand how many images we have for each class (i.e., coral species in this case).
 
@@ -267,7 +276,7 @@ Step 2: Visualize the Class Distribution
 
 
 Step 3: Visualizing Images from the Dataset
--------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
  It's helpful to look at a few images from each class to get a better understanding of the dataset.
  This will give us a better sense of:
@@ -330,7 +339,7 @@ Step 3: Visualizing Images from the Dataset
 
 
 Step 4: Split the Dataset and Handle Class Imbalance
-----------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 4.1 Split the Dataset into Training, Validation, and Test Sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

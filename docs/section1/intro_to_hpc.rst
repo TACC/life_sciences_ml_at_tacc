@@ -39,7 +39,7 @@ Systems Available at TACC
 -------------------------
 
 Clusters
-~~~~~~~~
+^^^^^^^^
 
 `Frontera <https://tacc.utexas.edu/systems/frontera/>`_: The fastest academic supercomputer in the
 world, providing computational capability that makes larger, more complex research challenges possible.
@@ -60,7 +60,7 @@ isolated clouds.
 
 
 Storage Systems
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
 `Corral <https://tacc.utexas.edu/systems/corral/>`_: Storage and data management resource designed
 and optimized to support large-scale collections and a collaborative research environment.
@@ -74,7 +74,7 @@ offers migration for further data management and archiving.
 
 
 File Systems
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 The account-level environment variables ``$HOME``, ``$WORK``, and ``$SCRATCH`` store the paths to
 directories that you own on each of these file systems. 
@@ -108,7 +108,7 @@ Create an Account
 -----------------
 
 Authentication 
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 
 To log in to TACC systems and participate in this workshop, you will need a TACC account and must
 have set up multi-factor authentication using a token app or SMS.  You can do this by visiting the
@@ -144,18 +144,18 @@ In your **TACC portal**, you can also view your allocations, open tickets, and t
 their current status.
 
 
-HPC Systems
-~~~~~~~~~~~
 
-The training will be fully interactive. Participants are **strongly encouraged** to follow along on
+Connecting to the Machines
+--------------------------
+
+This training will be fully interactive. Participants are **strongly encouraged** to follow along on
 the command line. In this workshop, for commands on the local system we will use:
 
 .. code-block:: console
 
    [local]$
 
-
-And commands on remote systems will resembe:
+And commands on remote systems will resemble:
 
 .. code-block:: console
 
@@ -168,17 +168,14 @@ or:
    [vista]$
 
 
-Connecting to the Machines
---------------------------
- 
 Connecting to Frontera
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 To log in to Frontera, follow the instructions for your operating system below.
 
 
 Mac / Linux (Use Terminal)
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Open the application 'Terminal' and:
 
@@ -197,7 +194,7 @@ Open the application 'Terminal' and:
 
 
 Windows (use WSL2 or an SSH client like PuTTY)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Open the application WSL2 :
 
@@ -267,7 +264,7 @@ If your login was successful, your terminal will look something like this:
 
  
 A Note About Quotas
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 The welcome message you receive upon successful login to Frontera has useful information
 for you to keep track of. Especially of note is the breakdown of disk quotas for your account,
@@ -286,26 +283,25 @@ Another useful way to monitor your disk quotas (and TACC project balances) at an
    [frontera]$ /usr/local/etc/taccinfo
 
 
-Transferring Files
-------------------
+Data Management
+---------------
 
 Creating and Changing Folders
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On a Windows or Mac desktop, our present location determines what files and folders
-we can access. I can "see" my present location visually with the help of the graphic
-interface - I could be looking at my Desktop, or the contents of a folder, for example.
-In a Linux command-line interface, we lack the same visual cues to tell us what our
-location is. Instead, we use a command - ``pwd`` (print working directory) - to tell
-us our present location. Try executing this command on Frontera:
+On a Windows or Mac desktop, our present location determines what files and folders we can access. I
+can "see" my present location visually with the help of the graphic interface - I could be looking at
+my Desktop, or the contents of a folder, for example. In a Linux command-line interface, we lack the
+same visual cues to tell us what our location is. Instead, we use a command - ``pwd`` (print working
+directory) - to tell us our present location. Try executing this command on Frontera:
 
 .. code-block:: console
 
    [frontera]$ pwd
    /home1/03302/lconcia
 
-This home location on the Linux filesystem is unique for each user, and it is roughly
-analogous to C:\\Users\\username on Windows, or /Users/username on Mac.
+This home location on the Linux filesystem is unique for each user, and it is roughly analogous to
+C:\\Users\\username on Windows, or /Users/username on Mac.
 
 To see what files and folders are available at this location, use the ``ls`` (list) command:
 
@@ -313,9 +309,9 @@ To see what files and folders are available at this location, use the ``ls`` (li
 
    [frontera]$ ls
 
-I have no files or folders in my home directory yet, so I do not get a response.
-We can create some folders using the ``mkdir`` (make directory) command. The words 
-'folder' and 'directory' are interchangeable:
+I have no files or folders in my home directory yet, so I do not get a response. We can create some
+folders using the ``mkdir`` (make directory) command. The words  'folder' and 'directory' are
+interchangeable:
 
 .. code-block:: console
 
@@ -327,9 +323,9 @@ We can create some folders using the ``mkdir`` (make directory) command. The wor
    [frontera]$ ls
    folder1 folder2
 
-Now we have some folders to work with. To "open" a folder, navigate into that folder 
-using the ``cd`` (change directory) command. This process is analogous to double-clicking 
-a folder on Windows or Mac:
+Now we have some folders to work with. To "open" a folder, navigate into that folder using the
+``cd`` (change directory) command. This process is analogous to double-clicking a folder on Windows
+or Mac:
 
 .. code-block:: console
 
@@ -356,11 +352,11 @@ shortcut, ``..``,  which refers to the **parent folder** - one level higher than
    [frontera]$ pwd
    /home1/03302/lconcia
 
-We are back in our home directory. Instead, we could specify 
-the complete path of where we want to go, in this case ``cd /home1/03302/lconcia``.
-Finally, let's remove the directories we have made, using ``rm -r`` to remove our parent 
-folder ``folder1`` and its subfolders. The ``-r`` command line option recursively removes subfolders 
-and files located "down" the parent directory. ``-r`` is required for folders.
+We are back in our home directory. Instead, we could specify the complete path of where we want to
+go, in this case ``cd /home1/03302/lconcia``. Finally, let's remove the directories we have made,
+using ``rm -r`` to remove our parent folder ``folder1`` and its subfolders. The ``-r`` command line
+option recursively removes subfolders and files located "down" the parent directory. ``-r`` is
+required for folders.
 
 .. code-block:: console
 
@@ -370,7 +366,7 @@ and files located "down" the parent directory. ``-r`` is required for folders.
 
 
 Transferring Files to and from Frontera
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To practice transferring files to Frontera's ``$WORK`` and ``$SCRATCH``, we need to identify the 
 path to our ``$WORK`` and ``$SCRATCH`` directory.  To identify these paths, we can use helpful
@@ -434,7 +430,7 @@ This is just the basics of copying files. See example ``scp`` usage
 
 
 EXERCISE
-^^^^^^^^
+~~~~~~~~
 
 1. Download the `file firststeps.zip <https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/firststeps.zip>`_.
 2. Login to Frontera.
@@ -486,7 +482,7 @@ EXERCISE
 
 
 Review of Topics Covered
-~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 +------------------------------------+-------------------------------------------------+
 | Command                            |          Effect                                 |
@@ -527,7 +523,7 @@ Read the `documentation <https://docs.tacc.utexas.edu/>`_.
 
 
 User Responsibility on Shared Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 HPC systems are shared resources. Your jobs and activity on a cluster, if mismanaged,
 can affect others. TACC staff are always `available to help <https://www.tacc.utexas.edu/about/help/>`_.
