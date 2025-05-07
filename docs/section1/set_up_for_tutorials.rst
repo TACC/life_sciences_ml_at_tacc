@@ -298,6 +298,23 @@ To confirm that your environment is correctly configured, run the following code
 
 
 
+Use of Jupyter on Vista 
+-----------------------
+
+Vista needs additional modules for the use of Jupyter.
+We can add them to the default environment with the following commands:
+
+.. code-block:: bash
+
+    # Load the gcc module
+    module load gcc
+    # Load the python3 module
+    module load python3
+    # save as the default environment
+    module save 
+
+The commands need to be run only once, when we log in on Vista for the first time.
+
 
 
 
