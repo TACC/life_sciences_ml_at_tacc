@@ -18,6 +18,20 @@ By the end of this section, you should be able to:
 * Visualize distributions using box plots, histograms, and scatter plots
 * Compare patterns across subgroups (e.g., years, outcome types)
 
+Getting the Data
+----------------
+
+Before starting, you’ll need to download the dataset. It contains animal outcome records from the Austin Animal Center and will be used throughout this tutorial.
+
+You can download it from the following link:
+
+`Austin_Animal_Center_Outcomes.zip <https://github.com/Ernesto-Lima/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip>`_
+
+After downloading, unzip the file so that ``Austin_Animal_Center_Outcomes.csv`` is available in your working directory.
+
+Make sure the CSV file is accessible from the notebook’s current folder so that the following cell can successfully load the data.
+
+
 Loading and Displaying the Data
 -------------------------------
 
