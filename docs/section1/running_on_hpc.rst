@@ -40,22 +40,22 @@ To learn about the command line options available for ``idev``, use ``idev -help
 Let's go over some of the most useful ``idev`` command line options that can customize your
 interactive session:
 
-To change the **time** limit from the default 30 minutes, users can apply the ``-m`` command line
-option. For example, a user requesting an interactive session for an hour would use the command line
-option ``-m 60``.
+* To change the **time** limit from the default 30 minutes, users can apply the ``-m`` command line
+  option. For example, a user requesting an interactive session for an hour would use the command
+  line option ``-m 60``.
+* To change the **allocation_name** associated with the interactive session, users can use the
+  ``-A`` command line option. This option is useful for when a user has multiple allocations they
+  belong to. For example, if I have allocations on accounts ``TACC`` and ``Training``, I can use
+  ``-A`` to set the allocation I want to be used like so: ``-A TACC`` or ``-A Training``.
+* To change the **queue** to be different than the default ``development`` queue, users can use the
+  ``-p`` command line option. For example, if a user wants to launch an interactive session on one
+  of Frontera GPU nodes, they would use the command line option ``-p rtx`` or ``-p rtx-dev``. You
+  can learn more about the different queues of Frontera 
+  `here <https://docs.tacc.utexas.edu/hpc/frontera/#table6>`_.
 
-To change the **allocation_name** associated with the interactive session, users can use the ``-A``
-command line option. This option is useful for when a user has multiple allocations they belong to. 
-For example, if I have allocations on accounts ``TACC`` and ``Training``, I can use ``-A`` to set the
-allocation I want to be used like so: ``-A TACC`` or ``-A Training``.
-
-To change the **queue** to be different than the default ``development`` queue, users can use the
-``-p`` command line option. For example, if a user wants to launch an interactive session on one of
-Frontera GPU nodes, they would use the command line option ``-p rtx`` or ``-p rtx-dev``. You can
-learn more about the different queues of Frontera
-`here <https://docs.tacc.utexas.edu/hpc/frontera/#table6>`_.
-
-Note: For the scope of this section, we will be using the default ``development`` queue.  
+.. note::
+   
+   For the scope of this section, we will be using the default ``development`` queue.  
 
 To start a thirty-minute interactive session on a compute node in the development queue with our
 ``EXAMPLE`` allocation:
@@ -85,12 +85,13 @@ If launch is successful, you will see output that includes the following excerpt
    ...
    c205-004[clx](633)$
 
+
 EXERCISE
 ^^^^^^^^
 
-Let's execute a Python code that determines the larger of two numbers. 
-The code also includes a 3-second delay before finishing. Note, the ``[clx]`` syntax in the prompt
-refers to a Frontera Cascade Lake node.
+Let's execute some Python code that determines the larger of two numbers. The code also includes a
+3-second delay before finishing. Note, the ``[clx]`` syntax in the prompt refers to an interactive
+session that has been started on a Frontera Cascade Lake node.
 
 .. code-block:: console
 
@@ -110,7 +111,8 @@ Load the appropriate modules, and run ``my_code.py``.
    [clx]$ python3 my_code.py
    The larger number of 51 and 20 is 51
 
-You can check the files that were generated using ``ls``, and see the contents of the file with ``cat``.
+You can check the files that were generated using ``ls``, and see the contents of the file with
+``cat``.
 
 .. code-block:: console
 
@@ -190,12 +192,12 @@ First, navigate to the ``Lab01`` directory where we have an example job script p
    # Everything below here should be Linux commands
 
 
-
 Frontera Production Queues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Here, we are comparing the differences between two queues: ``development`` and ``normal``. 
-For information about other queues, please refer to the `Frontera Production Queues <https://docs.tacc.utexas.edu/hpc/frontera/#table6>`_.
+For information about other queues, please refer to the
+`Frontera Production Queues <https://docs.tacc.utexas.edu/hpc/frontera/#table6>`_.
 
 .. table::
    :align: left
@@ -211,13 +213,14 @@ For information about other queues, please refer to the `Frontera Production Que
    Charge Rate per node-hour             1 SU                     1 SU 
    ===================================== ======================== ==========================
 
-**Note**: If you submit a job requesting 48 hrs in the normal queue, and it takes a total of 10 hrs
-to run, you will be charged as follows:
+.. note::
 
-**SUs charged = (Number of nodes) X (job wall-clock time) X (charge rate per node-hour).**
-
-**SUs charged = (Number of nodes) X 10 X 1.**
-
+   If you submit a job requesting 48 hrs in the normal queue, and it takes a total of 10 hrs
+   to run, you will be charged as follows:
+   
+   **SUs charged = (Number of nodes) X (job wall-clock time) X (charge rate per node-hour).**
+   
+   **SUs charged = (Number of nodes) X 10 X 1.**
 
 
 GPUs Available at TACC 
@@ -247,8 +250,7 @@ Here a summary of GPUs available at TACC.
 +                          +               +                 +                                 +-------------------------------------------------+
 |                          |               |                 |                                 |   gh-dev                                        |
 +--------------------------+---------------+-----------------+---------------------------------+-------------------------------------------------+
- 
- 
+
 
 Executing Basic Job Management Tasks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -366,8 +368,8 @@ For more information, see:
 Submit a Batch Job to the Queue
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Once you have filled in the job description, save and quit the file. 
-Submit the job to the queue using the ``sbatch`` command`:
+Once you have filled in the job description, save and quit the file. Submit the job to the queue
+using the ``sbatch`` command`:
 
 .. code-block:: console
 
@@ -377,12 +379,13 @@ To view the jobs you have currently in the queue, use the ``showq`` or ``squeue`
 
 .. code-block:: console
 
-   [frontera]$ showq -u
-   [frontera]$ showq        # shows all jobs by all users
-   [frontera]$ squeue -u $USERNAME
-   [frontera]$ squeue       # shows all jobs by all users
+   [frontera]$ showq -u               # shows my jobs
+   [frontera]$ showq                  # shows all jobs by all users
+   [frontera]$ squeue -u $USERNAME    # shows my jobs
+   [frontera]$ squeue                 # shows all jobs by all users
 
-If for any reason you need to cancel a job, use the ``scancel`` command with the 6- or 7-digit jobid:
+If for any reason you need to cancel a job, use the ``scancel`` command with the 6- or 7-digit
+``jobid``:
 
 .. code-block:: console
 
@@ -407,37 +410,14 @@ and an error file named something similar to ``error.o6146935`` in the same dire
 **Congratulations! You ran a batch job on Frontera!**
 
 
-Review of VIM Commands Covered
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-+------------------------------------+-------------------------------------------------+
-| Command                            |          Effect                                 |
-+====================================+=================================================+
-| ``vim file.txt``                   |  open "file.txt" and edit with ``vim``          |
-+------------------------------------+-------------------------------------------------+
-| ``i``                              |  toggle to insert mode                          |
-+------------------------------------+-------------------------------------------------+
-| ``<Esc>``                          |  toggle to normal mode                          |                                                 
-+------------------------------------+-------------------------------------------------+
-| ``<arrow keys>``                   |  navigate the file                              |
-+------------------------------------+-------------------------------------------------+
-| ``:q``                             |  quit ending the file                           |
-+------------------------------------+-------------------------------------------------+
-| ``:q!``                            |  quit editing the file without saving           |
-+------------------------------------+-------------------------------------------------+
-|  ``:w``                            |  save the file, continue editing                |
-+------------------------------------+-------------------------------------------------+
-|  ``:wq``                           |  save and quit                                  |
-+------------------------------------+-------------------------------------------------+
-
-
 Managing Modules
 ----------------
 
 Modules enable users to run specific applications or access libraries without the need to log out
-and back in. Modules for applications adjust the user's path for easy access, while those for library
-packages set environment variables indicating the location of library and header files.  Switching
-ssbetween package versions or removing a package is straightforward.
+and back in. Modules for applications adjust the user's path for easy access, while those for
+library packages set environment variables indicating the location of library and header files.
+Switching between package versions or removing a package is straightforward.
+
 
 Tour of the Module Command
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -447,9 +427,9 @@ independent of the user's shell.  Typically the system will load a
 default set of modules.  A user can list the modules loaded by:
 
 .. code-block:: console
-   
-   [frontera]$ module list
 
+   [frontera]$ module list
+   
    Currently Loaded Modules:
      1) intel/19.1.1   3) git/2.24.1      5) python3/3.7.0   7) hwloc/1.11.12   9) TACC
      2) impi/19.0.9    4) autotools/1.2   6) cmake/3.24.2    8) xalt/2.10.34
@@ -458,7 +438,9 @@ To find out available modules for loading, a user can use:
 
 .. code-block:: console
 
-    [frontera]$ module avail
+   [frontera]$ module avail
+   - or -
+   [frontera]$ module spider
 
 Press the ``<Enter>`` key to scroll through line-by-line, or the ``<Space>`` key to scroll through
 page-by-page. Press ``q`` to quit the view.
@@ -468,25 +450,24 @@ modules are available to load. To display a concise listing:
 
 .. code-block:: console
 
-    [frontera]$ module overview
+   [frontera]$ module overview
+   
+   ----------------- /opt/apps/intel19/impi19_0/python3_7/modulefiles -----------------
+   boost-mpi (2)
+   
+   --------------------- /opt/apps/intel19/python3_7/modulefiles ----------------------
+   boost (2)
+   
+   ---------------------- /opt/apps/intel19/impi19_0/modulefiles ----------------------
+   Rstats    (2)   gromacs    (4)    openfoam        (4)     remora      (2)
+   adcirc    (1)   hpctoolkit (2)    opensees        (4)     rosetta     (1)
+   adios2    (1)   hypre      (16)   p3dfft++        (1)     slepc       (39)
+   amask     (1)   ipm        (1)    p4est           (2)     suitesparse (10)
+   arpack    (1)   kokkos     (4)    parallel-netcdf (4)     sundials    (9)
+   aspect    (1)   lammps     (4)    parmetis        (1)     superlu     (12)
 
-    ----------------- /opt/apps/intel19/impi19_0/python3_7/modulefiles -----------------
-    boost-mpi (2)
-    
-    --------------------- /opt/apps/intel19/python3_7/modulefiles ----------------------
-    boost (2)
-    
-    ---------------------- /opt/apps/intel19/impi19_0/modulefiles ----------------------
-    Rstats    (2)   gromacs    (4)    openfoam        (4)     remora      (2)
-    adcirc    (1)   hpctoolkit (2)    opensees        (4)     rosetta     (1)
-    adios2    (1)   hypre      (16)   p3dfft++        (1)     slepc       (39)
-    amask     (1)   ipm        (1)    p4est           (2)     suitesparse (10)
-    arpack    (1)   kokkos     (4)    parallel-netcdf (4)     sundials    (9)
-    aspect    (1)   lammps     (4)    parmetis        (1)     superlu     (12)
-    
-
-This shows the short name of the module (i.e. git, or singularity)
-and the number in the parenthesis is the number of versions for each.
+This shows the short name of the module (i.e. git, or Rstats)
+and the number in the parentheses is the number of versions for each.
 This list above shows that there is one version of git and two
 versions of Rstats.
 
@@ -494,14 +475,13 @@ To check all the versions of a package (e.g., Rstats):
 
 .. code-block:: console
 
-    [frontera]$ module avail Rstats
+   [frontera]$ module avail Rstats
+   
+   --------------- /opt/apps/intel19/impi19_0/modulefiles ---------------
+      Rstats/3.6.3    Rstats/4.0.3 (D)
 
-    --------------- /opt/apps/intel19/impi19_0/modulefiles ---------------
-         Rstats/3.6.3    Rstats/4.0.3 (D)
-
-
-In *Rstats/4.0.3 (D)*, *D* denotes the default module. When loading packages, if you don't specify
-the version, the default module will be loaded. To load packages a user simply does:
+In ``Rstats/4.0.3 (D)``, the ``(D)`` denotes the default module. When loading packages, if you don't
+specify the version, the default module will be loaded. To load packages a user simply does:
 
 .. code-block:: console
 
@@ -525,11 +505,54 @@ To get a list of all the commands that module knows about do:
 
     [frontera]$ module help
 
+
 Review of Topics Covered
-^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------
+
+**VIM**
 
 +------------------------------------+-------------------------------------------------+
-| Command                            |          Effect                                 |
+| Command                            |  Effect                                         |
++====================================+=================================================+
+| ``vim file.txt``                   |  open "file.txt" and edit with ``vim``          |
++------------------------------------+-------------------------------------------------+
+| ``i``                              |  toggle to insert mode                          |
++------------------------------------+-------------------------------------------------+
+| ``<Esc>``                          |  toggle to normal mode                          |
++------------------------------------+-------------------------------------------------+
+| ``<arrow keys>``                   |  navigate the file                              |
++------------------------------------+-------------------------------------------------+
+| ``:q``                             |  quit ending the file                           |
++------------------------------------+-------------------------------------------------+
+| ``:q!``                            |  quit editing the file without saving           |
++------------------------------------+-------------------------------------------------+
+|  ``:w``                            |  save the file, continue editing                |
++------------------------------------+-------------------------------------------------+
+|  ``:wq``                           |  save and quit                                  |
++------------------------------------+-------------------------------------------------+
+
+**SLURM**
+
++------------------------------------+-------------------------------------------------+
+| Command                            |  Effect                                         |
++====================================+=================================================+
+| ``sbatch JOB.SLURM``               |  submit batch job to the queue                  |
++------------------------------------+-------------------------------------------------+
+| ``showq``                          |  show all jobs by all users                     |
++------------------------------------+-------------------------------------------------+
+| ``showq -u``                       |  show the current user's jobs                   |
++------------------------------------+-------------------------------------------------+
+| ``squeue``                         |  show all jobs by all users                     |
++------------------------------------+-------------------------------------------------+
+| ``squeue -u USERNAME``             |  show user USERNAME's jobs                      |
++------------------------------------+-------------------------------------------------+
+| ``scancel JOBID``                  |  cancel a job given a job ID                    |
++------------------------------------+-------------------------------------------------+
+
+**Modules**
+
++------------------------------------+-------------------------------------------------+
+| Command                            | Effect                                          |
 +====================================+=================================================+
 | ``module list``                    | List currently loaded modules                   |
 +------------------------------------+-------------------------------------------------+
@@ -547,3 +570,11 @@ Review of Topics Covered
 +------------------------------------+-------------------------------------------------+
 | ``module help``                    | Show module command help                        |
 +------------------------------------+-------------------------------------------------+
+
+
+Additional Resources
+--------------------
+
+* `Frontera queues <https://docs.tacc.utexas.edu/hpc/frontera/#table6>`_
+* `VIM tutorial <http://openvim.com/>`_
+* `Lmod module system <https://lmod.readthedocs.io/en/latest/>`_
