@@ -18,30 +18,54 @@ By the end of this section, you should be able to:
 * Visualize distributions using box plots, histograms, and scatter plots
 * Compare patterns across subgroups (e.g., years, outcome types)
 
-Getting the Data
-----------------
-
-Before starting, you’ll need to download the dataset. It contains animal outcome records from the Austin Animal Center and will be used throughout this tutorial.
-
-You can download it from the following link:
-
-`Austin_Animal_Center_Outcomes.zip <https://github.com/Ernesto-Lima/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip>`_
-
-After downloading, unzip the file so that ``Austin_Animal_Center_Outcomes.csv`` is available in your working directory.
-
-Make sure the CSV file is accessible from the notebook’s current folder so that the following cell can successfully load the data.
-
-
-Loading and Displaying the Data
+Getting and Displaying the Data
 -------------------------------
 
-We begin by loading the dataset using pandas. The dataset is publicly available and includes animal outcomes (e.g., adoptions, euthanasia, returns) from the Austin Animal Center.
+Before starting, you’ll need to load the dataset containing animal outcome records from the Austin Animal Center. It will be used throughout this tutorial.
+
+Instead of downloading and unzipping the file manually, we can now **programmatically fetch and extract the data directly from the URL** using Python. This approach makes your code more portable and reproducible.
 
 .. code:: python
 
+   import requests
+   import zipfile
+   import io
    import pandas as pd
-   data = pd.read_csv('Austin_Animal_Center_Outcomes.csv')
-   display(data)
+
+   # URL pointing to the ZIP file containing the CSV dataset
+   url = 'https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip'
+
+   # Send an HTTP GET request to fetch the content of the ZIP file
+   response = requests.get(url)
+   print(response.status_code)  # Should return 200 if the request was successful
+
+   # Extract the ZIP file directly from the response's binary content
+   with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+
+       # Open the CSV file inside the ZIP without saving it to disk
+       with z.open('Austin_Animal_Center_Outcomes.csv') as csv_file:
+
+           # Read the CSV into a pandas DataFrame
+           data = pd.read_csv(csv_file)
+
+           # Display the first few rows of the DataFrame
+           display(data)
+
+**Explanation of the Code:**
+
+- **requests.get(url)**: Sends an HTTP GET request to the specified URL to retrieve the content of the ZIP file.
+
+- **io.BytesIO(response.content)**: Creates an in-memory binary stream from the downloaded content, allowing it to be treated as a file-like object.
+
+- **zipfile.ZipFile(...)**: Opens the ZIP file from the in-memory binary stream.
+
+- **z.open('Austin_Animal_Center_Outcomes.csv')**: Accesses the specific CSV file within the ZIP archive.
+
+- **pd.read_csv(csv_file)**: Reads the CSV file into a pandas DataFrame for data manipulation and analysis.
+
+- **display(data)**: Displays the DataFrame in a readable format, typically used in Jupyter notebooks.
+
+This method avoids the need for manual downloading or unzipping and ensures your code can be run from any location with internet access.
 
 .. image:: ./images/dataframe.png
    :align: center
@@ -51,6 +75,20 @@ The image above represents a **DataFrame**, which is a 2D labeled data structure
 - **index**: row labels (blue)
 - **series**: column of values (green)
 - **key**: column name (red)
+
+.. note::
+
+   **Alternative method:** You can also download the file manually using the link below, unzip it, and place ``Austin_Animal_Center_Outcomes.csv`` in your working directory.
+
+   `Austin_Animal_Center_Outcomes.zip <https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip>`_
+
+   Once unzipped, make sure the CSV file is accessible from the notebook’s current folder, then you can load it using:
+
+   .. code:: python
+
+      import pandas as pd
+      data = pd.read_csv('Austin_Animal_Center_Outcomes.csv')
+      display(data)
 
 Understanding the Structure
 ---------------------------
