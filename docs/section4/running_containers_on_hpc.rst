@@ -425,7 +425,7 @@ NVIDIA host driver on the system supports the version of the CUDA library inside
 For some more exciting examples, lets look at two of the most popular Deep Learning frameworks for
 Python, `Tensorflow <https://www.tensorflow.org/>`__ and `PyTorch <https://pytorch.org/>`__.
 
-First, we'll run a simple script (`tf_test.py <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/scripts/tf_test.py>`_)
+First, we'll run a simple script (`tf_test.py <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/tf_test.py>`_)
 that uses Tensorflow to show the GPUs and then creates two tensors and multiplies them together.
 It can be tested as follows:
 
@@ -435,7 +435,7 @@ It can be tested as follows:
   $ cd $SCRATCH
 
   Download the test code
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/scripts/tf_test.py
+  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/tf_test.py
 
   Pull the image
   $ apptainer pull docker://nvcr.io/nvidia/tensorflow:24.12-tf2-py3
@@ -464,7 +464,7 @@ It can be tested as follows:
 	If you would like avoid the wordy tensorflow warning messages, run the above command and
 	redirect STDERR to a file (i.e. ``2>warnings.txt``).
 
-Next, we'll look at another example of matrix multiplication using PyTorch (`pytorch_matmul_scaling_test.py <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/scripts/pytorch_matmul_scaling_test.py>`_)
+Next, we'll look at another example of matrix multiplication using PyTorch (`pytorch_matmul_scaling_test.py <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/pytorch_matmul_scaling_test.py>`_)
 where we'll show how long it takes to multiply increasingly bigger matrices using both the CPU and GPU.
 It can be tested as follows:
 
@@ -474,7 +474,7 @@ It can be tested as follows:
   $ cd $SCRATCH
 
   Download the test code
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/scripts/pytorch_matmul_scaling_test.py
+  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/pytorch_matmul_scaling_test.py
 
   Pull the image
   $ apptainer pull docker://eriksf/pytorch-ml-container:0.2

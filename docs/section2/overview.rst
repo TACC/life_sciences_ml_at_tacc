@@ -15,5 +15,5 @@ evaluation in life science applications.
    model_quality
    knn
    log_regression_and_NB
-   decision_tree_and_random_forrest
+   decision_tree_and_random_forest
    data_standardization_and_pipelines

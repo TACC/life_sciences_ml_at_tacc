@@ -1,9 +1,9 @@
 Introduction to High Performance Computing
 ==========================================
 
-High Peformance Computing (HPC) refers to the aggregation of computing resources (i.e. supercomputers
-or clusters) to achieve performance far greater than a single workstation or server. By the end of this
-section, you should be able to:
+High Peformance Computing (HPC) refers to the aggregation of computing resources (i.e.
+supercomputers or clusters) to achieve performance far greater than a single workstation or server.
+By the end of this section, you should be able to:
 
 * Describe basic HPC architecture
 * Log in to a remote HPC system at TACC
@@ -19,14 +19,13 @@ architecture. We can think of an HPC systeam as a very large and complicated lab
 Users need to learn how to:
 
 * Interface with it / push the right buttons (Linux)
-* Load samples (data)
-* Run experiments (jobs)
-* Interpret the results (data analysis / vis)
+* Load samples (transfer data)
+* Run experiments (submit batch jobs)
+* Interpret the results (perform data analysis / vis)
 
 .. image:: ./images/hpc_schematic.png
    :target: ./images/hpc_schematic.png
    :alt: HPC System Architecture
-
 
 **IMPORTANT: Login vs. Compute Nodes**
 
@@ -39,47 +38,40 @@ Systems Available at TACC
 -------------------------
 
 Clusters
-~~~~~~~~
+^^^^^^^^
 
-`Frontera <https://tacc.utexas.edu/systems/frontera/>`_: The fastest academic supercomputer in the
-world, providing computational capability that makes larger, more complex research challenges possible.
-
-`Vista <https://tacc.utexas.edu/systems/vista/>`_: Vista expands TACC’s capacity for AI and ensures
-that the broadscience, engineering, and education research communities have access to the most
-advanced computing and AI technologies.
-
-`Stampede3 <https://tacc.utexas.edu/systems/stampede3/>`_: The newest strategic resource advancing NSF's
-supercomputing ecosystem for the nation's open science community.
-
-`Lonestar6 <https://tacc.utexas.edu/systems/lonestar6/>`_: Supporting Texas researchers in providing
-simulation, data analysis, visualization, and AI/machine learning.
-
-`Jetstream2 <https://tacc.utexas.edu/systems/jetstream2/>`_:
-A user-friendly, scalable cloud environment with reproducible, sharable computing on geographically
-isolated clouds.
+* `Frontera <https://tacc.utexas.edu/systems/frontera/>`_: The fastest academic supercomputer in the
+  world, providing computational capability that makes larger, more complex research challenges
+  possible.
+* `Vista <https://tacc.utexas.edu/systems/vista/>`_: Vista expands TACC's capacity for AI and
+  ensures that the broadscience, engineering, and education research communities have access to the
+  most advanced computing and AI technologies.
+* `Stampede3 <https://tacc.utexas.edu/systems/stampede3/>`_: The newest strategic resource advancing
+  NSF's supercomputing ecosystem for the nation's open science community.
+* `Lonestar6 <https://tacc.utexas.edu/systems/lonestar6/>`_: Supporting Texas researchers in
+  providing simulation, data analysis, visualization, and AI/machine learning.
+* `Jetstream2 <https://tacc.utexas.edu/systems/jetstream2/>`_: A user-friendly, scalable cloud
+  environment with reproducible, sharable computing on geographically isolated clouds.
 
 
 Storage Systems
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
-`Corral <https://tacc.utexas.edu/systems/corral/>`_: Storage and data management resource designed
-and optimized to support large-scale collections and a collaborative research environment.
-
-`Ranch <https://tacc.utexas.edu/systems/ranch/>`_: Long-term data archiving environment designed,
-implemented, and supported to provide storage for data sets of the TACC user community.
-
-`Stockyard <https://tacc.utexas.edu/systems/stockyard/>`_: Global file system at the center of TACC's
-system ecosystem that supports data-driven science by providing online storage of large datasets, and
-offers migration for further data management and archiving.
+* `Corral <https://tacc.utexas.edu/systems/corral/>`_: Storage and data management resource designed
+  and optimized to support large-scale collections and a collaborative research environment.
+* `Ranch <https://tacc.utexas.edu/systems/ranch/>`_: Long-term data archiving environment designed,
+  implemented, and supported to provide storage for data sets of the TACC user community.
+* `Stockyard <https://tacc.utexas.edu/systems/stockyard/>`_: Global file system at the center of
+  TACC's system ecosystem that supports data-driven science by providing online storage of large
+  datasets, and offers migration for further data management and archiving.
 
 
 File Systems
-~~~~~~~~~~~~
+^^^^^^^^^^^^
 
 The account-level environment variables ``$HOME``, ``$WORK``, and ``$SCRATCH`` store the paths to
 directories that you own on each of these file systems. 
  
-
 +---------------------+-----------------------------------+--------------------------------------------------------------------------------------------------------------------+
 | File System         | Quota                             | Key Features                                                                                                       | 
 +=====================+===================================+====================================================================================================================+
@@ -94,21 +86,14 @@ directories that you own on each of these file systems.
 |                     |                                   |- Recommended Use: Reproducible datasets, I/O files: temporary files, checkpoint/restart files, job output files    |
 +---------------------+-----------------------------------+--------------------------------------------------------------------------------------------------------------------+
 
-
 Files in ``$SCRATCH`` are subject to purge if access time is more than 10 days old.
-
-A useful way to monitor your disk quotas (and TACC project balances) at any time is to execute:
-
-.. code-block:: console
-
-   [frontera]$ /usr/local/etc/taccinfo
 
 
 Create an Account
 -----------------
 
 Authentication 
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 
 To log in to TACC systems and participate in this workshop, you will need a TACC account and must
 have set up multi-factor authentication using a token app or SMS.  You can do this by visiting the
@@ -128,7 +113,6 @@ Then clicking on your username at the top right of the page:
    :width: 800px
    :align: center
 
- 
 And selecting "Manage Account", and, under MFA Pairing, clicking to pair:
 
 .. image:: ./images/TACC_MFA_pairing.png
@@ -137,25 +121,25 @@ And selecting "Manage Account", and, under MFA Pairing, clicking to pair:
    :width: 800px
    :align: center
 
-
 You can find more details about MFA Pairing `here <https://docs.tacc.utexas.edu/basics/mfa/>`_.
 
-In your **TACC portal**, you can also view your allocations, open tickets, and the systems along with
-their current status.
+.. tip::
+   
+   In your **TACC portal**, you can also view your allocations, open tickets, and the systems along
+   with their current status.
 
 
-HPC Systems
-~~~~~~~~~~~
+Connecting to the Machines
+--------------------------
 
-The training will be fully interactive. Participants are **strongly encouraged** to follow along on
+This training will be fully interactive. Participants are **strongly encouraged** to follow along on
 the command line. In this workshop, for commands on the local system we will use:
 
 .. code-block:: console
 
    [local]$
 
-
-And commands on remote systems will resembe:
+And commands on remote systems will resemble:
 
 .. code-block:: console
 
@@ -168,17 +152,13 @@ or:
    [vista]$
 
 
-Connecting to the Machines
---------------------------
- 
 Connecting to Frontera
-~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^
 
 To log in to Frontera, follow the instructions for your operating system below.
 
-
 Mac / Linux (Use Terminal)
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Open the application 'Terminal' and:
 
@@ -194,10 +174,8 @@ Open the application 'Terminal' and:
    (enter password)
    (enter 6-digit token)
 
-
-
-Windows (use WSL2 or an SSH client like PuTTY)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Windows (Use WSL2 or an SSH Client)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Open the application WSL2 :
 
@@ -212,7 +190,6 @@ Open the application WSL2 :
 
    (enter password)
    (enter 6-digit token)
-
 
 Or open an SSH client like `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html>`_:
 
@@ -265,9 +242,9 @@ If your login was successful, your terminal will look something like this:
    | /scratch3           0.0       0.0     0.00            1           0    0.00 |
    -------------------------------------------------------------------------------
 
- 
+
 A Note About Quotas
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 The welcome message you receive upon successful login to Frontera has useful information
 for you to keep track of. Especially of note is the breakdown of disk quotas for your account,
@@ -278,34 +255,35 @@ impact your own work, but also impact the system for others. For example, if you
 your quota in ``$WORK``, and your job is repeatedly trying (and failing) to write to ``$WORK``,
 you will stress that file system.
 
+.. tip::
 
-Another useful way to monitor your disk quotas (and TACC project balances) at any time is to execute:
+   Another useful way to monitor your disk quotas (and TACC project balances) at any time is to
+   execute:
+   
+   .. code-block:: console
+   
+      [frontera]$ /usr/local/etc/taccinfo
 
-.. code-block:: console
 
-   [frontera]$ /usr/local/etc/taccinfo
-
-
-Transferring Files
-------------------
+Data Management
+---------------
 
 Creating and Changing Folders
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On a Windows or Mac desktop, our present location determines what files and folders
-we can access. I can "see" my present location visually with the help of the graphic
-interface - I could be looking at my Desktop, or the contents of a folder, for example.
-In a Linux command-line interface, we lack the same visual cues to tell us what our
-location is. Instead, we use a command - ``pwd`` (print working directory) - to tell
-us our present location. Try executing this command on Frontera:
+On a Windows or Mac desktop, our present location determines what files and folders we can access. I
+can "see" my present location visually with the help of the graphic interface - I could be looking
+at my Desktop, or the contents of a folder, for example. In a Linux command-line interface, we lack
+the same visual cues to tell us what our location is. Instead, we use a command - ``pwd`` (print
+working directory) - to tell us our present location. Try executing this command on Frontera:
 
 .. code-block:: console
 
    [frontera]$ pwd
    /home1/03302/lconcia
 
-This home location on the Linux filesystem is unique for each user, and it is roughly
-analogous to C:\\Users\\username on Windows, or /Users/username on Mac.
+This home location on the Linux filesystem is unique for each user, and it is roughly analogous to
+C:\\Users\\username on Windows, or /Users/username on Mac.
 
 To see what files and folders are available at this location, use the ``ls`` (list) command:
 
@@ -313,9 +291,9 @@ To see what files and folders are available at this location, use the ``ls`` (li
 
    [frontera]$ ls
 
-I have no files or folders in my home directory yet, so I do not get a response.
-We can create some folders using the ``mkdir`` (make directory) command. The words 
-'folder' and 'directory' are interchangeable:
+I have no files or folders in my home directory yet, so I do not get a response. We can create some
+folders using the ``mkdir`` (make directory) command. The words  'folder' and 'directory' are
+interchangeable:
 
 .. code-block:: console
 
@@ -327,9 +305,9 @@ We can create some folders using the ``mkdir`` (make directory) command. The wor
    [frontera]$ ls
    folder1 folder2
 
-Now we have some folders to work with. To "open" a folder, navigate into that folder 
-using the ``cd`` (change directory) command. This process is analogous to double-clicking 
-a folder on Windows or Mac:
+Now we have some folders to work with. To "open" a folder, navigate into that folder using the
+``cd`` (change directory) command. This process is analogous to double-clicking a folder on Windows
+or Mac:
 
 .. code-block:: console
 
@@ -348,7 +326,8 @@ Use ``ls`` to list the contents. What do you expect to see?
 There is nothing there because we have not made anything yet. Next, we will navigate back to the 
 home directory. So far we have seen how to navigate "down" into folders, but how do we navigate 
 back "up" to the parent folder? There are different ways to do it. For example, we could use a
-shortcut, ``..``,  which refers to the **parent folder** - one level higher than the current location:
+shortcut, ``..``,  which refers to the **parent folder** - one level higher than the current
+location:
 
 .. code-block:: console
 
@@ -356,11 +335,11 @@ shortcut, ``..``,  which refers to the **parent folder** - one level higher than
    [frontera]$ pwd
    /home1/03302/lconcia
 
-We are back in our home directory. Instead, we could specify 
-the complete path of where we want to go, in this case ``cd /home1/03302/lconcia``.
-Finally, let's remove the directories we have made, using ``rm -r`` to remove our parent 
-folder ``folder1`` and its subfolders. The ``-r`` command line option recursively removes subfolders 
-and files located "down" the parent directory. ``-r`` is required for folders.
+We are back in our home directory. Instead, we could specify the complete path of where we want to
+go, in this case ``cd /home1/03302/lconcia``. Finally, let's remove the directories we have made,
+using ``rmdir`` to remove our folder ``folder1`` and any contents. The ``-r`` command line
+option recursively removes subfolders and files located "down" the parent directory. ``-r`` is
+required for folders.
 
 .. code-block:: console
 
@@ -370,7 +349,7 @@ and files located "down" the parent directory. ``-r`` is required for folders.
 
 
 Transferring Files to and from Frontera
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To practice transferring files to Frontera's ``$WORK`` and ``$SCRATCH``, we need to identify the 
 path to our ``$WORK`` and ``$SCRATCH`` directory.  To identify these paths, we can use helpful
@@ -394,8 +373,8 @@ shortcut ``cds``:
    [frontera]$ pwd
    /scratch1/03302/lconcia
 
-Copying files from your local computer to Frontera's ``$WORK`` would require the ``scp`` command
-(Windows users use the program "WinSCP"):
+Copying files from your local computer to Frontera's ``$WORK`` requires the ``scp`` command. This
+should be available in your local Terminal (Mac/Linux) or WSL2 (Windows):
 
 .. code-block:: console
 
@@ -424,19 +403,20 @@ Copy files **from** Frontera to your local computer using the following:
    (enter password)
    (enter token)
 
-Note: If you wanted to copy ``my_file`` from ``$SCRATCH``, the path you would specify after the
-colon would be ``/scratch1/03302/lconcia/frontera/my_file``.
- 
-Instead of files, full directories can be copied using the "recursive" flag (``scp -r ...``). 
+.. note::
 
-This is just the basics of copying files. See example ``scp`` usage
-`here <https://en.wikipedia.org/wiki/Secure_copy>`__.
+   If you wanted to copy ``my_file`` from ``$SCRATCH``, the path you would specify after the
+   colon would be ``/scratch1/03302/lconcia/frontera/my_file``.
+
+Instead of files, full directories can be copied using the "recursive" flag (``scp -r ...``). See
+additional example ``scp`` usage `here <https://en.wikipedia.org/wiki/Secure_copy>`__.
 
 
 EXERCISE
-^^^^^^^^
+~~~~~~~~
 
-1. Download the `file firststeps.zip <https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/firststeps.zip>`_.
+1. Download the file `firststeps.zip <https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/firststeps.zip>`_
+   to your local laptop.
 2. Login to Frontera.
 3. Identify your ``$WORK`` directory path using ``cdw`` and ``pwd``.
 4. From your local computer, copy the file ``firststeps.zip`` to Frontera. (You will need to know where
@@ -445,7 +425,7 @@ EXERCISE
 
 .. toggle:: Click to show the answer
 
-   1. Download the `file firststeps.zip <https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/firststeps.zip>`_.
+   1. Download the file `firststeps.zip <https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/firststeps.zip>`_.
 
    2. Login to Frontera:
 
@@ -454,18 +434,19 @@ EXERCISE
          [local]$ ssh username@frontera.tacc.utexas.edu
          (enter password)
          (enter 6-digit token)
-   
+
    3. Identify your ``$WORK`` directory path using ``cdw`` and ``pwd``.
 
       .. code-block:: console
-   
+
          [frontera]$ cdw
          [frontera]$ pwd
          /work2/03302/lconcia/frontera
          [frontera]$ logout
 
    4. From your local computer, copy the file ``firststeps.zip`` to Frontera. (You will need to know
-      where the file ``firststeps.zip`` was downloaded on your local computer and navigate to this folder.)
+      where the file ``firststeps.zip`` was downloaded on your local computer and navigate to this
+      folder.)
 
       .. code-block:: console
 
@@ -473,23 +454,46 @@ EXERCISE
          (enter password)
          (enter token)
 
-   5. Login to Frontera, navigate to your ``$WORK``, and unzip the file using ``unzip firststeps.zip``.
+   5. Login to Frontera, navigate to your ``$WORK``, and unzip the file using
+      ``unzip firststeps.zip``.
 
       .. code-block:: console
-         
+
          [local]$ ssh username@frontera.tacc.utexas.edu
          (enter password)
          (enter 6-digit token)
          [frontera]$ cdw
          [frontera]$ unzip firststeps.zip
 
+   .. hint::
+
+      Avoid multiple logins by using ``wget`` to download files from the internet directly to
+      Frontera.
+
+
+Tips for Success
+----------------
+
+Read the `documentation <https://docs.tacc.utexas.edu/>`_.
+
+* Learn node schematics, limitations, file systems, rules
+* Learn about the scheduler, queues, policies
+* Determine the right resource for the job
+
+
+User Responsibility on Shared Resources
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+HPC systems are shared resources. Your jobs and activity on a cluster, if mismanaged,
+can affect others. TACC staff are always
+`available to help <https://www.tacc.utexas.edu/about/help/>`_.
 
 
 Review of Topics Covered
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 +------------------------------------+-------------------------------------------------+
-| Command                            |          Effect                                 |
+| Command                            |  Effect                                         |
 +====================================+=================================================+
 | ``pwd``                            |  print working directory                        |
 +------------------------------------+-------------------------------------------------+
@@ -515,19 +519,10 @@ Review of Topics Covered
 +------------------------------------+-------------------------------------------------+
 
 
+Additional Resources
+--------------------
 
-Tips for Success
-----------------
-
-Read the `documentation <https://docs.tacc.utexas.edu/>`_.
-
-* Learn node schematics, limitations, file systems, rules
-* Learn about the scheduler, queues, policies
-* Determine the right resource for the job
-
-
-User Responsibility on Shared Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-HPC systems are shared resources. Your jobs and activity on a cluster, if mismanaged,
-can affect others. TACC staff are always `available to help <https://www.tacc.utexas.edu/about/help/>`_.
+* `TACC account set up <https://tacc.utexas.edu/portal/login>`_
+* `TACC documentation <https://docs.tacc.utexas.edu/>`_
+* `TACC help desk <https://www.tacc.utexas.edu/about/help>`_
+* `SCP examples <https://en.wikipedia.org/wiki/Secure_copy>`_

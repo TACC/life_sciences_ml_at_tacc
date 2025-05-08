@@ -8,23 +8,27 @@ including:
 * Data types and variables (ints, floats, bools, strings, type(), print())
 * Arithmetic operations (+, -, \*, /, \*\*, %, //)
 * Lists and dictionaries (creating, interpreting, appending)
-* Conditionals and control loops (comparison operators, if/elif/else, while, for, break, continue, pass)
+* Conditionals and control loops (comparison operators, if/elif/else, while, for, break, continue,
+  pass)
 * Functions (defining, passing arguments, returning values)
 * File handling (open, with, read(), readline(), strip(), write())
 * Importing libraries (import, random, names, pip)
 
 
-.. note::
+Start the Python Interpreter
+----------------------------
 
-   For the first few sections below, we will be using the Python interpreter
-   in *interactive mode* to try out different things. Later on when we get to
-   more complex code, we will run commands in a precompiled `Jupyter notebook. <https://jupyter.org/try>`_
+The exercises below can be done in a Jupyter notebook, or on the command line in the Python
+interactive interpreter. To start a notebook environment, follow the steps on the
+`TACC Analysis Portal guide <./tap_and_jupyter.html>`_.
 
+.. tip::
 
-Data Types and Variables
-------------------------
+   Access a free, but resource-limited, Jupyter notebook environment in your browser at the 
+   `Jupyter website <https://jupyter.org/try>`_.
 
-Start up the interactive Python interpreter:
+To start an interactive Python interpreter on the command line, log in to Frontera (or any other
+system with Python3 installed), and type the following:
 
 .. code-block:: console
 
@@ -36,7 +40,11 @@ Start up the interactive Python interpreter:
 
 .. tip::
 
-   To exit the interpreter, type ``quit()``.
+   To exit the Python3 interactive interpreter, type ``quit()``.
+
+
+Data Types and Variables
+------------------------
 
 The most common data types in Python are similar to other programming languages.
 For this class, we probably only need to worry about **integers**, **floats**,
@@ -119,7 +127,6 @@ standard operations from other languages:
    %          Modulus           5%2       1
    //         Floor division    5//2      2
 
-
 Try a few things to see how they work:
 
 .. code-block:: python3
@@ -131,7 +138,6 @@ Try a few things to see how they work:
    >>> print('hello' + 'world')
    >>> print('some' + 1)
    >>> print('number' * 5)
-
 
 Also, carefully consider how arithmetic options may affect type:
 
@@ -266,10 +272,6 @@ Add new key:value pairs to the dictionary as follows:
    squircle
 
 
-Many other methods exist to access, manipulate, interpolate, copy, etc., lists
-and dictionaries. We will learn more about them out as we encounter them later
-in this course.
-
 Conditionals and Control Loops
 ------------------------------
 
@@ -302,7 +304,6 @@ A valid conditional statement might look like:
    ... else:
    ...     print('num1 and num2 are equal')
 
-
 In addition, conditional statements can be combined with **logical operators**.
 Valid logical operators include:
 
@@ -325,6 +326,7 @@ For example, consider the following code:
    ...     print('both are less than 100')
    ... else:
    ...     print('at least one of them is not less than 100')
+
 
 **While loops** also execute according to conditionals. They will continue to
 execute as long as a condition is True. For example:
@@ -384,12 +386,11 @@ You can also use the ``range()`` function to iterate over a range of numbers:
    ...         for c in range(3):
    ...             print( f'{a} + {b} + {c} = {a+b+c}' )
 
-
 .. note::
 
-   The code is getting a little bit more complicated now. It will be better to
-   stop running in the interpreter's interactive mode, and start writing our
-   code in Python scripts.
+   The code is getting a little bit more complicated now. If you are using the Python3 interactive
+   interpreter, it will be easier to start writing the code in Python scripts, as seen below. If you
+   are using a Jupyter notebook, make sure to add all code to a cell before executing it.
 
 
 Functions
@@ -405,7 +406,6 @@ On the command line, use a text editor to start writing a Python script:
 
    [frontera]$ vim function_test.py
 
-
 Enter the following text into the script:
 
 .. code-block:: python3
@@ -413,7 +413,7 @@ Enter the following text into the script:
 
    def hello_world():
        print('Hello, world!')
-
+   
    hello_world()
 
 After saving and quitting the file, execute the script (Python code is not
@@ -423,7 +423,6 @@ compiled - just run the raw script with the ``python3`` executable):
 
    [frontera]$ python3 function_test.py
    Hello, world!
-
 
 .. note::
 
@@ -438,7 +437,7 @@ More advanced functions can take parameters and return results:
 
    def add5(value):
        return(value + 5)
-
+   
    final_number = add5(10)
    print(final_number)
 
@@ -453,7 +452,7 @@ Pass multiple parameters to a function:
 
    def add5_after_multiplying(value1, value2):
        return( (value1 * value2) + 5)
-
+   
    final_number = add5_after_multiplying(10, 2)
    print(final_number)
 
@@ -471,7 +470,7 @@ to iterate over multiple lists:
        for x in mylist:
            if (x[0] == 't'):      # a string (x) can be interpreted as a list of chars!
                print(x)
-
+   
    list1 = ['circle', 'heart', 'triangle', 'square']
    list2 = ['one', 'two', 'three', 'four']
 
@@ -488,6 +487,7 @@ There are many more ways to call functions, including handing an arbitrary
 number of arguments, passing keyword / unordered arguments, assigning default
 values to arguments, and more.
 
+
 File Handling
 -------------
 
@@ -495,100 +495,28 @@ The ``open()`` function does all of the file handling in Python. It takes two
 arguments - the *filename* and the *mode*. The possible modes are read (``r``),
 write (``w``), append (``a``), or create (``x``).
 
-For example, to read a file do the following:
-
-
-.. code-block:: python3
-   :linenos:
-
-   with open('/usr/share/dict/words', 'r') as f:
-       for x in range(5):
-           print(f.readline())
-
-.. code-block:: text
-
-   1080
-
-   10-point
-
-   10th
-
-   11-point
-
-   12-point
-
-
-
-.. tip::
-
-   By opening the file with the ``with`` statement above, you get built in
-   exception handling, and it automatically will close the file handle for you.
-   It is generally recommended as the best practice for file handling.
-
-
-You may have noticed in the above that there seems to be an extra space between
-each word. What is actually happening is that the file being read has newline
-characters on the end of each line (``\n``). When read into the Python script,
-the original new line is being printed, followed by another newline added by the
-``print()`` function. Stripping the newline character from the original string
-is the easiest way to solve this problem:
-
-.. code-block:: python3
-   :linenos:
-
-   with open('/usr/share/dict/words', 'r') as f:
-       for x in range(5):
-           print(f.readline().strip('\n'))
-
-.. code-block:: text
-
-   1080
-   10-point
-   10th
-   11-point
-   12-point
-
-
-Read the whole file and store it as a list:
-
-.. code-block:: python3
-   :linenos:
-
-   words = []
-
-   with open('/usr/share/dict/words', 'r') as f:
-       words = f.read().splitlines()                # careful of memory usage
-
-   for x in range(5):
-       print(words[x])
-
-.. code-block:: text
-
-   1080
-   10-point
-   10th
-   11-point
-   12-point
-
-
-Write output to a new file on the file system; make sure you are attempting to
+When writing output to a new file on the file system, make sure you are attempting to
 write somwhere where you have permissions to write:
 
 .. code-block:: python3
    :linenos:
 
    my_shapes = ['circle', 'heart', 'triangle', 'square']
-
+   
    with open('my_shapes.txt', 'w') as f:
        for shape in my_shapes:
            f.write(shape)
-
 
 .. code-block:: console
 
    (in my_shapes.txt)
    circlehearttrianglesquare
 
+.. tip::
+
+   By opening the file with the ``with`` statement above, you get built in
+   exception handling, and it automatically will close the file handle for you.
+   It is generally recommended as the best practice for file handling.
 
 You may notice the output file is lacking in newlines this time. Try adding
 newline characters to your output:
@@ -597,7 +525,7 @@ newline characters to your output:
    :linenos:
 
    my_shapes = ['circle', 'heart', 'triangle', 'square']
-
+   
    with open('my_shapes.txt', 'w') as f:
        for shape in my_shapes:
            f.write( f'{shape}\n' )
@@ -610,9 +538,69 @@ newline characters to your output:
    triangle
    square
 
-
 Now notice that the original line in the output file is gone - it has been
 overwritten. Be careful if you are using write (``w``) vs. append (``a``).
+
+To read a file in, do the following:
+
+.. code-block:: python3
+   :linenos:
+
+   with open('my_shapes.txt', 'r') as f:
+       for x in range(4):
+           print(f.readline())
+
+.. code-block:: text
+
+   circle
+   
+   heart
+   
+   triangle
+   
+   square
+
+You may have noticed in the above that there seems to be an extra space between
+each word. What is actually happening is that the file being read has newline
+characters on the end of each line (``\n``). When read into the Python script,
+the original new line is being printed, followed by another newline added by the
+``print()`` function. Stripping the newline character from the original string
+is the easiest way to solve this problem:
+
+.. code-block:: python3
+   :linenos:
+
+   with open('my_shapes.txt', 'r') as f:
+       for x in range(4):
+           print(f.readline().strip('\n'))
+
+.. code-block:: text
+
+   circle
+   heart
+   triangle
+   square
+
+Read the whole file and store it as a list:
+
+.. code-block:: python3
+   :linenos:
+
+   words = []
+
+   with open('my_shapes.txt', 'r') as f:
+       words = f.read().splitlines()                # careful of memory usage
+
+   for x in range(4):
+       print(words[x])
+
+.. code-block:: text
+
+   circle
+   heart
+   triangle
+   square
+
 
 Importing Libraries
 -------------------
@@ -620,7 +608,7 @@ Importing Libraries
 The Python built-in functions, some of which we have seen above, are useful but
 limited. Part of what makes Python so powerful is the huge number and variety
 of libraries that can be *imported*. For example, if you want to work with
-random numbers, you have to import the 'random' library into your code, which
+random numbers, you have to import the ``random`` library into your code, which
 has a method for generating random numbers called 'random'.
 
 .. code-block:: python3
@@ -640,7 +628,7 @@ has a method for generating random numbers called 'random'.
    0.025668541754695906
 
 More information about using the ``random`` library can be found in the
-`Python docs <https://docs.python.org/3.6/library/random.html>`_
+`Python docs <https://docs.python.org/3/library/random.html>`_
 
 Some libraries that you might want to use are not included in the official
 Python distribution - called the *Python Standard Library*. Libraries written
@@ -666,14 +654,18 @@ is a shared system and non-privileged users can not download or install packages
 in root locations. The ``--user`` flag instructs ``pip3`` to install the library
 in your own home directory.
 
+.. tip::
+
+   If you are using a Jupyter notebook, you can install packages directly from
+   the notebook by using the ``!`` operator. For example, ``! pip3 install --user names``.
+
 .. code-block:: python3
    :linenos:
 
    import names
-
+   
    for i in range(5):
        print(names.get_full_name())
-
 
 .. code-block:: bash
 
@@ -684,14 +676,10 @@ in your own home directory.
    Jonathan Henry
 
 
-
-
-
 Additional Resources
 --------------------
 
 * `The Python Standard Library <https://docs.python.org/3/library/>`_
 * `PEP 8 Python Style Guide <https://www.python.org/dev/peps/pep-0008/>`_
-* `Python3 environment in a browser <https://www.katacoda.com/scenario-examples/courses/environment-usages/python>`_
-* `Jupyter Notebooks in a browser <https://jupyter.org/try>`_
-* `Jupyter Notebooks on TACC systems <https://tap.tacc.utexas.edu/>`_
+* `Jupyter notebooks in a browser <https://jupyter.org/try>`_
+* `Jupyter notebooks on TACC systems <https://tap.tacc.utexas.edu/>`_

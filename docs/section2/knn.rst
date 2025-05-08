@@ -360,8 +360,8 @@ the average of the performance values computed in each of the step 2s above.
 
     Pictorial representation of K-fold Cross-Validation. Citation: [2]
 
-Cross-Validation in Sklean
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cross-Validation in Sklearn
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Let's see how to use the idea of cross-validation in sklearn. We'll continue with the 
 above Pima Indian diabetes example and use cross-validation to find the optimal value 

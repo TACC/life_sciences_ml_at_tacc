@@ -208,6 +208,7 @@ So, it turns out we can find the model that minimizes the cost by finding the ze
 
 SciKit Learn
 ------------
+
 In this section, we introduce the Python Package SciKit Learn (``scikit-learn`` on PyPI). This 
 package provides implementations for a number of ML algorithms we will cover in this class. 
 It also works well with NumPy, Pandas, Matplotlib, etc. 
@@ -385,23 +386,23 @@ We can check that our DataFrame has what we expect:
 To use ``fit()``, we need to pass it the independent and dependent variables. 
 
 
-*Solution:*
+.. toggle:: Click to show the answer
 
-.. code-block:: python3
-
-    >>> X = melting_points.drop(["melting_point"], axis=1)
-    >>> Y = melting_points['melting_point']
-    >>> lr = sklearn.linear_model.LinearRegression()
-    >>> lr.fit(X,Y)
-
-    # be careful of the shape of the object that you pass to predict()
-    # predict one value... 
-    >>> lr.predict(X.iloc[0:1])
-
-    # predict a set of values
-    >>> lr.predict(X.iloc[0:10])
-
-    # How do they compare to the actual values?
-    >>> print(f"estimated melting point for Oligo 1: {lr.predict(X.iloc[0:1])}, actual melting point for Oligo 1: {Y.iloc[0]}")
+   .. code-block:: python3
+   
+       >>> X = melting_points.drop(["melting_point"], axis=1)
+       >>> Y = melting_points['melting_point']
+       >>> lr = sklearn.linear_model.LinearRegression()
+       >>> lr.fit(X,Y)
+   
+       # be careful of the shape of the object that you pass to predict()
+       # predict one value... 
+       >>> lr.predict(X.iloc[0:1])
+   
+       # predict a set of values
+       >>> lr.predict(X.iloc[0:10])
+   
+       # How do they compare to the actual values?
+       >>> print(f"estimated melting point for Oligo 1: {lr.predict(X.iloc[0:1])}, actual melting point for Oligo 1: {Y.iloc[0]}")
 
 

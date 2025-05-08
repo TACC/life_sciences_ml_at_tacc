@@ -417,7 +417,7 @@ This is the stage where the neural network becomes practically useful: once trai
 In the next session, we'll apply these concepts hands-on by building our own neural network from scratch.
 
 References and Additional Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------
 
 * The material in this module is based on `COE 379L: Software Design for Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/unit03/neural_networks.html>`_
 

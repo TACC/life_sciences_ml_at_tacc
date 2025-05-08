@@ -15,4 +15,4 @@ Mastery of these concepts is essential for successful completion of the hands-on
    tap_and_jupyter
    python_refresher
    exploratory_data_analysis
-   
+   set_up_for_tutorials

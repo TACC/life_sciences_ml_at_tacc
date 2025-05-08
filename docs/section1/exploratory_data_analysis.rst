@@ -1,405 +1,614 @@
 Exploratory Data Analysis
 =========================
 
-We will begin by giving a high-level overview of the kinds of data analysis 
-tasks we will be performing and why they are important. We'll also introduce 
-the ``numpy`` python package and work through some examples in a Jupyter notebook.
+The success of a machine learning model is heavily dependent on the quality of the data it is
+trained on. An important first step in a machine learning project is to familiarize yourself with
+the dataset you will be using. This is a process called **exploratory data analysis (EDA)**. We will
+mostly be using Python and the ``pandas`` library for this. We will perform these steps in a Jupyter
+notebook for convenience, but this can also be done in a standard Python script.
 
-By the end of this module, you should be able to: 
+By the end of this section, you should be able to:
 
-* Understand what data analysis is and why (at a high level) it is important. 
-* Have a basic understanding of the different kinds of tasks we will perform and what libraries 
-  we will use for each kind of task. 
-* (Numpy) Understand the primary differences between the ``ndarray`` object from ``numpy`` and basic Python 
-  lists, and when to use each.
-* (Numpy) Utilize ``ndarray`` objects to perform various computations, including linear algebra calculations 
-  and statistical operations. 
+* Load structured datasets into a pandas DataFrame
+* Inspect and summarize data using `.info()`, `.head()`, and value counts
+* Identify and handle missing values
+* Drop or filter columns and rows based on criteria
+* Convert string-based columns (e.g., age, dates) into numeric or datetime types
+* Extract and manipulate date-related features (e.g., weekday, year)
+* Visualize distributions using box plots, histograms, and scatter plots
+* Compare patterns across subgroups (e.g., years, outcome types)
 
+Getting and Displaying the Data
+-------------------------------
 
+Before starting, you’ll need to load the dataset containing animal outcome records from the Austin Animal Center. It will be used throughout this tutorial.
 
+Instead of downloading and unzipping the file manually, we can now **programmatically fetch and extract the data directly from the URL** using Python. This approach makes your code more portable and reproducible.
 
+.. code:: python
 
-Step 1: Data Loading and Organization
--------------------------------------
+   import requests
+   import zipfile
+   import io
+   import pandas as pd
 
-..
- In this step, we load all coral images from the dataset directory and organize them into a DataFrame. 
- Each image is assigned a label based on the name of the directory it's stored in (i.e., 'ACER' - *Acropora cervicornis*, 'CNAT' - *Colpophyllia natans*, 'MCAV' - * Montastraea cavernosa*). 
-..
- This DataFrame will serve as the foundation for splitting our data into training, validation, and test sets later in the tutorial.
-
-1.1 List Dataset Directory Contents
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- Before loading the images, we first want to inspect the directory structure to make sure everything is in the right place. 
- The code below lists the contents of the ``coral-species`` data directory to verity that the subdirectories for each coral species are present and correctly named:
-
- .. code-block:: python
-
-    from pathlib import Path
+   # URL pointing to the ZIP file containing the CSV dataset
+   url = 'https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip'
 
-    # Define the path to the dataset directory
-    # NOTE: Replace the path below with the full path to your scratch directory
-    dataset_dir = Path('/full/path/to/your/scratch/directory/coral-species-CNN-tutorial/data/coral-species')
+   # Send an HTTP GET request to fetch the content of the ZIP file
+   response = requests.get(url)
+   print(response.status_code)  # Should return 200 if the request was successful
 
-    # List the contents of the data directory
-    print(list(dataset_dir.iterder()))
+   # Extract the ZIP file directly from the response's binary content
+   with zipfile.ZipFile(io.BytesIO(response.content)) as z:
 
-    # You should see something like this:
-    # [PosixPath('../data/coral-species/MCAV'), PosixPath('../data/coral-species/ACER'), PosixPath('../data/coral-species/CNAT')]
-    
-1.2 Check File Extensions
-~~~~~~~~~~~~~~~~~~~~~~~~~
+       # Open the CSV file inside the ZIP without saving it to disk
+       with z.open('Austin_Animal_Center_Outcomes.csv') as csv_file:
 
- Next, we scan the dataset directory and all its subdirectories to find out what types of image files are present. 
- This helps us catch unexpected or unsupported file types (e.g., GIFs, txt files, etc.), which could cause problems later when loading images. 
+           # Read the CSV into a pandas DataFrame
+           data = pd.read_csv(csv_file)
 
- This also allows us to see if the images are all in the same format or not.
+           # Display the first few rows of the DataFrame
+           display(data)
 
- .. code-block:: python
+**Explanation of the Code:**
 
-    # Recursively list all files under the dataset directory
-    image_files = list(dataset_dir.rglob("*"))
+- **requests.get(url)**: Sends an HTTP GET request to the specified URL to retrieve the content of the ZIP file.
 
-    # Extract and print the unique file extensions
-    # This helps us confirm that only valid image files are present
-    extensions = set(p.suffix.lower() for p in image_files if p.is_file())
-    print("File extensions found:", extensions)
+- **io.BytesIO(response.content)**: Creates an in-memory binary stream from the downloaded content, allowing it to be treated as a file-like object.
 
- **Question**: What file extensions are present in the dataset? Write down your answer.
+- **zipfile.ZipFile(...)**: Opens the ZIP file from the in-memory binary stream.
 
-1.3 Explore Image Dimensions and Color Modes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- **z.open('Austin_Animal_Center_Outcomes.csv')**: Accesses the specific CSV file within the ZIP archive.
 
- Before feeding images into a CNN, it's important to understand the basic properties of the dataset.
- In this step, we examine the **dimensions** (width x height) as well as the **color mode** (e.g., RGB, RGBA, grayscale) of each image.
- This helps us decide if we need to resize or convert images before we begin training our CNN. 
+- **pd.read_csv(csv_file)**: Reads the CSV file into a pandas DataFrame for data manipulation and analysis.
 
- The script below prints a summary and gives recommendations if inconsistencies are found.
+- **display(data)**: Displays the DataFrame in a readable format, typically used in Jupyter notebooks.
 
- .. code-block:: python
+This method avoids the need for manual downloading or unzipping and ensures your code can be run from any location with internet access.
 
-    from PIL import Image
-    from pathlib import Path
-    from collections import Counter
-
-    def explore_image_dataset(data_root):
-        """
-        Explore basic properties of images: size and color mode.
-        """
-        print("Starting image dataset exploration...\n")
-        
-        # Gather all .jpg files in the dataset
-        image_files = list(Path(data_root).rglob('*.jpg'))
-        print(f"Found {len(image_files)} image files\n")
-        
-        # Track sizes and color modes
-        image_sizes = []
-        color_modes = []
-
-        print("Checking image dimensions and color modes...\n")
-        for img_path in image_files:
-            with Image.open(img_path) as img:
-                image_sizes.append(img.size)   
-                color_modes.append(img.mode)  
-
-        # Summarize image sizes
-        size_counts = Counter(image_sizes)
-        print("=== Image Sizes ===")
-        print(f"Found {len(size_counts)} unique image sizes:")
-        for size, count in size_counts.most_common():
-            print(f"- {size}: {count} images")
-
-        # Summarize color modes
-        mode_counts = Counter(color_modes)
-        print("\n=== Color Modes ===")
-        print(f"Found {len(mode_counts)} unique color modes:")
-        for mode, count in mode_counts.most_common():
-            print(f"- {mode}: {count} images")
-
-        # Simple recommendations
-        print("\n=== Recommendations ===")
-        if len(size_counts) > 1:
-            print(f"Images have different sizes. Consider resizing.")
-        else:
-            print("All images are the same size.")
-        
-        if len(mode_counts) > 1:
-            print("Images have different color modes. Consider converting to RGB.")
-        else:
-            print("All images share the same color mode.")
-
-    # Run the function
-    data_root = Path('../data/coral-species')
-    explore_image_dataset(data_root)
-    
- Our dataset analysis reveals some important characteristics that we'll need to keep in mind as we proceed with the tutorial:
-
- 1. **Image Size Variation**: We have 500 total images in out dataset, with 132 different image sizes (dimensions). Also notice that some images are in portrait orientation (height > width) while others are landscape (width > height). CNNs expect all images to have the same dimensions, so we'll need to resize them to a standard size before training our model.
-
- 2. **Color Mode**: Not all images have the same color mode. CNNs also expect all images to have the same color mode, so we'll need to convert any images with non-RGB color modes to RGB.
-
- We will address these issues in Step 5 when we prepare our data for input into the CNN. 
-
-1.4 Check for Corrupted Images
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- Before continuing, we want to make sure that all images files are readable. 
- Corrupted files can break your model training or cause unexpected errors during preprocessing. 
-
- In this step, we:
-
-  1. Attempt to open each '.jpg' file using PIL 
-  2. Discard any files that fail to load 
-
- This ensures we only keep clean, valid images for training.
-
- .. code-block:: python
-
-    from PIL import Image
-    from tqdm import tqdm
-
-    # Find all .jpg files in the dataset
-    # NOTE: add the correct file extension(s) for your image dataset in the space indicated below
-    # TIP: see Step 1.2
-    image_paths = list(dataset_dir.rglob('*.___'))
-
-    # Create lists to store valid and corrupted files
-    valid_images = []
-    bad_images = []
-
-    print("Checking for corrupted images...\n")
-
-    # tqdm adds a progress bar to show how long the process will take
-    for path in tqdm(image_paths):
-        try:
-            # Try to open and verify the image
-            with Image.open(path) as img:
-                img.verify()
-            # If the image is valid, add it to valid_images
-            valid_images.append(path)
-
-        except Exception:
-            # If any error occurs while opening/verifying the image, add it to bad_images
-            bad_images.append(path)
-
-    print(f"Valid images: {len(valid_images)}")
-    print(f"Corrupted images removed: {len(bad_images)}")
- 
- If there are any corrupted images, in your dataset, this code will automatically remove them. 
-
-1.5 Create a DataFrame of Image Paths and Labels
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- Now that we have a good idea of what our data looks like and have removed any corrupted images, we can start setting up our data for training.
- In this step, we build a ``pandas.DataFrame`` that organizes all the image data into two columns:
-
-  1. **filepath**: The full path to each image file
-  2. **label**: The class label for each image, taken from the directory name
-
- This structured DataFrame is essential for training with Keras' ``flow_from_dataframe`` method that we'll use later in the tutorial.
-
- .. code-block:: python
-
-    import pandas as pd
-
-    # Build (filepath, label) pairs from valid image paths
-    data = []
-    for path in valid_images:
-        label = path.parent.name # Extract label from directory name
-        data.append((str(path), label))
-
-    # Create a DataFrame with columns for filepath and label
-    df = pd.DataFrame(data, columns=["filepath", "label"])
-
-    # (Optional) Shuffle the DataFrame to randomize order of images
-    df = df.sample(frac=1, random_state=123).reset_index(drop=True)
-
-    # Show a preview of the DataFrame
-    df.head()
-    
- 
-Step 2: Visualize the Class Distribution
-----------------------------------------
-
- Before training our CNN, it's important to understand how many images we have for each class (i.e., coral species in this case).
-
- In this step we:
-
-  1. Count how many images belong to each class
-  2. Plot the class distribution as a pie chart and bar graph
-
- If the dataset is imbalanced (i.e., some classes have far more images than others), we may need to account for this later using **class weights** or **data augmentation**.
-
- .. code-block:: python
-
-    import matplotlib.pyplot as plt
-
-    # Count class distribution
-    counts = df['label'].value_counts()
-
-    # Create a 1-row, 2-column subplot
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-
-    # Define a color palette for consistency
-    colors = ['#8158ff', '#ff9423', '#7fcdbb'] 
-
-    # Pie chart
-    axes[0].pie(counts.values, labels=counts.index, autopct='%1.1f%%', startangle=90, colors=colors)
-    axes[0].axis('equal')
-    axes[0].set_title('Class Distribution (Percentage)')
-
-    # Bar chart
-    axes[1].bar(counts.index, counts.values, color=colors)
-    axes[1].set_title('Class Distribution (Values)')
-    axes[1].set_ylabel('Number of Images')
-    plt.setp(axes[1].get_xticklabels(), rotation=45, ha='right')
-
-    # Layout adjustment
-    plt.tight_layout()
-    plt.show()
-
-    # Print label counts and percentages
-    for label, count in counts.items():
-        print(f"{label}: {count} images ({count/len(df)*100:1f}%)")
-
- **Thought Challenge**: Describe the class distribution in your own words. How much of the dataset is made up by the largest class? The smallest class? Is there anything that we need to address before continuing?
-
-
-Step 3: Visualizing Images from the Dataset
--------------------------------------------
-
- It's helpful to look at a few images from each class to get a better understanding of the dataset.
- This will give us a better sense of:
-
- - What each coral species looks like
- - How much visual variation exists within each class (e.g., different angles, lighting, etc.)
- - Whether the dataset includes noise, blur, or other artifacts
-
- We'll display a grid of randomly selected images, grouped by class.
-
- .. code-block:: python
-
-    import matplotlib.pyplot as plt
-    from tensorflow.keras.preprocessing.image import load_img
-    import random
-
-    # Set seed for reproducibility
-    random.seed(123)
-
-    # Set the number of images to display per class
-    samples_per_class = 3
-
-    # Get list of unique coral species names (classes)
-    classes = df['label'].unique()
-
-    # Create a figure with appropriate size
-    # The height (2.5 * len(classes)) ensures enough space for all images
-    plt.figure(figsize=(12, len(classes) * 2.5))
-
-    # Loop through each class to create a grid of images
-    for i, label in enumerate(sorted(classes)):
-        # Filter DataFrame to get only images from the current class
-        class_df = df[df['label'] == label]
-
-        # Randomly select 3 images from the current class 
-        sample_paths = random.sample(list(class_df['filepath']), samples_per_class)
-
-        # Create subplot for each image
-        for j, img_path in enumerate(sample_paths):
-
-            # Calculate position in grid: (row * width) + column + 1
-            plt.subplot(len(classes), samples_per_class, i * samples_per_class + j + 1)
-
-            # Load and display the image
-            img = load_img(img_path)        # Load the image
-            plt.imshow(img)                 # Display the image
-            plt.title(label)                # Add species name as title
-            plt.axis('off') 
-
-    plt.tight_layout()
-    plt.show()
-
- .. image:: ./images/coral_species_images.png
-   :width: 800px
+.. image:: ./images/dataframe.png
    :align: center
 
- **Thought Challenge**: Try changing the ``random.seed`` value a few times to view different images from our dataset. What do you notice? Take a moment to write down your observations.
+The image above represents a **DataFrame**, which is a 2D labeled data structure in pandas. Each column is a **Series**, each row is indexed (blue box), and column headers serve as keys (red box).
 
- *Remember: the quality of a machine learning model is decided largely by the quality of the dataset it was trained on!*
+- **index**: row labels (blue)
+- **series**: column of values (green)
+- **key**: column name (red)
+
+.. note::
+
+   **Alternative method:** You can also download the file manually using the link below, unzip it, and place ``Austin_Animal_Center_Outcomes.csv`` in your working directory.
+
+   `Austin_Animal_Center_Outcomes.zip <https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip>`_
+
+   Once unzipped, make sure the CSV file is accessible from the notebook’s current folder, then you can load it using:
+
+   .. code:: python
+
+      import pandas as pd
+      data = pd.read_csv('Austin_Animal_Center_Outcomes.csv')
+      display(data)
+
+Understanding the Structure
+---------------------------
+
+Once loaded, we can inspect the dataset. The first few rows give us a general sense of what we are working with.
+
+.. code:: python
+
+   data.head()
+
+.. image:: ./images/datahead.png
+   :align: center 
+
+For more comprehensive info — like the total number of entries, data types, and missing values, we use `.info()`:
+
+.. code:: python
+
+   data.info()
+
+.. code-block:: python-console
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 173775 entries, 0 to 173774
+    Data columns (total 12 columns):
+     #   Column            Non-Null Count   Dtype 
+    ---  ------            --------------   ----- 
+     0   Animal ID         173775 non-null  object
+     1   Date of Birth     173775 non-null  object
+     2   Name              123991 non-null  object
+     3   DateTime          173775 non-null  object
+     4   MonthYear         173775 non-null  object
+     5   Outcome Type      173729 non-null  object
+     6   Outcome Subtype   79660 non-null   object
+     7   Animal Type       173775 non-null  object
+     8   Sex upon Outcome  173774 non-null  object
+     9   Age upon Outcome  173766 non-null  object
+     10  Breed             173775 non-null  object
+     11  Color             173775 non-null  object
+
+We see that there are 173,775 records. Several fields (like `Name` and `Outcome Subtype`) contain missing values. All columns are currently stored as strings (object), even dates and age.
+
+Dropping Unnecessary Columns
+----------------------------
+
+To streamline our analysis, we can drop columns that are not useful at this stage. For example, we won’t use the color of the animal in our initial exploration.
+
+.. code:: python
+
+   data = data.drop(columns=['Color'], errors='ignore')
+   data.info()
+
+.. code-block:: python-console
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 173775 entries, 0 to 173774
+    Data columns (total 11 columns):
+     #   Column            Non-Null Count   Dtype 
+    ---  ------            --------------   ----- 
+     0   Animal ID         173775 non-null  object
+     1   Date of Birth     173775 non-null  object
+     2   Name              123991 non-null  object
+     3   DateTime          173775 non-null  object
+     4   MonthYear         173775 non-null  object
+     5   Outcome Type      173729 non-null  object
+     6   Outcome Subtype   79660 non-null   object
+     7   Animal Type       173775 non-null  object
+     8   Sex upon Outcome  173774 non-null  object
+     9   Age upon Outcome  173766 non-null  object
+     10  Breed             173775 non-null  object
+    dtypes: object(11)
+    memory usage: 14.6+ MB  
+
+Examining Columns and Values
+----------------------------
+
+We can list all columns in the dataset to better understand its structure:
+
+.. code:: python
+
+   data.keys()
+
+.. code-block:: python-console
+
+    Index(['Animal ID', 'Date of Birth', 'Name', 'DateTime', 'MonthYear',
+           'Outcome Type', 'Outcome Subtype', 'Animal Type', 'Sex upon Outcome',
+           'Age upon Outcome', 'Breed'],
+          dtype='object')
+
+Let’s take a closer look at the `Animal Type` column:
+
+.. code:: python
+
+   data['Animal Type']
+
+.. code-block:: python-console
+
+    0         Other
+    1         Other
+    2         Other
+    3         Other
+    4          Bird
+              ...  
+    173770      Cat
+    173771      Dog
+    173772    Other
+    173773      Dog
+    173774    Other
+    Name: Animal Type, Length: 173775, dtype: object
+
+This column represents the type of animal (e.g., dog, cat, bird). We can get the unique types:
+
+.. code:: python
+
+   data['Animal Type'].unique()
+
+.. code-block:: python-console
+
+   array(['Other', 'Bird', 'Dog', 'Cat', 'Livestock'], dtype=object)
+
+And count how many records belong to each category:
+
+.. code:: python
+
+   data['Animal Type'].value_counts()
+
+.. code-block:: python-console
+
+    Dog          94505
+    Cat          69399
+    Other         8960
+    Bird           877
+    Livestock       34
+    
+Filtering for Specific Categories
+---------------------------------
+
+To practice working with subsets of data, let’s explore a less common animal type: **livestock**. This will allow us to demonstrate filtering operations and how to work with small subsets of a larger dataset.
+
+We start by creating a Boolean mask that identifies rows where the `'Animal Type'` column is equal to `'Livestock'`. We then apply this filter to create a new DataFrame containing only those rows.
+
+.. code:: python
+
+   filter_livestock = data['Animal Type'] == 'Livestock'
+   data_livestock = data[filter_livestock]
+   data_livestock.head()
+
+.. image:: ./images/livestock_head.png
+   :align: center
+
+The resulting table shows all animals labeled as livestock. From this preview, we can already spot that some records are missing values in the `Name` column. We'll address that in the next step. This kind of targeted filtering is common in EDA, it helps isolate groups of interest for deeper analysis or validation.
 
 
-Step 4: Split the Dataset and Handle Class Imbalance
-----------------------------------------------------
+Exercise: List All Livestock Names
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-4.1 Split the Dataset into Training, Validation, and Test Sets
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Try listing all unique livestock names:
 
- We are now ready to split our labeled image dataset into three parts:
+.. toggle:: Click to show
 
-  1. **Training Set**: Used to train the model
-  2. **Validation Set**: Used to tune hyperparameters and monitor model performance during training
-  3. **Test Set**: Used to evaluate the final model's performance after training is complete
+  .. code:: python
 
- We will use the ``train_test_split`` function from scikit-learn in two stages:
+      data_livestock['Name'].unique()
 
-  1. First, we split the original dataset into **training + test** sets
-  2. Then, we split the training set again into **training + validation** 
+  .. code-block:: python-console
 
- This approach ensures that our CNN *never sees the test set* during training, which is important for obtaining an unbiased estimate of the model's performance.
+     array([nan, 'Bacon', 'Loki', 'Peppa', 'Hazel', 'Piggy Smalls'], dtype=object)
 
- To preserve the class distribution across splits, we use ``stratify=df["label"]`` to ensure each split has the same proportion of each class as in the original dataset.
- This is called **stratified sampling**. 
+We can see that some livestock entries are missing a name (`NaN`). In most data analysis workflows, missing values like these need to be handled — either by imputing values or, as we’ll do here, removing incomplete rows.
 
- .. code-block:: python
+Handling Missing Values
+-----------------------
 
-    # NOTE: Replace the spaces indicated below with your code
-    from sklearn.model_selection import ____
+In this case, it makes sense to **drop rows where the `Name` is missing**, since the name may be used later for identification or analysis.
 
-    # First, split the original dataset into training + test sets
-    train_df, test_df = train_test_split(
-        df,                            # This is our DataFrame from step 1.5
-        test_size=____,                # How much of the data should be in the test set?
-        stratify=____,                 # Ensure each split maintains original class distribution
-        random_state=123               # Set the random seed for reproducibility
-    )
+We use the `dropna()` function, specifying the `subset` argument to limit the removal to rows where `'Name'` is `NaN`.
 
-    # Then, split the training set into training + validation sets
-    ____, ____ = train_test_split(
-        ____,                          # What goes here?
-        test_size=____,                # How much of the data should be in the validation set?
-        stratify=____,                 # Ensure each split maintains original class distribution
-        random_state=123               # Set the random seed for reproducibility
-    )
+.. code:: python
 
-    # Print split sizes
-    total = len(df)
-    print(f"\nDataset splits:")
-    print(f"Train: {len(train_df)} images ({len(train_df)/total:.2%})")
-    print(f"Validation: {len(val_df)} images ({len(val_df)/total:.2%})")
-    print(f"Test: {len(test_df)} images ({len(test_df)/total:.2%})")
+   data_livestock = data_livestock.dropna(subset=['Name'])
+   display(data_livestock)
 
- **Thought Challenge**: Will changing the ``random_state`` value in the ``train_test_split`` function change your model's performance? Why or why not?
+.. toggle:: Click to show
 
- .. toggle:: Click to show
+   .. image:: ./images/livestock_names.png
+      :align: center
 
-    **Answer**: Yes – even though stratification preserves class balance, changing ``random_state`` changes *which individual images* go into the training set. For example:
+Now the dataset contains only livestock animals with valid names. This is an example of a simple but important data cleaning operation common in real-world projects.
 
-    - With ``random_state=123``, the model might learn from images A, B, and C
-    - With ``random_state=456``, the model might learn from images D, E, and F 
- 
-    Since each image has unique properties (lighting, orientation, scale, background, etc.), the model will learn slightly different features depending on the exact training set.
-    As a result, its internal weights and final accuracy may vary. 
+Exercise: Find the Oldest Dog
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Try running the full training pipeline multiple times with different ``random_state`` values. Do your metrics stay stable? What might that tell you about the robustness of your model?
+Let’s now switch our focus to **dogs**, which make up the largest portion of the dataset. Your task is to create a new DataFrame, `data_dog`, that contains only dog entries.
 
-4.2 Compute Class Weights
+Once the filtering is complete, find the oldest one recorded.
+
+.. toggle:: Click to show
+
+   .. code:: python
+
+      dog_filter = data['Animal Type'] == 'Dog'
+      data_dog = data[dog_filter]
+      data_dog = data_dog.dropna(subset=['Name'])
+      print(data_dog['Age upon Outcome'].unique())
+
+      filter_age = data_dog['Age upon Outcome'] == '24 years'
+      display(data_dog[filter_age])
+
+   .. image:: ./images/oldest_dog.png
+      :align: center
+
+This exercise demonstrates how to create a filtered subset, clean it, and search for specific conditions in real data, a key part of exploratory data analysis.
+
+Type Conversion
+---------------
+
+The `'Age upon Outcome'` column is currently stored as a string (e.g., `'3 years'`, `'2 months'`), which means we can’t perform numerical analysis directly on it. In this section, we will convert this string-based column into a proper numeric format so we can, for example, find the oldest dogs by age.
+
+We will take the following steps:
+
+1. **Drop rows with missing age values**  
+   These entries can't be processed numerically, so we remove them.
+
+2. **Filter rows that express age in years**  
+   We'll ignore entries like `'4 months'` or `'2 weeks'` for now to simplify conversion.
+
+3. **Extract the numeric part of the string**  
+   We use a regular expression to extract just the digits (e.g., `'4 years'` → `4`).
+
+4. **Convert the result to integers**  
+   This gives us a numeric `AgeInYears` column that we can use for filtering and visualization.
+
+5. **Find and display the oldest dogs**  
+   Now that we have numeric ages, we can identify and display the oldest dogs.
+
+.. code:: python
+
+   # Remove rows where age is missing
+   data_dog = data_dog.dropna(subset=['Age upon Outcome'])
+
+   # Keep only rows where the age is expressed in full years
+   years_filter = data_dog['Age upon Outcome'].str.contains('years')
+   data_dog = data_dog[years_filter]
+
+   # Extract the number of years from the string and convert to integer
+   data_dog['AgeInYears'] = data_dog['Age upon Outcome'].str.extract(r'(\d+)')[0].astype(int)
+
+   # Get the maximum age
+   max_age = data_dog['AgeInYears'].max()
+   print(f"The oldest dog is {max_age} years old.")
+
+   # Display the record(s) corresponding to the oldest dog(s)
+   display(data_dog[data_dog['AgeInYears'] == max_age])
+
+This process is a good example of how to transform human-readable strings into numeric values that can be used for meaningful analysis.
+
+Let’s take a closer look at this line:
+
+.. code:: python
+
+   data_dog['AgeInYears'] = data_dog['Age upon Outcome'].str.extract(r'(\d+)')[0].astype(int)
+
+This command performs **three important operations** in a single step:
+
+1. **Accessing a string method on a pandas Series**  
+   The column `'Age upon Outcome'` contains strings like `'2 years'`, `'14 years'`, etc.  
+   We use `.str.extract()` to apply a **regular expression** to each string in the Series.
+
+2. **Using a regular expression**  
+   The pattern `r'(\\d+)'` means:
+   
+   - `\d` = match a digit (`0–9`)
+   - `+` = one or more digits
+   - parentheses `()` = capture the matched part so it becomes part of the output
+
+   This extracts just the numeric portion from strings like `'14 years'`, returning a new column with values like `'14'`.
+
+3. **Selecting the first capture group and converting to integer**  
+   The result of `.str.extract()` is a DataFrame (because there could be multiple groups).  
+   We use `[0]` to select the first column of matches.
+
+   Then, `.astype(int)` converts the result from string (e.g., `'14'`) to integer (`14`), allowing us to perform numeric operations.
+
+The result is a new column called `'AgeInYears'` that contains only numeric ages, ready for plotting or filtering.
+
+.. tip::
+   If you're unfamiliar with regular expressions, think of `.str.extract(r'(\d+)')` as a way to pull the number out of a string that looks like `"14 years"` — it's like a smarter version of `.split()` or `.replace()`.
+
+Visualize Data
+--------------
+
+After performing type conversion and filtering, we can begin visualizing the data to understand trends and distributions. Visualization is a key part of exploratory data analysis, helping to reveal patterns that might not be obvious from raw numbers alone.
+
+Box Plot of Dog Ages
+~~~~~~~~~~~~~~~~~~~~
+
+We use a box plot to summarize the distribution of dog ages in years. This shows the median, quartiles, and outliers.
+
+.. code:: python
+
+   import seaborn as sns
+   import matplotlib.pyplot as plt
+   sns.boxplot(data=data_dog, x='AgeInYears')
+
+.. image:: ./images/AgeInYears.png
+   :align: center
+
+From this plot, we can quickly identify typical age ranges and see if any unusually young or old dogs are present.
+
+Bar Plot of Outcome Types
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
- If our dataset is imbalanced (i.e., some classes have many more images than others), the model may learn to favor those majority classes. 
- To address this, we can compute **class weights** based on the training data using the ``compute_class_weight`` function from scikit-learn.
+We now look at what happens to the dogs. Were they adopted, transferred, returned, or something else? The `'Outcome Type'` column records this.
 
- These weights:
- - Assign higher importance to underrepresented classes
- - Are passed into ``model.fit()`` using the ``class_weight`` argument
- 
+.. code:: python
+
+   sns.histplot(data = data_dog['Outcome Type'])
+   plt.xticks(rotation=45, ha='right')
+
+.. image:: ./images/OutcomeType.png
+   :align: center
+
+This bar chart shows the frequency of each outcome type. Rotating the x-axis labels makes them easier to read.
+
+Exercise: Plot and Find the Most Common Outcome Subtype
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each outcome type can be broken down further. For example, a "Transfer" might go to a foster home, a partner shelter, or another facility. This detail is captured in the `'Outcome Subtype'` column.
+
+Try plotting the distribution of outcome subtypes to see which are most frequent.
+
+.. toggle:: Click to show
+
+    .. code:: python
+
+       sns.histplot(data = data_dog['Outcome Subtype'])
+       plt.xticks(rotation=45, ha='right')
+
+    .. image:: ./images/OutcomeSubtype.png
+       :align: center
+
+This visualization gives you more context about how different outcomes occur, for instance, whether transfers usually go to partners or other locations.
+
+Working with Dates
+------------------
+
+Many datasets include timestamp information, which can be incredibly useful for time-based analysis. In our case, the `'DateTime'` column records when each outcome occurred, but it is currently stored as a string, which limits what we can do with it.
+
+To perform operations like grouping by day of the week, we first need to convert the column to a proper `datetime` object using `pandas`.
+
+We then extract:
+
+- The **weekday number** (0 = Monday, 6 = Sunday)
+- The **weekday name** (e.g., 'Monday', 'Tuesday')
+
+.. code:: python
+
+   # Convert the string to datetime, setting errors='coerce' to safely handle invalid formats
+   data_dog['DateTime'] = pd.to_datetime(data_dog['DateTime'], errors='coerce', utc=True)
+
+   # Extract the weekday number (0 = Monday, 6 = Sunday)
+   data_dog['weekday'] = data_dog['DateTime'].dt.weekday
+
+   # Extract the full weekday name (e.g., 'Monday', 'Tuesday')
+   data_dog['weekday_name'] = data_dog['DateTime'].dt.day_name()
+
+   # Preview the updated DataFrame
+   data_dog.head()
+
+.. image:: ./images/data_weekdays.png
+   :align: center
+
+Now each dog outcome is labeled with the day of the week it occurred, both numerically and by name. This opens up the possibility of analyzing weekly patterns, for example, determining which day sees the most adoptions or the fewest returns.
+
+Exercise: Which day has the most and least outcomes?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. toggle:: Click to show
+
+    .. code:: python
+
+       data_dog['weekday_name'].value_counts()
+
+    .. code-block:: python-console
+
+        weekday_name
+        Monday       178
+        Tuesday      146
+        Wednesday    126
+        Sunday       100
+        Thursday      96
+        Friday        68
+        Saturday      61
+        Name: count, dtype: int64
+
+    From the result, we can see that Mondays had the most outcomes, while Saturdays had the fewest in this filtered dataset. This kind of temporal insight is often valuable when planning staffing or outreach for shelters.
+    
+Calculating the Overall Date Range
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now that we’ve converted the `'DateTime'` column to proper `datetime` objects, we can calculate how long a time period the dataset covers.
+
+This is helpful for understanding how recent the data is, and whether it spans days, months, or years, which can influence how you interpret trends over time.
+
+.. code:: python
+
+   min_date = data_dog['DateTime'].min()
+   max_date = data_dog['DateTime'].max()
+   range_date = max_date - min_date
+   print(range_date)
+
+This code calculates:
+
+- `min_date`: the earliest date in the dataset
+- `max_date`: the most recent date
+- `range_date`: the total time span between them
+
+The result might look like:
+
+.. code-block:: python-console
+
+    3762 days 00:00:00
+
+This tells us the filtered dataset covers approximately 10.3 years of outcomes for dogs.
+
+Comparing Weekday Distributions for 2023 vs 2024
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A useful exploratory question is: **Did outcome patterns shift between years?**  
+To investigate this, we compare the distribution of dog outcomes by weekday in two different years: 2023 and 2024.
+
+.. code:: python
+
+   # Filter the dataset by year
+   data_2024 = data_dog[data_dog['DateTime'].dt.year == 2024]
+   data_2023 = data_dog[data_dog['DateTime'].dt.year == 2023]
+
+   # Count outcomes per weekday (0 = Monday, ..., 6 = Sunday)
+   w2023 = data_2023['weekday'].value_counts().sort_index()
+   w2024 = data_2024['weekday'].value_counts().sort_index()
+
+This gives us the number of outcomes that occurred on each weekday, separately for each year.
+
+Next, we plot the results:
+
+.. code:: python
+
+   plt.figure(figsize=(8, 5))
+   sns.scatterplot(x=w2023.index, y=w2023.values, label='2023')
+   sns.scatterplot(x=w2024.index, y=w2024.values, label='2024')
+   plt.xticks(ticks=range(7), labels=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
+   plt.title('Dog Outcomes by Weekday: 2023 vs 2024')
+   plt.xlabel('Weekday')
+   plt.ylabel('Number of Outcomes')
+   plt.legend()
+   plt.grid(True)
+   plt.show()
+
+.. image:: ./images/2023vs2024.png
+   :align: center
+
+From this plot, you can visually compare the activity levels across the week between the two years. For example, if adoptions were much lower on Tuesdays and Wednesdays in 2024 compared to 2023, that might signal a shift in shelter scheduling or public behavior.
+
+
+Conclusion
+----------
+
+You now know how to:
+
+- Explore real datasets using pandas
+- Visualize distributions with seaborn
+- Clean and transform data for analysis
+
+Summary of Common EDA Operations
+--------------------------------
+
+Here’s a reference table of the main operations and functions covered in this tutorial:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 30 50
+
+   * - **Step**
+     - **Purpose**
+     - **Common Function(s)**
+   * - Load data
+     - Import CSV as a DataFrame
+     - ``pd.read_csv()``
+   * - Preview data
+     - Look at the first few rows
+     - ``data.head()``, ``display(data)``
+   * - Inspect structure
+     - Check types, memory usage, and missing values
+     - ``data.info()``
+   * - Column overview
+     - See column names and value counts
+     - ``data.keys()``, ``data['col'].value_counts()``
+   * - Handle missing data
+     - Remove rows with `NaN` in specific columns
+     - ``data.dropna(subset=['col'])``
+   * - Filter rows
+     - Create subsets based on condition
+     - ``data[data['col'] == 'value']``
+   * - Type conversion
+     - Convert strings to numbers or dates
+     - ``astype(int)``, ``pd.to_datetime()``
+   * - Extract from strings
+     - Parse numeric values from strings
+     - ``.str.extract(r'(\\d+)')``, ``.str.split()``
+   * - Work with dates
+     - Get weekday, year, etc.
+     - ``.dt.weekday``, ``.dt.day_name()``, ``.dt.year``
+   * - Summary statistics
+     - Min, max, range of dates
+     - ``data['Date'].min()``, ``.max()``, ``.max() - .min()``
+   * - Visualize distributions
+     - Understand data shape and outliers
+     - ``sns.boxplot()``, ``sns.histplot()``
+   * - Compare groups
+     - Examine trends across years or categories
+     - ``value_counts()``, ``scatterplot()``
+
+This table serves as a handy recap of your EDA toolbox in pandas and seaborn.
+
