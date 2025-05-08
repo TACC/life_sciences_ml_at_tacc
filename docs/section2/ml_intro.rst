@@ -172,6 +172,4 @@ additionally decide whether the problem is a classification or regression proble
 References and Additional Resources
 -----------------------------------
 
-.. warning::
-
-   Add some additional resources here
+1. COE 379L: Software Design For Responsible Intelligent Systems. https://coe-379l-sp24.readthedocs.io/en/latest/index.html
