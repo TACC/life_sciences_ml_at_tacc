@@ -317,4 +317,18 @@ The commands need to be run only once, when we log in on Vista for the first tim
 
 
 
+Default visualization
+^^^^^^^^^^^^^^^^^^^^^
+
+By default, Vista visualizes Jupyter as tree of directories
+
+.. image::  ./images/Jupyter_default_tree.png
+   :target: ./images/Jupyter_default_tree.png
+   :alt:  Figure 7 Jupyter tree visualization 
+
+This behavior can be changed by editing the text in the address bar of your browser from /tree to /lab
+
+.. image::  ./images/Jupyter_lab.png
+   :target: ./images/Jupyter_lab.png
+   :alt:  Figure 8 Jupyter lab visualization 
 
