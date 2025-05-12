@@ -42,6 +42,7 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx_copybutton',
     'sphinxemoji.sphinxemoji',
     'sphinx_rtd_theme',
     'sphinx_togglebutton'
@@ -185,3 +186,12 @@ epub_exclude_files = ['search.html']
 # To allow css styling
 def setup(app):
     app.add_css_file('custom.css')
+    
+# -- Options for sphinx-copybutton -------------------------------------------
+
+# If your code examples include Python prompts like >>> or ..., this tells the copy button to ignore them when copying.
+copybutton_prompt_text = r">>> |\.\.\. "
+
+# Treat the prompt text as a regular expression so both >>> and ... are matched.
+copybutton_prompt_is_regexp = True
+
