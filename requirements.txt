@@ -4,3 +4,4 @@ sphinx-rtd-theme
 sphinx-fontawesome
 sphinxemoji
 sphinx-togglebutton
+sphinx-copybutton
