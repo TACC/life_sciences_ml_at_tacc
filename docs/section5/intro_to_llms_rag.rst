@@ -12,7 +12,7 @@ Running a chat interface to LLMs
 --------------------------------
 
 As a demonstration, we will learn how to run a chat interface to LLMs using the open-source tools
-`Open WebUI <https://github.com/open-webui/open-webui>`_  and `Ollama <https://ollama.com/>`_.
+`Open WebUI <https://github.com/open-webui/open-webui>`__  and `Ollama <https://ollama.com/>`_.
 Open WebUI is a web-based interface for interacting with LLMs, while Ollama is a command-line tool for running
 LLMs locally. In keeping with the theme of the previous section, we will run these tools in a container on an
 HPC system.
@@ -35,6 +35,9 @@ We will use the open-source `Firefox <https://www.mozilla.org/en-US/firefox/new/
 
 .. code-block:: console
 
+   # Move to the scratch directory
+   $ cd $SCRATCH
+
    # Download the Firefox install script
    $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section5/files/install_firefox_linux-aarch64.sh
 
@@ -48,7 +51,7 @@ We will use the open-source `Firefox <https://www.mozilla.org/en-US/firefox/new/
    To permanently add '/home1/03762/eriksf/bin' to your PATH, add 'export PATH=$PATH:/home1/03762/eriksf/bin' to /home1/03762/eriksf/.bashrc
 
 Run the Open WebUI/Ollama container
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Next, we will run the Open WebUI/Ollama container. To simplify the process, we will download and run a "start" script
 that will automatically load the apptainer module, pull the container, create some data directories, and run it
@@ -171,3 +174,7 @@ model is selected.
 Additional Resources
 --------------------
 
+The material in this section is based on the following resources:
+
+* `Ollama <https://ollama.com/>`_
+* `Open WebUI <https://openwebui.com/>`_

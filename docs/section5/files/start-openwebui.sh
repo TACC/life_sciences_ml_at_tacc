@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OPEN_WEBUI_SIF="$SCRATCH/open-webui_v0.6.7-ollama.sif"
+OPEN_WEBUI_SIF="$SCRATCH/open-webui_v0.6.9-ollama.sif"
 OPEN_WEBUI_DIR="$SCRATCH/openwebui-data"
 OLLAMA_DATA="$OPEN_WEBUI_DIR/ollama"
 OPEN_WEBUI_DATA="$OPEN_WEBUI_DIR/open-webui"
@@ -15,7 +15,7 @@ fi
 
 if [[ ! -s "$OPEN_WEBUI_SIF" ]]; then
     echo "Pulling open-webui image..."
-    apptainer pull docker://ghcr.io/open-webui/open-webui:v0.6.7-ollama
+    apptainer pull docker://ghcr.io/open-webui/open-webui:v0.6.9-ollama
 fi
 
 echo "Creating data directories, if needed..."
