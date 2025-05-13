@@ -325,19 +325,19 @@ and ``Esc``.
 
 Entering VIM insert mode:
 
-.. code-block:: bash
+.. code-block:: text
 
    > i
 
 Entering VIM normal mode:
 
-.. code-block:: bash
+.. code-block:: text
 
    > Esc
 
 A summary of the most important keys to know for normal mode are (more on your cheat sheet):
 
-.. code-block:: bash
+.. code-block:: text
 
    # Navigating the file:
 

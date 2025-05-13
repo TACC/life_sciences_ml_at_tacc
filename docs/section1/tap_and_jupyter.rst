@@ -19,9 +19,9 @@ section, you should be able to:
 Accessing the Portal
 --------------------
 
-Log in to the `TAP <https://tap.tacc.utexas.edu/>`_ using the same username and password that you
-use to access the TACC User Portal. Once you've logged in you'll be directed to the Home Screen
-where you can begin scheduling jobs.
+Log in to `TAP <https://tap.tacc.utexas.edu/>`_ using the same username and password that you use to
+access the TACC User Portal. Once you've logged in you'll be directed to the Home Screen where you
+can begin scheduling jobs.
 
 .. image::  ./images/1TAP.png
    :alt:  Figure 1. TAP Home Screen
@@ -199,7 +199,7 @@ Troubleshooting TAP
 -------------------
 
 If you encounter an error while using TAP, or if your job status remains in "PENDING" for more than 
-a few moments, alert with workshop instructors.
+a few moments, alert the workshop instructors.
 
 .. note::
 
