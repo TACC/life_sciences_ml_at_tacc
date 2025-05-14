@@ -32,29 +32,29 @@ and reproducible.
 .. code-block:: python
    :linenos:
 
-   import requests
-   import zipfile
-   import io
-   import pandas as pd
+   >>> import requests
+   >>> import zipfile
+   >>> import io
+   >>> import pandas as pd
    
-   # URL pointing to the ZIP file containing the CSV dataset
-   url = 'https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip'
+   >>> # URL pointing to the ZIP file containing the CSV dataset
+   >>> url = 'https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/Austin_Animal_Center_Outcomes.zip'
    
-   # Send an HTTP GET request to fetch the content of the ZIP file
-   response = requests.get(url)
-   print(response.status_code)  # Should return 200 if the request was successful
+   >>> # Send an HTTP GET request to fetch the content of the ZIP file
+   >>> response = requests.get(url)
+   >>> print(response.status_code)  # Should return 200 if the request was successful
    
-   # Extract the ZIP file directly from the response's binary content
-   with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+   >>> # Extract the ZIP file directly from the response's binary content
+   >>> with zipfile.ZipFile(io.BytesIO(response.content)) as z:
    
-       # Open the CSV file inside the ZIP without saving it to disk
-       with z.open('Austin_Animal_Center_Outcomes.csv') as csv_file:
+   >>>     # Open the CSV file inside the ZIP without saving it to disk
+   >>>     with z.open('Austin_Animal_Center_Outcomes.csv') as csv_file:
        
-           # Read the CSV into a pandas DataFrame
-           data = pd.read_csv(csv_file)
+   >>>         # Read the CSV into a pandas DataFrame
+   >>>         data = pd.read_csv(csv_file)
            
-           # Display the first few rows of the DataFrame
-           display(data)
+   >>>         # Display the first few rows of the DataFrame
+   >>>         display(data)
 
 **Explanation of the Code:**
 
@@ -241,7 +241,7 @@ This column represents the type of animal (e.g., dog, cat, bird). We can get the
 
 .. code-block:: text
 
-   >>> array(['Other', 'Bird', 'Dog', 'Cat', 'Livestock'], dtype=object)
+   array(['Other', 'Bird', 'Dog', 'Cat', 'Livestock'], dtype=object)
 
 And count how many records belong to each category:
 
@@ -256,17 +256,28 @@ And count how many records belong to each category:
    Other         8960
    Bird           877
    Livestock       34
+   
+   
+Finding All Livestock with Names
+--------------------------------
+
+Let’s work on a real-world question: **which livestock animals have names recorded in the system?**
+
+To answer this, we’ll walk through two essential data preparation steps:
+
+- First, we’ll **filter the dataset** to isolate livestock records.
+- Then, we’ll **handle missing values** by removing entries without names.
+
+These steps reflect a common pattern in exploratory data analysis: narrowing the data to a relevant 
+subgroup, then cleaning it to ensure quality before drawing any conclusions.
 
 
-Filtering for Specific Categories
----------------------------------
+Filtering for Livestock
+^^^^^^^^^^^^^^^^^^^^^^^
 
-To practice working with subsets of data, let's explore a less common animal type: **livestock**.
-This will allow us to demonstrate filtering operations and how to work with small subsets of a
-larger dataset.
-
-We start by creating a Boolean mask that identifies rows where the ``'Animal Type'`` column is equal
-to ``'Livestock'``. We then apply this filter to create a new DataFrame containing only those rows.
+Our first step is to extract only the records where the animal type is ``'Livestock'``. We start 
+by creating a Boolean mask that identifies rows where the ``'Animal Type'`` column is equal to ``'Livestock'``. 
+We then apply this filter to create a new DataFrame containing only those rows.
 
 .. code-block:: python
 
@@ -277,11 +288,8 @@ to ``'Livestock'``. We then apply this filter to create a new DataFrame containi
 .. image:: ./images/livestock_head.png
    :align: center
 
-The resulting table shows all animals labeled as livestock. From this preview, we can already spot
-that some records are missing values in the ``Name`` column. We'll address that in the next step.
-This kind of targeted filtering is common in EDA, it helps isolate groups of interest for deeper
-analysis or validation.
-
+This filtered DataFrame contains only livestock records. From the preview, we can already see that 
+some entries are missing values in the ``Name`` column.
 
 Exercise: List All Livestock Names
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -299,15 +307,14 @@ Try listing all unique livestock names:
      array([nan, 'Bacon', 'Loki', 'Peppa', 'Hazel', 'Piggy Smalls'], dtype=object)
 
 We can see that some livestock entries are missing a name (``NaN``). In most data analysis
-workflows, missing values like these need to be handled — either by imputing values or, as we'll do
+workflows, missing values like these need to be handled, either by imputing values or, as we'll do
 here, removing incomplete rows.
 
+Handling Missing Names
+^^^^^^^^^^^^^^^^^^^^^^
 
-Handling Missing Values
------------------------
-
-In this case, it makes sense to **drop rows where the ``Name``` is missing**, since the name may be
-used later for identification or analysis.
+Next, we want to remove livestock entries without names. In practice, missing values are often 
+removed or imputed depending on the context. Here, we’ll simply **drop rows where the ``Name``` is missing**.
 
 We use the ``dropna()`` function, specifying the ``subset`` argument to limit the removal to rows
 where ``'Name'`` is ``NaN``.
@@ -322,27 +329,42 @@ where ``'Name'`` is ``NaN``.
    .. image:: ./images/livestock_names.png
       :align: center
 
-Now the dataset contains only livestock animals with valid names. This is an example of a simple but
-important data cleaning operation common in real-world projects.
+This gives us a clean dataset of livestock animals that all have names recorded.
 
+You’ve now completed a full data filtering and cleaning cycle.
+
+
+Analyzing Dogs in the Dataset
+-----------------------------
+
+Now let’s turn our attention to **dogs**, which make up the largest portion of the dataset. 
+We’ll go through a few real-world data analysis steps to answer the following questions:
+
+1. What is the oldest recorded dog in the dataset?
+2. Can we extract and convert age information into numeric values for further analysis?
+3. What can we learn by visualizing outcomes and age distribution for dogs?
 
 Exercise: Find the Oldest Dog
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's now switch our focus to **dogs**, which make up the largest portion of the dataset. Your task
-is to create a new DataFrame, ``data_dog``, that contains only dog entries.
-
-Once the filtering is complete, find the oldest one recorded.
+Your first task is to create a new DataFrame, ``data_dog``, that contains only dog entries 
+with names recorded. Then, search for the oldest dog based on the ``'Age upon Outcome'`` column.
 
 .. toggle:: Click to show
 
    .. code-block:: python
 
+      >>> # Filter for dogs
       >>> dog_filter = data['Animal Type'] == 'Dog'
       >>> data_dog = data[dog_filter]
+
+      >>> # Remove unnamed entries
       >>> data_dog = data_dog.dropna(subset=['Name'])
+
+      >>> # Preview unique age values
       >>> print(data_dog['Age upon Outcome'].unique())
-      >>>
+
+      >>> # Filter and display dog(s) labeled as 24 years old
       >>> filter_age = data_dog['Age upon Outcome'] == '24 years'
       >>> display(data_dog[filter_age])
 
@@ -354,10 +376,10 @@ conditions in real data, a key part of exploratory data analysis.
 
 
 Type Conversion
----------------
+^^^^^^^^^^^^^^^
 
 The ``'Age upon Outcome'`` column is currently stored as a string (e.g., ``'3 years'``,
-``'2 months'``), which means we can't perform numerical analysis directly on it. In this section, we
+``'2 months'``), which means we can't perform numerical analysis directly on it. In this step, we
 will convert this string-based column into a proper numeric format so we can, for example, find the
 oldest dogs by age.
 
@@ -378,22 +400,22 @@ We will take the following steps:
 
    .. code-block:: python
    
-      # Remove rows where age is missing
-      data_dog = data_dog.dropna(subset=['Age upon Outcome'])
+      >>> # Remove rows where age is missing
+      >>> data_dog = data_dog.dropna(subset=['Age upon Outcome'])
    
-      # Keep only rows where the age is expressed in full years
-      years_filter = data_dog['Age upon Outcome'].str.contains('years')
-      data_dog = data_dog[years_filter]
+      >>> # Keep only rows where the age is expressed in full years
+      >>> years_filter = data_dog['Age upon Outcome'].str.contains('years')
+      >>> data_dog = data_dog[years_filter]
    
-      # Extract the number of years from the string and convert to integer
-      data_dog['AgeInYears'] = data_dog['Age upon Outcome'].str.extract(r'(\d+)')[0].astype(int)
+      >>> # Extract the number of years from the string and convert to integer
+      >>> data_dog['AgeInYears'] = data_dog['Age upon Outcome'].str.extract(r'(\d+)')[0].astype(int)
    
-      # Get the maximum age
-      max_age = data_dog['AgeInYears'].max()
-      print(f'The oldest dog is {max_age} years old.')
+      >>> # Get the maximum age
+      >>> max_age = data_dog['AgeInYears'].max()
+      >>> print(f'The oldest dog is {max_age} years old.')
    
-      # Display the record(s) corresponding to the oldest dog(s)
-      display(data_dog[data_dog['AgeInYears'] == max_age])
+      >>> # Display the record(s) corresponding to the oldest dog(s)
+      >>> display(data_dog[data_dog['AgeInYears'] == max_age])
 
 This process is a good example of how to transform human-readable strings into numeric values that
 can be used for meaningful analysis.
@@ -435,9 +457,8 @@ plotting or filtering.
    pull the number out of a string that looks like ``"14 years"`` — it's like a smarter version of
    ``.split()`` or ``.replace()``.
 
-
 Visualize Data
---------------
+^^^^^^^^^^^^^^
 
 After performing type conversion and filtering, we can begin visualizing the data to understand
 trends and distributions. Visualization is a key part of exploratory data analysis, helping to
@@ -524,17 +545,17 @@ We then extract:
 
 .. code-block:: python
 
-   # Convert the string to datetime, setting errors='coerce' to safely handle invalid formats
-   data_dog['DateTime'] = pd.to_datetime(data_dog['DateTime'], errors='coerce', utc=True)
+   >>> # Convert the string to datetime, setting errors='coerce' to safely handle invalid formats
+   >>> data_dog['DateTime'] = pd.to_datetime(data_dog['DateTime'], errors='coerce', utc=True)
 
-   # Extract the weekday number (0 = Monday, 6 = Sunday)
-   data_dog['weekday'] = data_dog['DateTime'].dt.weekday
+   >>> # Extract the weekday number (0 = Monday, 6 = Sunday)
+   >>> data_dog['weekday'] = data_dog['DateTime'].dt.weekday
 
-   # Extract the full weekday name (e.g., 'Monday', 'Tuesday')
-   data_dog['weekday_name'] = data_dog['DateTime'].dt.day_name()
+   >>> # Extract the full weekday name (e.g., 'Monday', 'Tuesday')
+   >>> data_dog['weekday_name'] = data_dog['DateTime'].dt.day_name()
 
-   # Preview the updated DataFrame
-   data_dog.head()
+   >>> # Preview the updated DataFrame
+   >>> data_dog.head()
 
 .. image:: ./images/data_weekdays.png
    :align: center
@@ -610,13 +631,13 @@ To investigate this, we compare the distribution of dog outcomes by weekday in t
 
 .. code-block:: python
 
-   # Filter the dataset by year
-   data_2024 = data_dog[data_dog['DateTime'].dt.year == 2024]
-   data_2023 = data_dog[data_dog['DateTime'].dt.year == 2023]
+   >>> # Filter the dataset by year
+   >>> data_2024 = data_dog[data_dog['DateTime'].dt.year == 2024]
+   >>> data_2023 = data_dog[data_dog['DateTime'].dt.year == 2023]
 
-   # Count outcomes per weekday (0 = Monday, ..., 6 = Sunday)
-   w2023 = data_2023['weekday'].value_counts().sort_index()
-   w2024 = data_2024['weekday'].value_counts().sort_index()
+   >>> # Count outcomes per weekday (0 = Monday, ..., 6 = Sunday)
+   >>> w2023 = data_2023['weekday'].value_counts().sort_index()
+   >>> w2024 = data_2024['weekday'].value_counts().sort_index()
 
 This gives us the number of outcomes that occurred on each weekday, separately for each year.
 
