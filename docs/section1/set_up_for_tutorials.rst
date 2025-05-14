@@ -125,7 +125,7 @@ as follows:
 .. image::  ./images/TAP_3.jupyter_HOME.png
    :alt:  Figure 3 TAP session will log into user $HOME 
 
-* Change your kernel to ``tf-213``. Click on the menu ``kernel``, then ``Change kernel``, and select the kernel ``tf-213``. Trust the kernel by clicking on the button "Not trusted" at the top right 
+* Change your kernel to ``Day3-tf-213``. Click on the menu ``kernel``, then ``Change kernel``, and select the kernel ``Day3-tf-213``. Trust the kernel by clicking on the button "Not trusted" at the top right 
 
 .. image::  ./images/TAP_4.kernel_change.png
    :alt:  Figure 4 Changing the kernel version ant trust the kernel
@@ -177,7 +177,7 @@ tutorial notebook:
 
 .. tip::
 
-   Make sure to change your kernel to ``tf-213``.
+   Make sure to change your kernel to ``Day3-tf-213``.
 
 .. code-block:: python
 

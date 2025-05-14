@@ -35,7 +35,7 @@ If you've followed the setup instructions in the `TACC Deep Learning Tutorials R
  - CUDA libraries compatible with the system
  - All required Python packages pre-installed
 
-This cell will confirm that your environment is correctly configured (TIP: Make sure you change your kernel to ``tf-213``).
+This cell will confirm that your environment is correctly configured (TIP: Make sure you change your kernel to ``Day3-tf-213``).
 
 .. code-block:: python3
 

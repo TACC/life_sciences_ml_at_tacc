@@ -120,6 +120,19 @@ Tutorial Setup and Materials
 
 All materials and instructions for running this tutorial in the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ are available in our GitHub repository: `TACC Deep Learning Tutorials <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_.
 
+Step 0: Check GPU Availability and TensorFlow Version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before training deep learning models, it's important to check whether TensorFlow can access the GPU on your machine. Training on a GPU is significantly faster than on a CPU, especially for large image datasets. 
+
+If you've followed the setup instructions in the `TACC Deep Learning Tutorials README <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_, and you've run the ``install_kernel.sh`` script on **Frontera**, you should now be running this notebook inside a containerized Jupyter kernel that includes:
+
+ - TensorFlow v. 2.13.0 with GPU support
+ - CUDA libraries compatible with the system
+ - All required Python packages pre-installed
+
+This cell will confirm that your environment is correctly configured (TIP: Make sure you change your kernel to ``Day3-tf-213``).
+
 Step 1: Importing and examining the data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
