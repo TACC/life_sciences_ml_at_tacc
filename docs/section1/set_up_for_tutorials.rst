@@ -5,8 +5,8 @@ This section provides instructions for setting up the environment and gathering 
 for two hands-on tutorials.
 
 
-Set Up
-------
+Set Up For Frontera
+------------------- 
 
 
 Step 1. Log in to Frontera
@@ -144,7 +144,7 @@ as follows:
 
 
 Complete the Tutorial
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 To complete this tutorial:
 
@@ -158,7 +158,7 @@ repository you cloned previously.
 
 
 Check GPU Availability
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Before training deep learning models on HPC systems, it's important to check whether TensorFlow can
 access the GPU. Training on a GPU is significantly faster than on a CPU, especially for large image
@@ -188,3 +188,93 @@ tutorial notebook:
    
    >>> # Print TensorFlow version
    >>> print(tf.__version__)
+
+
+Set Up For Vista
+---------------- 
+
+Step 1. Log in to Vista
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Log in to Vista using SSH:
+
+.. code:: console
+
+   [local]$ ssh username@vista.tacc.utexas.edu
+   (username@vista.tacc.utexas.edu) Password: 
+   (username@vista.tacc.utexas.edu) TACC Token Code:
+
+   # ------------------------------------------------------------------------------
+   # Welcome to the Vista Supercomputer
+   # Texas Advanced Computing Center, The University of Texas at Austin
+   # ------------------------------------------------------------------------------
+
+Step 2. Set up Environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Download the setup script (``install_kernels.sh``) and run it to set up the environment. This script will copy the Jupyter
+kernel image files into your SCRATCH directory and install the kernel definition files into your HOME directory.
+
+.. code:: console
+
+   # Change to your SCRATCH directory
+   [vista]$ cds
+   
+   # Download the setup script
+   [vista]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section4/files/install_kernels.sh
+
+   # Run the setup script
+   [vista]$ bash ./install_kernels.sh
+   Copying tensorflow-ml-container_0.1.sif to /scratch/03762/eriksf...
+   Copying pytorch-ml-container_0.4.sif to /scratch/03762/eriksf...
+   Kernel directory created at ~/.local/share/jupyter/kernels/Day4-tf-217 and kernel.json has been added.
+   Kernel directory created at ~/.local/share/jupyter/kernels/Day4-pt-251 and kernel.json has been added.
+
+Step 3. Launch Jupyter
+^^^^^^^^^^^^^^^^^^^^^^
+
+Log in to the `TACC Analysis Portal <https://tap.tacc.utexas.edu/jobs/>`_ and configure your session
+as follows:
+
+* **System:** Vista
+* **Application:** Jupyter Notebook
+* **Project:** frontera-training
+* **Queue:** gh
+* **Reservation:** LSC-ML-Institute-May22
+
+.. warning::
+
+   The reservation name changes day by day.
+
+.. image::  ./images/TAP1_vista_job_submitting.png
+   :alt:  Figure 1. Submitting a job through TAP 
+
+* Click 'Submit' and wait for the job to start
+* Click 'Connect' when the a node becomes available
+
+.. image::  ./images/TAP2_vista_connect.png
+   :alt:  Figure 2 Submitting a job through TAP 
+ 
+* By default on Vista, the Jupyter Notebook job will open with the Jupyter Lab interface showing the user
+  ``$HOME`` directory on the left. If the kernels are installed properly, you should see the
+  ``Day4-tf-217`` and ``Day4-pt-251`` kernels listed in the Launcher tab under the Notebook section.
+
+.. image::  ./images/TAP3_vista_jupyter_lab_home.png
+   :alt:  Figure 3 Jupyter Lab interface showing user $HOME 
+
+.. note::
+
+   If you prefer to use the classic Jupyter Notebook interface instead of Jupyter Lab, you can edit the URL
+   in your browser to replace the word "/lab" with "/tree". 
+
+* To verify that the kernels are installed properly in the Jupyter Notebook interface, click on the "New" dropdown
+  menu in the upper right to see the ``Day4-tf-217`` or ``Day4-pt-251`` kernels.
+
+.. image::  ./images/TAP4_vista_jupyter_notebook_home.png
+   :alt:  Figure 4 Jupyter Notebook interface showing user $HOME
+
+* The Jupyter notebooks are now ready to be launched.
+
+.. note::
+
+   The kernel may take a few moments to initialize on first use.
