@@ -47,44 +47,43 @@ Data Types and Variables
 ------------------------
 
 The most common data types in Python are similar to other programming languages.
-For this class, we probably only need to worry about **integers**, **floats**,
-**booleans**, and **strings**.
+For this class, we’ll focus on:
 
-Assign some values to variables by doing the following:
+- **int** – integers like `3`, `42`
+- **float** – decimal numbers like `3.14`, `0.01`
+- **bool** – `True` or `False`
+- **str** – strings like `"hello"`
 
-.. code-block:: python3
-
-   >>> my_int = 5
-   >>> my_float = 5.0
-   >>> my_bool = True      # or False, notice capital letters
-   >>> my_string = 'Hello, world!'
-
-In Python, you don't have to declare type. Python figures out the type
-automatically. Check using the ``type()`` function:
+Assign values to variables:
 
 .. code-block:: python3
 
-   >>> type(my_int)
-   <class 'int'>
-   >>> type(my_float)
-   <class 'float'>
-   >>> type(my_bool)
-   <class 'bool'>
-   >>> type(my_string)
-   <class 'str'>
+   >>> x = 5
+   >>> y = 3.14
+   >>> name = "Alice"
+   >>> flag = True
 
-Print the values of each variable using the ``print()`` function:
+In Python, you don't have to declare type. Python figures out the type automatically.
+You can check the type using the ``type()`` function:
 
 .. code-block:: python3
 
-   >>> print(my_int)
-   5
-   >>> print('my_int')
-   my_int
+   >>> print(type(x))     # int
+   >>> print(type(y))     # float
+   >>> print(type(name))  # str
+   >>> print(type(flag))  # bool
+   
+The ``print()`` function is used to show output on the screen. You can print numbers, 
+text, or the result of expressions.
 
-(Try printing the others as well). And, notice what happens when we print with
-and without single quotes? What is the difference between ``my_int`` and
-``'my_int'``?
+Notice what happens when we print with and without single quotes?
+
+.. code-block:: python3
+
+   >>> print(x)        # prints the number 5
+   >>> print("x")      # prints the letter x
+
+**Converting between types**
 
 You can convert between types using a few different functions. For example, when
 you read in data from a file, numbers are often read as strings. Thus, you may
@@ -92,21 +91,19 @@ want to convert the string to integer or float as appropriate:
 
 .. code-block:: python3
 
-   >>> str(my_int)      # convert int to string
-   >>> str(my_float)    # convert float to string
-   >>> int(my_string)   # convert string to int
-   >>> float(my_string) # convert string to float
-   >>>
-   >>> value = 5
-   >>> print(value)
-   5
-   >>> type(value)
-   <class 'int'>
-   >>> new_value = str(value)
-   >>> print(new_value)
-   '5'
-   >>> type(new_value)
-   <class 'str'>
+   >>> a = 10
+   >>> b = str(a)         # convert int to string
+   >>> c = "20"
+   >>> d = int(c)         # convert string to int
+
+   >>> print(b)           # '10'
+   >>> print(d)           # 20
+   >>> print(type(b))     # str
+   >>> print(type(d))     # int
+
+.. tip::
+
+   Not all strings can be turned into numbers. Try ``int("hello")`` and see what happens!
 
 
 Arithmetic Operations
