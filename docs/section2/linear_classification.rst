@@ -416,6 +416,7 @@ Examples:
     array([-3.17277854])
 
     >>> # this is the same as computing the linear combination of the coef_ and intercept_:
+    >>> import numpy as np
     >>> np.sum( clf.coef_*X_train[0]) + clf.intercept_
     array([-3.17277854])
 
@@ -611,7 +612,7 @@ dataset from sklearn
 
       >>> print(data.feature_names)
       >>> print(data.target_names)
-      >>> data.data
+      >>> print(data.data)
       >>> X = data.data
       >>> y = data.target
 
@@ -664,6 +665,7 @@ Exercise 3
       >>> print(f"Train accuracy: {accuracy_train}; Test accuracy: {accuracy_test}")
 
       >>> from sklearn.metrics import ConfusionMatrixDisplay
+      >>> import matplotlib.pyplot as plt
       >>> cm_display = ConfusionMatrixDisplay.from_estimator(clf, X_test, y_test, cmap=plt.cm.Blues, normalize=None)
 
 

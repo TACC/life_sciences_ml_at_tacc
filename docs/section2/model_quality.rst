@@ -222,4 +222,6 @@ there were more false positives than false negatives.
 Additional Resources
 --------------------
 
+* Adapted from: 
+  `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
 * `SciKit-Learn metrics documentation <https://scikit-learn.org/stable/modules/model_evaluation.html>`_
