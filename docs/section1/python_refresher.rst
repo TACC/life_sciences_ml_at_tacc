@@ -47,12 +47,12 @@ Data Types and Variables
 ------------------------
 
 The most common data types in Python are similar to other programming languages.
-For this class, we’ll focus on:
+For this class, we'll focus on:
 
-- **int** – integers like `3`, `42`
-- **float** – decimal numbers like `3.14`, `0.01`
-- **bool** – `True` or `False`
-- **str** – strings like `"hello"`
+- **int** - integers like `3`, `42`
+- **float** - decimal numbers like `3.14`, `0.01`
+- **bool** - `True` or `False`
+- **str** - strings like `"hello"`
 
 Assign values to variables:
 
@@ -239,7 +239,7 @@ some examples of slicing:
 - Mutable (you can change values)
 - Keys must be unique
 
-Let’s create a simple English-to-Spanish dictionary:
+Let's create a simple English-to-Spanish dictionary:
 
 .. code-block:: python3
 
@@ -272,7 +272,7 @@ But you **cannot** use the value to look up the key directly:
 This shows that dictionaries are **one-directional**: they map from keys to values 
 (not the other way around).
 
-You can **change the value** associated with a key. For example, let’s say we decide 
+You can **change the value** associated with a key. For example, let's say we decide 
 to update the translation for `'one'`:
 
 .. code-block:: python3

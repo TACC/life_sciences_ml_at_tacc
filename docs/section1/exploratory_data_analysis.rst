@@ -30,7 +30,6 @@ extract the data directly from the URL** using Python. This approach makes your 
 and reproducible.
 
 .. code-block:: python
-   :linenos:
 
    >>> import requests
    >>> import zipfile
@@ -212,7 +211,7 @@ We can list all columns in the dataset to better understand its structure:
           'Age upon Outcome', 'Breed'],
           dtype='object')
 
-Let’s take a closer look at the ``Animal Type`` column:
+Let's take a closer look at the ``Animal Type`` column:
 
 .. code-block:: python
 
@@ -261,12 +260,12 @@ And count how many records belong to each category:
 Finding All Livestock with Names
 --------------------------------
 
-Let’s work on a real-world question: **which livestock animals have names recorded in the system?**
+Let's work on a real-world question: **which livestock animals have names recorded in the system?**
 
-To answer this, we’ll walk through two essential data preparation steps:
+To answer this, we'll walk through two essential data preparation steps:
 
-- First, we’ll **filter the dataset** to isolate livestock records.
-- Then, we’ll **handle missing values** by removing entries without names.
+- First, we'll **filter the dataset** to isolate livestock records.
+- Then, we'll **handle missing values** by removing entries without names.
 
 These steps reflect a common pattern in exploratory data analysis: narrowing the data to a relevant 
 subgroup, then cleaning it to ensure quality before drawing any conclusions.
@@ -314,7 +313,7 @@ Handling Missing Names
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Next, we want to remove livestock entries without names. In practice, missing values are often 
-removed or imputed depending on the context. Here, we’ll simply **drop rows where the ``Name``` is missing**.
+removed or imputed depending on the context. Here, we'll simply **drop rows where the ``Name``` is missing**.
 
 We use the ``dropna()`` function, specifying the ``subset`` argument to limit the removal to rows
 where ``'Name'`` is ``NaN``.
@@ -331,14 +330,14 @@ where ``'Name'`` is ``NaN``.
 
 This gives us a clean dataset of livestock animals that all have names recorded.
 
-You’ve now completed a full data filtering and cleaning cycle.
+You've now completed a full data filtering and cleaning cycle.
 
 
 Analyzing Dogs in the Dataset
 -----------------------------
 
-Now let’s turn our attention to **dogs**, which make up the largest portion of the dataset. 
-We’ll go through a few real-world data analysis steps to answer the following questions:
+Now let's turn our attention to **dogs**, which make up the largest portion of the dataset. 
+We'll go through a few real-world data analysis steps to answer the following questions:
 
 1. What is the oldest recorded dog in the dataset?
 2. Can we extract and convert age information into numeric values for further analysis?
