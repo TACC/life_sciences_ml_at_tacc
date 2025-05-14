@@ -407,6 +407,6 @@ function to predict dependent variables given independent variables.
 Additional Resources
 --------------------
 
-* This documentation is adapted from: 
+* Adapted from: 
   `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
 * `SciKit Learn Linear Regression Documentation <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html>`_
