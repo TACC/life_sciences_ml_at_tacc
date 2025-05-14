@@ -230,6 +230,20 @@ kernel image files into your SCRATCH directory and install the kernel definition
    Kernel directory created at ~/.local/share/jupyter/kernels/Day4-tf-217 and kernel.json has been added.
    Kernel directory created at ~/.local/share/jupyter/kernels/Day4-pt-251 and kernel.json has been added.
 
+.. warning::
+
+   Vista by default does not have the Python3 module loaded, nor is it in the default module path.
+   This means that if you try to run a Jupyter Notebook on Vista, it will return an error. To fix
+   this, you must manually log in to Vista on the command line and perform the following steps:
+
+   .. code-block:: console
+
+      [vista]$ module load gcc
+      [vista]$ module load python3
+      [vista]$ module save
+
+   This is a one-time setup step. After this, you can use TAP to launch Jupyter Notebooks on Vista.
+
 Step 3. Launch Jupyter
 ^^^^^^^^^^^^^^^^^^^^^^
 
