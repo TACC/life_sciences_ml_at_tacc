@@ -2,13 +2,13 @@ Linear Regression
 =================
 
 In this section, we introduce our first ML algorithm called Linear Regression. We also 
-introduce the SciKit Learn Python library which provides an implementation of Linear 
+introduce the SciKit-Learn Python library which provides an implementation of Linear 
 Regression and many other ML algorithms. By the end of this section, you should be able to:
 
 * Describe the basics of the Linear Regression model
 * Identify which ML problems Linear Regression could potentially be applied to
-* Install and import the SciKit Learn Python package into a Python program
-* Use SciKit Learn to implement a basic Linear Regression model
+* Install and import the SciKit-Learn Python package into a Python program
+* Use SciKit-Learn to implement a basic Linear Regression model
 
 
 Introduction
@@ -210,10 +210,10 @@ function.
   similar ideas can be used to deal with the case of multiple independent variables. 
 
 
-SciKit Learn
+SciKit-Learn
 ------------
 
-The Python Package SciKit Learn (``scikit-learn`` on PyPI) provides implementations for a number of
+The Python Package SciKit-Learn (``scikit-learn`` on PyPI) provides implementations for a number of
 ML algorithms we will cover in this workshop. It also works well with NumPy, Pandas, Matplotlib,
 etc. 
 
@@ -409,4 +409,4 @@ Additional Resources
 
 * Adapted from: 
   `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
-* `SciKit Learn Linear Regression Documentation <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html>`_
+* `SciKit-Learn Linear Regression Documentation <https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html>`_
