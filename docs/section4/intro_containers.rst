@@ -32,7 +32,6 @@ What is a Container?
   application from environment.
 
 
-
 How is a Container Different from a VM?
 ---------------------------------------
 
@@ -58,8 +57,6 @@ and have very short start up times (~100s of ms).
 
    Applications isolated by containers.
 
-
-
 **Benefits of using containers include:**
 
 * Platform independence: Build it once, run it anywhere
@@ -68,12 +65,12 @@ and have very short start up times (~100s of ms).
 * Effective isolation and resource sharing
 
 
-
 Container Technologies
 ----------------------
 
+
 Docker
-~~~~~~
+^^^^^^
 
 .. figure:: ./images/docker_logo.jpg
    :height: 180
@@ -88,18 +85,31 @@ by far the most common containerization platform today, and most other container
 platforms are compatible with Docker. (E.g. Apptainer, Singularity, and Shifter
 are other containerization platforms you may find in HPC environments).
 
-We can find existing images at:
+
+Apptainer
+^^^^^^^^^
+
+Apptainer is a container solution designed to execute applications at bare-metal performance while
+being secure, portable, and 100% reproducible. Apptainer's permissions model makes it a popular
+choice for shared HPC environments where Docker cannot be supported. It has its own syntax for
+building containers but also support pulling and running Docker containers.
+
+In general we use **Docker** to develop new containers and run them on our laptops. We use 
+**Apptainer** as a runtime on our HPC systems. We can find existing containers that are compatible
+with both Docker and Apptainer platforms (among others) at:
 
 1. `Docker Hub <https://hub.docker.com/>`_
-2. `Quay.io <https://quay.io/>`_
-3. `BioContainers <https://biocontainers.pro/#/>`_
+2. `NVIDIA GPU Cloud (NGC) <https://catalog.ngc.nvidia.com/>`_
+3. `Quay.io <https://quay.io/>`_
+4. `BioContainers <https://biocontainers.pro/#/>`_
 
 
 Some Quick Definitions
 ----------------------
 
+
 Dockerfile
-~~~~~~~~~~
+^^^^^^^^^^
 
 A Dockerfile is a recipe for creating a Docker image. It is a human-readable, 
 plain text file that contains a sequential set of commands (*a recipe*) for 
@@ -108,8 +118,9 @@ command line interface is used to interpret a Dockerfile and "build" an  image
 based on those instructions. Other container build environments, such as Apptainer, 
 have different syntax for container recipes, but the function is the same.
 
+
 Image
-~~~~~
+^^^^^
 
 An image is a read-only template that contains all the code, dependencies,
 libraries, and supporting files that are required to launch a container. Docker
@@ -117,16 +128,18 @@ stores images as layers, and any changes made to an image are captured by adding
 new layers. The "base image" is the bottom-most layer that does not depend on 
 any other layer and typically defines the operating system for the container.
 
+
 Container
-~~~~~~~~~
+^^^^^^^^^
 
 A container is an instance of an image that can execute a software enviornment. 
 Running a container requires a container runtime environment (e.g. Docker, 
 Apptainer) and an instruction set architecture (e.g. x86) compatible with the 
 image from which the container is instantiated.
 
+
 Image Registry
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 
 Docker images can be stored in online image registries, such as `Docker Hub 
 <https://hub.docker.com/>`_. (It is analogous to the way Git repositories are 
@@ -134,8 +147,9 @@ stored on GitHub.) Image registries are an excellent way to publish research
 software and to discover tools built by others. Image registries support the 
 notion of tags to identify specific versions of images. 
 
+
 Image Tags
-~~~~~~~~~~
+^^^^^^^^^^
 
 Docker supports image tags, similar to tags in a git repository. Tags identify 
 a specific version of an image. The full name of an image on Docker Hub is 
@@ -149,6 +163,7 @@ and the "tag". For example, an image with the full name
 
 would reference the "gateways19" image owned by the "tacc" organization with a
 tag of "0.1".
+
 
 Summing Up
 ----------
@@ -164,24 +179,26 @@ Dockerfile, or *pull* an image from a public registry. Then, you can *run*
 
    Simple Docker workflow.
 
+
 Getting Started With Docker
 ---------------------------
 
 Prerequisites
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 1) Install Docker on your laptop:
 
-  - `Mac <https://docs.docker.com/desktop/install/mac-install/>`_
-  - `Windows <https://docs.docker.com/desktop/install/windows-install/>`_
-  - Linux `Desktop <https://docs.docker.com/desktop/install/linux-install/>`_ or `Engine (CLI) <https://docs.docker.com/engine/install/>`_
+  * `Mac <https://docs.docker.com/desktop/install/mac-install/>`_
+  * `Windows <https://docs.docker.com/desktop/install/windows-install/>`_
+  * Linux `Desktop <https://docs.docker.com/desktop/install/linux-install/>`_ or
+    `Engine (CLI) <https://docs.docker.com/engine/install/>`_
 
 To check if the installation was successful, open up your favorite Terminal (Mac, Linux) or the Docker Terminal (Windows)
 and try running
 
 .. code-block:: console
 
-   $ docker version
+   [local]$ docker version
    Client:
     Version:           27.5.1
     API version:       1.47
@@ -218,7 +235,7 @@ and try running
 
 
 EXERCISE
-~~~~~~~~
+^^^^^^^^
 
 While everyone gets set up, take a few minutes to run ``docker --help`` and a
 few examples of ``docker <verb> --help`` to make sure you can find and read the
@@ -239,10 +256,9 @@ which images are available, when they were created, and how large they are:
 
 .. code-block:: console
 
-   $ docker images
+   [local]$ docker images
    REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
    ubuntu       24.04     20377134ad88   2 months ago   101MB
-
 
 .. note::
 
@@ -255,7 +271,7 @@ image:
 
 .. code-block:: console
 
-   $ docker pull hello-world
+   [local]$ docker pull hello-world
    Using default tag: latest
    latest: Pulling from library/hello-world
    2db29710123e: Pull complete
@@ -270,7 +286,7 @@ that has been configured as the "default command" when the image was built:
 
 .. code-block:: console
 
-   $ docker run hello-world
+   [local]$ docker run hello-world
 
    Hello from Docker!
    This message shows that your installation appears to be working correctly.
@@ -298,7 +314,7 @@ Verify that the image you just pulled is now available on your local machine:
 
 .. code-block:: console
 
-   $ docker images
+   [local]$ docker images
    REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
    ubuntu       24.04     20377134ad88   2 months ago   101MB
    hello-world  latest    ee301c921b8a   21 months ago  9.14kB
@@ -308,12 +324,12 @@ Check to see if any containers are still running using ``docker ps``:
 
 .. code-block:: console
 
-   $ docker ps
+   [local]$ docker ps
    CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
 
 
 EXERCISE
-~~~~~~~~
+^^^^^^^^
 
 The command ``docker ps`` shows only currently running containers. Pull up the
 help text for that command and figure out how to show all containers, not just
@@ -334,11 +350,13 @@ with running any software.
    Be careful running container images that you are not familiar with. Some could contain 
    security vulnerabilities or, even worse, malicious code like viruses or ransomware. 
 
-To combat this, Docker Hub provides `"Official Images" <https://docs.docker.com/docker-hub/official_images/>`_,
+To combat this, Docker Hub provides
+`"Official Images" <https://docs.docker.com/docker-hub/official_images/>`_,
 a well-maintained set of container images providing high-quality installations of operating
 systems, programming language environments and more.
 
-We can search through the official images on Docker Hub `here <https://hub.docker.com/search?image_filter=official&q=&type=image>`_.
+We can search through the official images on Docker Hub
+`here <https://hub.docker.com/search?image_filter=official&q=&type=image>`_.
 
 Scroll down to find the Python official image called ``python``, then 
 click on that `image <https://hub.docker.com/_/python>`_.
@@ -353,17 +371,16 @@ available locally:
 
 .. code-block:: console
 
-   $ docker pull python
+   [local]$ docker pull python
    ...
-   $ docker images
+   [local]$ docker images
    ...
-   $ docker inspect python
+   [local]$ docker inspect python
    ...
 
 .. tip::
 
    Use ``docker inspect`` to find some metadata available for each image.
-
 
 
 Start an Interactive Shell Inside a Container
@@ -378,18 +395,18 @@ commands on your local device (we will see why in a minute):
 
 .. code-block:: console
 
-   $ whoami
+   [local]$ whoami
    username
-   $ pwd
+   [local]$ pwd
    /Users/username
-   $ uname -a
+   [local]$ uname -a
    Darwin dhcp-146-6-176-91.tacc.utexas.edu 24.3.0 Darwin Kernel Version 24.3.0: Thu Jan  2 20:24:16 PST 2025; root:xnu-11215.81.4~3/RELEASE_ARM64_T6000 arm64
 
 Now start the interactive shell inside a Python container:
 
 .. code-block:: console
 
-   $ docker run --rm -it python /bin/bash
+   [local]$ docker run --rm -it python /bin/bash
    root@fc5b620c5a88:/#
 
 Here is an explanation of the command options:
@@ -417,8 +434,9 @@ interactive shell in the container - and note what has changed:
 Now you are the ``root`` user on a different operating system inside a running
 Linux container! You can type ``exit`` to escape the container.
 
+
 EXERCISE
-~~~~~~~~
+^^^^^^^^
 
 Before you exit the container, try running the command ``python``. What happens?
 Compare that with running the command ``python`` directly on your local device. 
@@ -442,13 +460,13 @@ to use a software application inside an image. Docker allows you to spin up an
 
 .. code-block:: console
 
-   $ docker run --rm python whoami
+   [local]$ docker run --rm python whoami
    root
-   $ docker run --rm python pwd
+   [local]$ docker run --rm python pwd
    /
-   $ docker run --rm python uname -a
+   [local]$ docker run --rm python uname -a
    Linux 39d35e287274 6.12.5-linuxkit #1 SMP Tue Jan 21 10:23:32 UTC 2025 aarch64 GNU/Linux
-   $ docker run -it --rm python
+   [local]$ docker run -it --rm python
    Python 3.13.1 (main, Jan 24 2025, 20:47:48) [GCC 12.2.0] on linux
    Type "help", "copyright", "credits" or "license" for more information.
    >>>
@@ -507,13 +525,13 @@ If all else fails, display the help text:
 
 .. code-block:: console
 
-   $ docker --help
+   [local]$ docker --help
    shows all docker options and summaries
 
 
 .. code-block:: console
 
-   $ docker COMMAND --help
+   [local]$ docker COMMAND --help
    shows options and summaries for a particular command
 
 
