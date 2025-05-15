@@ -3,8 +3,8 @@ Hands-on Machine Learning
 
 In this unit we introduce the field of Machine Learning (ML) and develop the first set of techniques
 for supervised learning. We will explore key ML concepts, including supervised classification,
-linear regression, and principal component analysis, with a focus on ML considerations and
-evaluation in life science applications. 
+linear regression, nearest neighbor, logistic regression, and decision trees, with a focus on ML
+considerations and evaluation in life science applications. 
 
 .. toctree::
    :maxdepth: 1
