@@ -5,11 +5,12 @@ In the previous section, we learned how to classify mushrooms based on their phy
 In this section, we will introduce Convolutional Neural Networks (CNNs), a specialized class of deep neural networks that excel in tasks involving spatial data, particularly image recognition and computer vision.
 Understanding CNNs will prepare you for future applications where image data is involved. 
 
-By the end of this exercise participants will be able to:
+By the end of this section, you should be able to:
 
-- Understand the challenges associated with ANNs for image processing
-- Explain what makes CNNs a better choice for solving image classification problems
-- Understand different CNN architectures, such as VGG16 and LeNet-5 
+* Identify the challenges associated with ANNs for image processing
+* Explain what makes CNNs a better choice for solving image classification problems
+* Define convolutional and pooling layers
+* Describe notable CNN architectures, such as VGG16
 
 
 Why CNNs?
@@ -27,7 +28,7 @@ When using traditional artificial neural networks (ANNs) to classify these image
 **1. Loss of Spatial Information**:
 ANNs treat input data as flat vectors, disregarding the spatial relationships present in the image.
 For instance, when flattening a 28x28 pixel image into a 1D array of 784 pixels, important spatial information is lost.
-This means that an ANN might struggle to recognize features like the curves or straight linesof the digit '5'. 
+This means that an ANN might struggle to recognize features like the curves or straight lines of the digit '5'. 
 
 .. figure:: ./images/flatten-MNIST.gif
     :width: 400px
@@ -55,7 +56,7 @@ This number grows quadratically with image size, making training on larger image
     :align: center
     :alt: 
 
-
+|
 
 How CNNs Process Grid Data
 --------------------------
@@ -65,6 +66,7 @@ Their key capability is identifying object locations in images through a mathema
 This allows CNNs to handle variations in object position, making them ideal for computer vision tasks like image classification, object detection, face recognition, and autonomous driving.
 
 Their utility comes from two simple, yet powerful layers of CNNs, known as the **convolutional** and **pooling** layers.
+
 
 Convolutional Layer:
 ^^^^^^^^^^^^^^^^^^^^
@@ -119,6 +121,7 @@ Multiple convolutional layers detect increasingly complex features: early layers
         :align: center
         :alt: 
 
+
 Pooling Layer
 ^^^^^^^^^^^^^
 
@@ -156,12 +159,14 @@ Convolutional Neural Networks (CNNs) are built from several key components: conv
     :align: center
     :alt: CNN Architecture
 
+
 **Feature Extraction**
 
  The convolutional layer, along with the activation function and pooling layer, forms the **feature extraction** stage of the CNN.
  In this stage, filters are applied to the input image to create multi-dimensional feature maps, where each map represents the activation of perceptrons at different spatial locations.
 
 **Prediction**
+
  The flatten layer and dense layer make up the **prediction stage**. The flatten layer converts the multi-dimensional feature maps into a one-dimensional vector, which is then processed by the dense layer to make predictions.
 
 
@@ -170,9 +175,10 @@ Adding CNN Layers in TensorFlow Keras
 
 Here's a complete CNN model implementation in TensorFlow Keras:
 
-.. code-block:: python3
+.. code-block:: python
+    :linenos:
 
-    from tensorflow.keras.models import Sequential
+    from tensorflow.keras import Sequential
     from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
     
     # Create a complete CNN model
@@ -222,7 +228,7 @@ Here's a complete CNN model implementation in TensorFlow Keras:
 
 The output of the model.summary() function is as follows:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Model: "sequential"
     ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
@@ -315,11 +321,21 @@ VGG-16 is available in the keras.applications package and can be imported using 
 - **MobileNet**: Designed for mobile and embedded devices with limited computational resources.
 
 
-References and Additional Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Additional Resources
+--------------------
 
-* The material in this module is based on `COE 379L: Software Design for Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/unit03/neural_networks.html>`_
+* Adapted from: 
+  `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
+* `MNIST Dataset <https://en.wikipedia.org/wiki/MNIST_database>`_
+* `Intuitively Understanding Convolutions for Deep Learning <https://medium.com/data-science/intuitively-understanding-convolutions-for-deep-learning-1f6f42faee1>`_
+* `Keras Sequential Conv2D <https://keras.io/api/layers/convolution_layers/convolution2d/>`_
+* `Keras Sequential MaxPooling2D <https://keras.io/api/layers/pooling_layers/max_pooling2d/>`_ 
+* `Keras VGG-16 <https://keras.io/api/applications/vgg/>`_
 
-.. [1] Minfei, L., Yidong, G., Ze, C., Zhi, W., Erik, S., & Branko, Š. (2022). Microstructure-informed deep convolutional neural network for predicting short-term creep modulus of cement paste. Cement and Concrete Research, 152, 106681. doi:10.1016/j.cemconres.2021.106681
+
+References
+^^^^^^^^^^
+
+.. [1] Minfei, L., Yidong, G., Ze, C., Zhi, W., Erik, S., & Branko, Š. (2022). Microstructure-informed deep convolutional neural network for predicting short-term creep modulus of cement paste. Cement and Concrete Research, 152, 106681. http://dx.doi:10.1016/j.cemconres.2021.106681
 .. [2] Simonyan, K., & Zisserman, A. (2015). Very Deep Convolutional Networks for Large-Scale Image Recognition. arXiv [Cs.CV]. Retrieved from http://arxiv.org/abs/1409.1556
 .. [3] Learning, G. (2021, September 23). Everything you need to know about VGG16. Medium. https://medium.com/@mygreatlearning/everything-you-need-to-know-about-vgg16-7315defb5918 

@@ -13,6 +13,35 @@ We are given a dataset containing images of three different coral species:
 Our task is to build a Convolutional Neural Network (CNN) that can classify the coral images into the correct species. 
 This technology can help automate coral reef monitoring efforts and support conservation initiatives by enabling rapid, large-scale species identification.
 
+By the end of this exercise, you should be able to:
+
+* Import, explore, organize, visualize, and pre-process input image data 
+* Build and train a CNN from scratch
+* Build and train a CNN based on the VGG19 architecture (transfer learning)
+* Use callbacks to optimize the model performance during training
+* Assess model accuracy numerically (e.g. precision, recall, F1-score) and visually (e.g. confusion matrix)
+
+.. note::
+
+    In this section, long blocks of Python code are shown with line numbers on the left-hand side.
+    The Python code blocks can be run in a Jupyter Notebook, interactive Python interpreter, or in a
+    stand-alone Python script:
+
+    .. code-block:: python
+        :linenos:
+
+        print('Hello, world!')
+        # Python code here
+
+    Linux commands are shown with a host name in square brackets followed by a dollar sign. Linux
+    commands should be entered into a Terminal:
+
+    .. code-block:: console
+
+        [frontera]$ echo "Hello, world!"
+        Hello, world!
+        [frontera]$ # Linux commands here
+
 
 Tutorial Setup and Materials
 ----------------------------
@@ -37,7 +66,8 @@ If you've followed the setup instructions in the `TACC Deep Learning Tutorials R
 
 This cell will confirm that your environment is correctly configured (TIP: Make sure you change your kernel to ``Day3-tf-213``).
 
-.. code-block:: python3
+.. code-block:: python
+    :linenos:
 
     import tensorflow as tf
 
@@ -49,11 +79,10 @@ This cell will confirm that your environment is correctly configured (TIP: Make 
 
 You should see the following output:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Num GPUs Available:  4
     2.13.0
-
 
 
 Step 1: Data Loading and Organization
@@ -75,16 +104,16 @@ On TACC systems, your scratch directory is a temporary storage space for computa
 
 1. After logging into **Frontera**, run this command to see your SCRATCH path:
 
-   .. code-block:: bash
+   .. code-block:: console
 
-       echo $SCRATCH
+       [frontera]$ echo $SCRATCH
        # This will output something like: /scratch1/12345/username
 
 2. Verify that the coral-species dataset is in the correct location:
 
-   .. code-block:: bash
+   .. code-block:: console
 
-       ls $SCRATCH/tacc-deep-learning-tutorials/data/coral-species
+       [frontera]$ ls $SCRATCH/tacc-deep-learning-tutorials/data/coral-species
        # You should see three directories: ACER, CNAT, and MCAV
 
 3. Use the full path shown by these commands in the code below.
@@ -92,6 +121,7 @@ On TACC systems, your scratch directory is a temporary storage space for computa
 Now that you know your SCRATCH path, let's list the contents of the ``coral-species`` data directory to verify that the subdirectories for each coral species are present and correctly named:
 
 .. code-block:: python
+    :linenos:
 
     from pathlib import Path
 
@@ -104,10 +134,11 @@ Now that you know your SCRATCH path, let's list the contents of the ``coral-spec
 
 You should see something like this:
 
-.. code-block:: python-console
+.. code-block:: text
 
     [PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/CNAT'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/MCAV'), PosixPath('/scratch1/12345/username/tacc-deep-learning-tutorials/data/coral-species/ACER')]
-    
+
+
 1.2 Check File Extensions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -117,6 +148,7 @@ This helps us catch unexpected or unsupported file types (e.g., GIFs, txt files,
 This also allows us to see if the images are all in the same format or not.
 
 .. code-block:: python
+    :linenos:
 
     # Recursively list all files under the dataset directory
     image_files = list(dataset_dir.rglob("*"))
@@ -128,6 +160,7 @@ This also allows us to see if the images are all in the same format or not.
 
 **Question**: What file extensions are present in the dataset? Write down your answer.
 
+
 1.3 Explore Image Dimensions and Color Modes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -138,6 +171,7 @@ This helps us decide if we need to resize or convert images before we begin trai
 The script below prints a summary and gives recommendations if inconsistencies are found.
 
 .. code-block:: python
+    :linenos:
 
     from PIL import Image
     from pathlib import Path
@@ -214,6 +248,7 @@ In this step, we:
 This ensures we only keep clean, valid images for training.
 
 .. code-block:: python
+    :linenos:
 
     from PIL import Image
     from tqdm import tqdm
@@ -247,6 +282,7 @@ This ensures we only keep clean, valid images for training.
 
 If there are any corrupted images in your dataset, this code will automatically remove them. 
 
+
 1.5 Create a DataFrame of Image Paths and Labels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -259,6 +295,7 @@ In this step, we build a ``pandas.DataFrame`` that organizes all the image data 
 This structured DataFrame is essential for training with Keras' ``flow_from_dataframe`` method that we'll use later in the tutorial.
 
 .. code-block:: python
+    :linenos:
 
     import pandas as pd
 
@@ -297,6 +334,7 @@ In this step we:
 If the dataset is imbalanced (i.e., some classes have far more images than others), we may need to account for this later using **class weights**.
 
 .. code-block:: python
+    :linenos:
 
     import matplotlib.pyplot as plt
 
@@ -333,6 +371,7 @@ If the dataset is imbalanced (i.e., some classes have far more images than other
 
 **Thought Challenge**: Describe the class distribution in your own words. How much of the dataset is made up by the largest class? The smallest class? Is there anything that we need to address before continuing?
 
+
 2.2 Visualize Images from the Dataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -346,6 +385,7 @@ This will give us a better sense of:
 We'll display a grid of randomly selected images, grouped by class.
 
 .. code-block:: python
+    :linenos:
 
     from tensorflow.keras.preprocessing.image import load_img
     import random
@@ -389,6 +429,8 @@ We'll display a grid of randomly selected images, grouped by class.
    :width: 800px
    :align: center
 
+|
+
 **Thought Challenge**: Try changing the ``random.seed`` value a few times to view different images from the dataset. What do you notice? Take a moment to write down your observations.
 
 *Remember: the quality of a machine learning model is decided largely by the quality of the dataset it was trained on!*
@@ -396,6 +438,7 @@ We'll display a grid of randomly selected images, grouped by class.
 
 Step 3: Split the Dataset and Handle Class Imbalance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 3.1 Split the Dataset into Training, Validation, and Test Sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -417,6 +460,7 @@ To preserve the class distribution across splits, we use ``stratify=df["label"]`
 This is called **stratified sampling**. 
 
 .. code-block:: python
+    :linenos:
 
     # NOTE: Replace the spaces indicated below with your code
     from sklearn.model_selection import ____
@@ -458,6 +502,7 @@ This is called **stratified sampling**.
 
     Try running the full training pipeline multiple times with different ``random_state`` values. Do your metrics stay stable? What might that tell you about the robustness of your model?
 
+
 3.2 Compute Class Weights
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -475,6 +520,7 @@ This technique helps the model give balanced attention to all classes during tra
 While our dataset is quite balanced, we provide the code for computing class weights below:
 
 .. code-block:: python
+    :linenos:
 
     from sklearn.utils.class_weight import compute_class_weight
     import numpy as np
@@ -519,11 +565,9 @@ Step 4: Image Preprocessing and Data Generators
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As we discovered in Step 1.3, we need to prepare our images before feeding them into the CNN. 
-This step involves two key concepts:
+This step involves two key concepts: **Data Generators** and **Data Augmentation**.
 
-**a. Data Generators**
-
-Data generators are special tools that help us efficiently load and preprocess image data in small batches (instead of all at once).
+**Data generators** are special tools that help us efficiently load and preprocess image data in small batches (instead of all at once).
 Keras provides a built-in data generator called ``ImageDataGenerator`` that can:
 
   - Resize all images to a consistent size
@@ -532,9 +576,7 @@ Keras provides a built-in data generator called ``ImageDataGenerator`` that can:
 
 Data generators can be used with Keras model methods like ``fit()``, ``evaluate()``, and ``predict()``, which is particularly useful when dealing with large datasets that don't all fit into memory at once.  
 
-**b. Data Augmentation**
-
-Data augmentation is a powerful technique that helps our model learn more robust features by creating variations of our training images.
+**Data augmentation** is a powerful technique that helps our model learn more robust features by creating variations of our training images.
 Augmentation techniques not only expand the size of our training set, but also help prevent overfitting by exposing our model to different variations of our images.
 
 Conveniently, ``ImageDataGenerator`` also provides a number of built-in augmentation techniques that we can use to augment our training data, such as:
@@ -556,6 +598,7 @@ We will define three separate ``ImageDataGenerator`` objects, one for each datas
   - ``val_datagen`` and ``test_datagen`` will only apply normalization (no augmentation)
 
 .. code-block:: python
+    :linenos:
 
     from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
@@ -573,7 +616,8 @@ We will define three separate ``ImageDataGenerator`` objects, one for each datas
     # Validation and test data generators only need normalization – do not augment
     val_datagen = ImageDataGenerator(rescale=1./255)
     test_datagen = ImageDataGenerator(rescale=1./255)
-    
+
+
 4.2 Load Images Using ``flow_from_dataframe()``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -582,6 +626,7 @@ Now that our preprocessing methods are defined, we can use ``flow_from_dataframe
 All generators return batches of preprocessed image tensors and their corresponding labels.
 
 .. code-block:: python
+    :linenos:
 
     # Set image size and batch size
     IMAGE_SIZE = (224, 224)
@@ -611,6 +656,7 @@ All generators return batches of preprocessed image tensors and their correspond
         shuffle=False               # Keep original order for testing
     )
 
+
 Sanity Check: Inspect a Batch from the Training Generator
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -623,6 +669,7 @@ In the code below, we:
  - Display a few image-label pairs to confirm the generator is working
 
 .. code-block:: python
+    :linenos:
 
     # Get one batch from the training generator
     images, labels = next(train_generator)
@@ -642,6 +689,7 @@ Visualize a Few Images from the Training Generator
 Let's display a few images from the training geneator along with their decoded class labels.
 
 .. code-block:: python
+    :linenos:
 
     # Get a fresh batch of images
     images, labels = next(train_generator)
@@ -667,6 +715,8 @@ Let's display a few images from the training geneator along with their decoded c
 .. image:: ./images/coral-species-augmented.png
    :width: 800px
    :align: center
+
+|
 
 **Thought Challenge**: Look carefully at the images displayed above.
 Try running the code cell multiple times and changing the code to display images from the validation and test generators. 
@@ -699,17 +749,19 @@ Below, we define a model that consists of three main parts:
    - Output layer: How many perceptrons should our output layer have? Which activation function should we use?
 
 .. code-block:: python
+    :linenos:
 
-    from tensorflow.keras import models, layers
+    from tensorflow.keras import Sequential
+    from tensorflow.keras.layers import Input, Conv2D, AveragePooling2D, Flatten, Dense
 
     # Build a custom CNN architecture
-    cnn_model = models.Sequential([
+    cnn_model = Sequential([
         # Input layer: matches image shape
-        layers.Input(shape=(___, ___, __)),
+        Input(shape=(___, ___, __)),
 
         # Convolution Block 1
-        layers.Conv2D(32, (3, 3), padding='same', activation='relu'),
-        layers.AveragePooling2D((2, 2), padding='same'),
+        Conv2D(32, (3, 3), padding='same', activation='relu'),
+        AveragePooling2D((2, 2), padding='same'),
 
         # Convolution Block 2
         # ...
@@ -720,17 +772,18 @@ Below, we define a model that consists of three main parts:
         # ...
 
         # Flatten to convert 2D feature maps into a 1D vector
-        layers.Flatten(),
+        Flatten(),
 
         # Fully connected layers
-        layers.Dense(128, activation='relu'),
-        layers.Dense(64, activation='relu'),
-        layers.Dense(___, activation='___')   
+        Dense(128, activation='relu'),
+        Dense(64, activation='relu'),
+        Dense(___, activation='___')   
     ])
 
 Once you have filled in the blanks and defined your model, let's compile it:
 
 .. code-block:: python
+    :linenos:
 
     from tensorflow.keras.optimizers import RMSprop
 
@@ -748,6 +801,7 @@ We also set the learning rate to ``1e-4``, which sets the initial learning rate 
 Finally, let's display our model architecture and parameter count:
 
 .. code-block:: python
+    :linenos:
 
     cnn_model.summary()
 
@@ -881,6 +935,7 @@ Here, we will also pass in ``class_weight`` to demonstrate how to handle imbalan
 We also track the training history, which we'll use later to visualize performance over time. 
 
 .. code-block:: python
+    :linenos:
 
     cnn_history = cnn_model.fit(
         train_generator,
@@ -917,6 +972,7 @@ These plots can help us identify overfitting, underfitting, or confirm that the 
 We use the ``cnn_history`` object returned by the ``fit()`` method to plot the training and validation accuracy and loss:
 
 .. code-block:: python
+    :linenos:
 
     def plot_training_history(history, title_prefix="CNN"):
         acc = history.history['accuracy']
@@ -964,6 +1020,8 @@ We use the ``cnn_history`` object returned by the ``fit()`` method to plot the t
    :width: 800px
    :align: center
 
+|
+
 The plots above show the training and validation accuracy/loss over 15 epochs.
 
 **Thought Challenge**: What do you notice about the training and validation accuracy and loss? What does this tell you about the model's learning performance (i.e. overfitting, underfitting, healthy learning)? Write down your answer before checking our interpretation below.
@@ -989,12 +1047,14 @@ Step 7: Evaluate the Model on the Test Set
 Now that we've trained our model, it's time to evaluate its performance on the test set.
 This step is crucial because it helps us understand how well the model generalizes to new, unseen data, which is a good indicator of its real-world performance.
 
+
 Evaluate Test Accuracy and Loss
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 We use ``model.evaluate()`` to calculate the test accuracy and loss. These metrics give us a quick overview of the model's performance.
 
 .. code-block:: python
+    :linenos:
 
     # Evaluate test accuracy and loss
     test_loss, test_acc = cnn_model.evaluate(test_generator, verbose=0)
@@ -1003,13 +1063,14 @@ We use ``model.evaluate()`` to calculate the test accuracy and loss. These metri
 
 Example output:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Test Accuracy: 34.52%
     Test Loss: 1.1921
 
 Our model correctly classifies the test images about 35% of the time, and our loss is still quite high.
 While these numbers provide a snapshot of performance, they don't tell the whole story. Let's dig deeper with a confusion matrix.
+
 
 Visualize Predictions with a Confusion Matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1018,6 +1079,7 @@ A confusion matrix provides a detailed breakdown of the model's predictions comp
 It helps identify which classes are being confused with each other.
 
 .. code-block:: python
+    :linenos:
 
     from sklearn.metrics import confusion_matrix
     import seaborn as sns
@@ -1052,6 +1114,8 @@ It helps identify which classes are being confused with each other.
    :width: 800px
    :align: center
 
+|
+
 
 Detailed Performance with a Classification Report
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1059,6 +1123,7 @@ Detailed Performance with a Classification Report
 The classification report provides precision, recall, and F1-scores for each class, offering a more nuanced view of model performance.
 
 .. code-block:: python
+    :linenos:
 
     from sklearn.metrics import classification_report
 
@@ -1068,7 +1133,7 @@ The classification report provides precision, recall, and F1-scores for each cla
 
 Example output:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Classification Report:
                   precision    recall  f1-score   support
@@ -1123,6 +1188,7 @@ It was trained on the **ImageNet** dataset, which contains over 14 million image
 Step 1: Prepare Data for VGG19
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
 1.1 Define Image Preprocessing and Augmentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1137,6 +1203,7 @@ Let's create new data generators for VGG19 using ``ImageDataGenerator`` with:
  - No augmentation on the validation and test sets
 
 .. code-block:: python
+    :linenos:
 
     from tensorflow.keras.applications.vgg19 import VGG19, preprocess_input
     from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -1165,6 +1232,7 @@ Let's create new data generators for VGG19 using ``ImageDataGenerator`` with:
 Just like we did for our CNN model, we can use ``flow_from_dataframe()`` to load images in batches directly from our labeled Dataframes (``train_df``, ``val_df``, and ``test_df``).
 
 .. code-block:: python
+    :linenos:
 
     # Assuming train_df, val_df, and test_df are defined
     # Create training generator below
@@ -1193,9 +1261,11 @@ Next, we stack a **custom classifier** on top using Keras' ``Sequential`` API:
 - Add the same fully connected (dense) layers that we had in our original CNN built from scratch
 
 .. code-block:: python
+    :linenos:
 
     from tensorflow.keras.applications import VGG19
-    from tensorflow.keras import layers, models
+    from tensorflow.keras import Sequential
+    from tensorflow.keras.layers import ___, ___   # Import the necessary layers
     from tensorflow.keras.optimizers import RMSprop
 
     # Load VGG19 base (without top classifier)
@@ -1203,7 +1273,7 @@ Next, we stack a **custom classifier** on top using Keras' ``Sequential`` API:
     vgg_base.trainable = False  # Freeze all pretrained layers
 
     # Build the full model
-    VGG19_model = models.Sequential([
+    VGG19_model = Sequential([
         vgg_base,
         # Add a flatten layer:
         # ... your code here ...
@@ -1217,6 +1287,7 @@ Next, we stack a **custom classifier** on top using Keras' ``Sequential`` API:
 Now, let's compile the model with the same optimizer and loss function as our previous model.
 
 .. code-block:: python
+    :linenos:
 
     # Compile with a low learning rate optimizer
     VGG19_model.compile(
@@ -1237,6 +1308,7 @@ Some common callbacks include:
 - **ReduceLROnPlateau**: This callback reduces the learning rate when a monitored metric (e.g., validation loss) stops improving. By lowering the learning rate, the model can converge to a better local minimum (preventing it from getting stuck in a suboptimal solution).
 
 .. code-block:: python
+    :linenos:
 
     from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
@@ -1266,7 +1338,7 @@ Some common callbacks include:
 
 Example Output:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Epoch 1/15
     9/9 [==============================] - 14s 1s/step - loss: 4.4430 - accuracy: 0.5188 - val_loss: 0.2631 - val_accuracy: 0.9104 - lr: 1.0000e-04
@@ -1289,6 +1361,7 @@ Example Output:
     Epoch 10/15
     9/9 [==============================] - 8s 861ms/step - loss: 0.2725 - accuracy: 0.9323 - val_loss: 0.4518 - val_accuracy: 0.8955 - lr: 5.0000e-05
 
+
 Visualizing Training History
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1297,6 +1370,7 @@ Just like we did for our first CNN model, let's plot the training and validation
 Refer back to Section 1: Step 6 – *Visualizing Training History* for a refresher on how to do this.
 
 .. code-block:: python
+    :linenos:
 
     # Plot for VGG19
     plot_training_history(VGG19_history, title_prefix='VGG19')
@@ -1313,12 +1387,14 @@ Step 3: Evaluate the VGG19 Model on the Test Set
 
 Just like we did for our first CNN model, let's evaluate the VGG19 model on the test set.
 
+
 Evaluate Test Accuracy and Loss
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First, let's calculate the test accuracy and loss. Can you recall how to do this?
 
 .. code-block:: python
+    :linenos:
 
     # Evaluate test accuracy and loss
     # ... your code here ...
@@ -1327,12 +1403,13 @@ First, let's calculate the test accuracy and loss. Can you recall how to do this
 
 Example output:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Test Accuracy: 92.86%
     Test Loss: 0.2990
 
 Our model correctly classifies the test images about 93% of the time. What an improvement!
+
 
 Visualize Predictions with a Confusion Matrix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1342,6 +1419,7 @@ Now, let's visualize the predictions of our VGG19 model on the test set with a c
 Refer back to Section 1: Step 7 – *Visualize Predictions with a Confusion Matrix* for a refresher on how to do this.
 
 .. code-block:: python
+    :linenos:
 
     # Get predicted probabilities for each class
     vgg19_pred_probs = # ... your code here ...
@@ -1373,8 +1451,11 @@ Refer back to Section 1: Step 7 – *Visualize Predictions with a Confusion Matr
    :width: 800px
    :align: center
 
+|
+
 Notice how the confusion matrix shows a distinct diagonal pattern, where the true and predicted labels are the same more often than not?
 This indicates that our model is performing well on all classes. Nice!
+
 
 Detailed Performance with a Classification Report
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1382,6 +1463,7 @@ Detailed Performance with a Classification Report
 Finally, let's print out the full classification report.
 
 .. code-block:: python
+    :linenos:
 
     # Print the full classification report
     # ... your code here ...
@@ -1390,7 +1472,7 @@ Finally, let's print out the full classification report.
 
 Example output:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Classification Report (VGG19):
                precision    recall  f1-score   support
@@ -1419,6 +1501,7 @@ First, let's take the raw predictions from our VGG19 model and organize them int
 This organized DataFrame makes it easy to save our model's predictions and create visualizations of the results. 
 
 .. code-block:: python
+    :linenos:
 
     import os
 
@@ -1452,6 +1535,7 @@ Let's display a few test images along with their predicted labels, true labels, 
 This helps visually confirm whether predictions make sense – and helps identify patterns in misclassifications.
 
 .. code-block:: python
+    :linenos:
 
     from tensorflow.keras.preprocessing.image import load_img
 
@@ -1486,9 +1570,11 @@ This helps visually confirm whether predictions make sense – and helps identif
    :width: 800px
    :align: center
 
+|
+
 
 Final Thoughts and Wrap-Up
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 Congratulations!
 
@@ -1496,6 +1582,7 @@ Congratulations!
 - You learned how to implement and utilize training callbacks to optimize the model's performance.
 - You explored the importance of data preprocessing and augmentation in improving model accuracy.
 - You gained insights into the practical application of deep learning in biological data analysis.
+
 
 Next Steps
 ~~~~~~~~~~
@@ -1511,3 +1598,11 @@ To further enhance your model, consider the following ideas:
 ---
 
 Thank you for following along! You've made significant progress in understanding how deep learning can be applied to real-world biological data. Keep experimenting and learning!
+
+
+
+Additional Resources
+--------------------
+
+* Adapted from: 
+  `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
