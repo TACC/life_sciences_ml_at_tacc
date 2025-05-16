@@ -363,6 +363,15 @@ execute as long as a condition is True. For example:
    >>> while (i < 10):
    ...     print( f'i = {i}' )       # literal string interpolation
    ...     i = i + 1
+   
+.. note::
+
+   The ``f`` in front of the string makes it a **formatted string** (also called an f-string).  
+   It lets you insert variable values directly inside the string using curly braces ``{}``.
+
+   For example, ``f'i = {i}'`` will print something like ``i = 0``, ``i = 1``, and so on.  
+   This is a common and convenient way to combine text and variables in Python.
+
 
 The ``break`` statement can also be used to escape loops:
 
@@ -519,9 +528,13 @@ values to arguments, and more.
 File Handling
 -------------
 
-The ``open()`` function does all of the file handling in Python. It takes two
-arguments - the *filename* and the *mode*. The possible modes are read (``r``),
-write (``w``), append (``a``), or create (``x``).
+The ``open()`` function is used to work with files in Python. It takes two
+arguments: the *filename* and the *mode*. Common modes are:
+
+- ``'r'`` – read
+- ``'w'`` – write (overwrites file)
+- ``'a'`` – append
+- ``'x'`` – create a new file
 
 When writing output to a new file on the file system, make sure you are attempting to
 write somwhere where you have permissions to write:
@@ -529,18 +542,20 @@ write somwhere where you have permissions to write:
 .. code-block:: python3
    :linenos:
 
-   my_shapes = ['circle', 'heart', 'triangle', 'square']
-   
-   with open('my_shapes.txt', 'w') as f:
-       for shape in my_shapes:
-           f.write(shape)
+   my_numbers = [5, 6, 2, 4]
+
+   with open('numbers.txt', 'w') as f:
+       for number in my_numbers:
+           f.write(str(number))
 
 .. code-block:: console
 
-   (in my_shapes.txt)
-   circlehearttrianglesquare
+   (in numbers.txt)
+   5624
 
 .. tip::
+
+   You must use ``str()`` to convert numbers to text before writing. 
 
    By opening the file with the ``with`` statement above, you get built in
    exception handling, and it automatically will close the file handle for you.
@@ -552,19 +567,19 @@ newline characters to your output:
 .. code-block:: python3
    :linenos:
 
-   my_shapes = ['circle', 'heart', 'triangle', 'square']
+   my_numbers = [5, 6, 2, 4]
    
-   with open('my_shapes.txt', 'w') as f:
-       for shape in my_shapes:
-           f.write( f'{shape}\n' )
-
+   with open('numbers.txt', 'w') as f:
+       for number in my_numbers:
+           f.write(f'{number}\n')   
+   
 .. code-block:: console
 
-   (in my_shapes.txt)
-   circle
-   heart
-   triangle
-   square
+   (in numbers.txt)
+   5
+   6
+   2
+   4
 
 Now notice that the original line in the output file is gone - it has been
 overwritten. Be careful if you are using write (``w``) vs. append (``a``).
@@ -574,19 +589,19 @@ To read a file in, do the following:
 .. code-block:: python3
    :linenos:
 
-   with open('my_shapes.txt', 'r') as f:
-       for x in range(4):
+   with open('numbers.txt', 'r') as f:
+       for i in range(4):
            print(f.readline())
 
 .. code-block:: text
 
-   circle
+   5
    
-   heart
+   6
    
-   triangle
+   2
    
-   square
+   4
 
 You may have noticed in the above that there seems to be an extra space between
 each word. What is actually happening is that the file being read has newline
@@ -598,36 +613,32 @@ is the easiest way to solve this problem:
 .. code-block:: python3
    :linenos:
 
-   with open('my_shapes.txt', 'r') as f:
-       for x in range(4):
-           print(f.readline().strip('\n'))
+   with open('numbers.txt', 'r') as f:
+       for i in range(4):
+           print(f.readline().strip())
 
 .. code-block:: text
 
-   circle
-   heart
-   triangle
-   square
+   5
+   6
+   2
+   4
 
 Read the whole file and store it as a list:
 
 .. code-block:: python3
    :linenos:
 
-   words = []
+   numbers = []
 
-   with open('my_shapes.txt', 'r') as f:
-       words = f.read().splitlines()                # careful of memory usage
+   with open('numbers.txt', 'r') as f:
+       numbers = f.read().splitlines()                # careful of memory usage
 
-   for x in range(4):
-       print(words[x])
+   print(numbers)
 
 .. code-block:: text
 
-   circle
-   heart
-   triangle
-   square
+   [5, 6, 2, 4]
 
 
 Importing Libraries
