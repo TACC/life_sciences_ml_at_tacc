@@ -30,6 +30,14 @@ Deep learning is driving breakthroughs in life sciences research, including:
 
 The range of deep learning applications is extensive, making it an exciting field for researchers to explore. 
 
+By the end of this section, you should be able to:
+
+* Describe the components of a perceptron
+* Mathematically define the sigmoid, softmax, and ReLU activation functions
+* Implement various activation functions in Python
+* Describe the basic neural network architecture
+* Define training and inference phases of deep learning
+
 
 Understanding Neural Networks
 -----------------------------
@@ -46,6 +54,7 @@ Similarly, perceptrons take in multiple inputs, apply weights to them to signal 
     :align: center
 
     Biological neuron (a) vs. artificial neuron (b). Source: Zhang et al. 2019 [3]_
+
 
 Perceptrons: The Building Blocks of Neural Networks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -79,6 +88,8 @@ The basic architecture of a perceptron is depicted below:
     :width: 700px
     :align: center
 
+| 
+
 Activation Functions
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -89,6 +100,7 @@ Without them, neural networks would be limited to learning only linear relations
 You can think of activation functions like switches that decide if and how strongly a neuron "fires" based on its inputs. They also transform incoming signals into outputs in non-linear ways. Different activation functions behave differently, and understanding them is key to choosing the right one for your task. 
 
 Let's explore three key activation functions through hands-on examples to develop intuition about how they work.
+
 
 The ``sigmoid`` Activation Function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,37 +118,39 @@ Mathematically, the ``sigmoid`` function is defined as:
 
 **Step 1: Define the sigmoid function**
 
-.. code-block:: python3
+.. code-block:: python
 
-   import numpy as np
+   >>> import numpy as np
 
-   # Define the sigmoid function
-   def sigmoid(x):
-      return 1.0 / (1 + np.exp(-x))
+   >>> # Define the sigmoid function
+   >>> def sigmoid(x):
+   >>>    return 1.0 / (1 + np.exp(-x))
 
 **Step 2: Generate inputs and plot the function**
 
-.. code-block:: python3
+.. code-block:: python
 
-   import matplotlib.pyplot as plt
+   >>> import matplotlib.pyplot as plt
 
-   # Create 100 x-values evenly spaced between -10 and 10
-   x = np.linspace(-10, 10, 100)
+   >>> # Create 100 x-values evenly spaced between -10 and 10
+   >>> x = np.linspace(-10, 10, 100)
 
-   # Apply the sigmoid function to each x-value
-   y = sigmoid(x)
+   >>> # Apply the sigmoid function to each x-value
+   >>> y = sigmoid(x)
 
-   # Plot the results
-   plt.plot(x, y)
-   plt.xlabel("x")
-   plt.ylabel("Sigmoid(x)")
-   plt.title("Sigmoid Activation Function")
-   plt.show()
+   >>> # Plot the results
+   >>> plt.plot(x, y)
+   >>> plt.xlabel("x")
+   >>> plt.ylabel("Sigmoid(x)")
+   >>> plt.title("Sigmoid Activation Function")
+   >>> plt.show()
    
 .. figure:: ./images/Sigmoid-Function.png
    :align: center
    :width: 500px
    :alt: Sigmoid function graph showing S-shaped curve from 0 to 1
+
+|
 
 **Key Properties of Sigmoid**:
 
@@ -147,6 +161,7 @@ Mathematically, the ``sigmoid`` function is defined as:
 3. **Saturates at Extremes**: At the extremes of the curve, the function becomes very flat, meaning that large changes in input produce only tiny changes in output.
 
 **In Neural Networks**: ``Sigmoid`` is often used in the *output layer* of a neural network when you're solving a binary classification problem (e.g., "Is this image a cat?" → 0.92 means "92% confident it's a cat").
+
 
 The ``softmax`` Activation Function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,33 +184,33 @@ Mathematically, for a vector :math:`z = [z_1, z_2, ..., z_n]`, the `softmax` of 
 
 **Step 1: Define the softmax function**
 
-.. code-block:: python3
+.. code-block:: python
 
-   import numpy as np
+   >>> import numpy as np
 
-   def softmax(z):
-      # Calculate e^(z_i) for each element in z
-      exps = np.exp(z)
+   >>> def softmax(z):
+   >>>    # Calculate e^(z_i) for each element in z
+   >>>    exps = np.exp(z)
 
-      # Divide each exponential by the sum of all exponentials
-      return exps / np.sum(exps)
+   >>>    # Divide each exponential by the sum of all exponentials
+   >>>    return exps / np.sum(exps)
 
 **Step 2: Generate inputs and plot the function**
 
-.. code-block:: python3
+.. code-block:: python
 
-   # Example 1: Increasing values
-   print("softmax([1, 2, 3]) ->", softmax(np.array([1, 2, 3])))
+   >>> # Example 1: Increasing values
+   >>> print("softmax([1, 2, 3]) ->", softmax(np.array([1, 2, 3])))
 
-   # Example 2: Identical values
-   print("softmax([3, 3, 3]) ->", softmax(np.array([3, 3, 3])))
+   >>> # Example 2: Identical values
+   >>> print("softmax([3, 3, 3]) ->", softmax(np.array([3, 3, 3])))
 
-   # Example 3: One dominant class
-   print("softmax([10, 0, 0]) ->", softmax(np.array([10, 0, 0])))
+   >>> # Example 3: One dominant class
+   >>> print("softmax([10, 0, 0]) ->", softmax(np.array([10, 0, 0])))
    
 This code will output:
 
-.. code-block:: python-console
+.. code-block:: text
 
    softmax([1, 2, 3]) -> [0.09003057 0.24472847 0.66524096]
    softmax([3, 3, 3]) -> [0.33333333 0.33333333 0.33333333]
@@ -222,7 +237,7 @@ Mathematically, the `ReLU` function is defined as:
 
 This means:
  
- - If the input is positive, the output it as-is
+ - If the input is positive, the output is as-is
  - If the input if negative or zero, output is 0
 
 .. admonition:: Python Hands-On: Visualizing ReLU
@@ -231,37 +246,39 @@ This means:
 
 **Step 1: Define the ReLU function**
 
-.. code-block:: python3
+.. code-block:: python
 
-   import numpy as np
+   >>> import numpy as np
 
-   # Define the ReLU function
-   def relu(x):
-      return np.maximum(0, x)
+   >>> # Define the ReLU function
+   >>> def relu(x):
+   >>>    return np.maximum(0, x)
 
 **Step 2: Generate inputs and plot the function**
 
-.. code-block:: python3
+.. code-block:: python
 
-   import matplotlib.pyplot as plt
+   >>> import matplotlib.pyplot as plt
 
-   # Create 100 x-values evenly spaced between -10 and 10
-   x = np.linspace(-10, 10, 100)
+   >>> # Create 100 x-values evenly spaced between -10 and 10
+   >>> x = np.linspace(-10, 10, 100)
 
-   # Apply the ReLU function to each x-value
-   y = relu(x)
+   >>> # Apply the ReLU function to each x-value
+   >>> y = relu(x)
 
-   # Plot the results
-   plt.plot(x, y)
-   plt.xlabel("x")
-   plt.ylabel("ReLU(x)")
-   plt.title("ReLU Activation Function")
-   plt.show()
+   >>> # Plot the results
+   >>> plt.plot(x, y)
+   >>> plt.xlabel("x")
+   >>> plt.ylabel("ReLU(x)")
+   >>> plt.title("ReLU Activation Function")
+   >>> plt.show()
 
 .. figure:: ./images/ReLU-Function.png
    :align: center
    :width: 500px
    :alt: ReLU function graph showing linear output for positive values and 0 for negative values
+
+|
 
 **Key Properties of ReLU**:
 
@@ -294,6 +311,7 @@ This means:
      - Hidden layers
      - Fast computation, no saturation for positive values
 
+
 Network Architecture
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -314,6 +332,7 @@ The basic architecture of a neural network is depicted below:
 Each perceptron in a layer is connected to perceptrons in the next layer, and these *connections have weights*, which determine the influence of each input.
 During training, these weights are adjusted to improve accuracy. 
 
+
 Putting it all Together
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -329,6 +348,8 @@ When multiple perceptrons are connected, they form a neural network that can lea
 
     Multilayer perceptron. Adapted from: Beardall et al. 2022 [4]_
 
+|
+
 
 Training and Inference
 ----------------------
@@ -337,6 +358,7 @@ Deep learning involves two main phases: **training** and **inference**.
 Broadly speaking, *training* involves multiple iterations of feeding data into a neural network and adjusting its parameters to minimize prediction errors.
 This process requires large amounts of data and computational resources to fine-tune the model for accuracy. 
 Once trained, the model enters the *inference* phase, where it applies its learned knowledge to new, unseen data to make predictions. 
+
 
 Training
 ^^^^^^^^
@@ -358,6 +380,8 @@ This is pretty much how **gradient descent** works in machine learning. Let's qu
     :alt: Gradient Descent concept
     :width: 400px
     :align: center  
+
+|
 
 1. *Loss (y-axis) = The height of the mountain*: The higher you are, the worse your model is performing.
 2. *Weight (x-axis) = Your position on the mountain*: Different positions on the mountain correspond to different weight values. The goal of training is to find the weight that gives the **Minimum Loss**. 
@@ -388,6 +412,8 @@ Imagine you are training a neural network to classify tumors as either malignant
     :width: 700px
     :align: center    
 
+|
+
 The network processes each gene expression profile through all layers and generates a prediction.
 If it gets the prediction wrong, an error signal is sent backward (**backpropagation**), and the weights are adjusted accordingly using gradient descent.
 This process continues across many training samples until the model learns a set of weights that minimizes prediction error.
@@ -412,14 +438,21 @@ The network then produces a predicted classification: whether the gene expressio
     :width: 700px
     :align: center 
 
+|
+
 This is the stage where the neural network becomes practically useful: once trained, it can analyze and interpret new biological data to support tasks like diagnosis, prognosis, or treatment decision-making.
 
 In the next session, we'll apply these concepts hands-on by building our own neural network from scratch.
 
-References and Additional Resources
------------------------------------
+Additional Resources
+--------------------
 
-* The material in this module is based on `COE 379L: Software Design for Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/unit03/neural_networks.html>`_
+* This documentation is adapted from: 
+  `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
+
+
+References
+^^^^^^^^^^
 
 .. [1] Jumper, J., Evans, R., Pritzel, A. et al. Highly accurate protein structure prediction with AlphaFold. Nature 596, 583–589 (2021). https://doi.org/10.1038/s41586-021-03819-2
 .. [2] McCulloch, W.S., Pitts, W. A logical calculus of the ideas immanent in nervous activity. Bulletin of Mathematical Biophysics 5, 115–133 (1943). https://doi.org/10.1007/BF02478259
