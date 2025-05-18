@@ -163,7 +163,6 @@ First, we will import the Mushroom dataset using the ``ucimlrepo`` package:
 .. code-block:: python
 
     >>> import pandas as pd
-    >>> import random
     >>> from ucimlrepo import fetch_ucirepo 
 
     >>> # fetch dataset 
