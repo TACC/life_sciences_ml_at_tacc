@@ -58,7 +58,7 @@ Step 0: Check GPU Availability and TensorFlow Version
 
 Before training deep learning models, it's important to check whether TensorFlow can access the GPU on your machine. Training on a GPU is significantly faster than on a CPU, especially for large image datasets. 
 
-If you've followed the setup instructions in the `TACC Deep Learning Tutorials README <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_, and you've run the ``install_kernel.sh`` script on **Frontera**, you should now be running this notebook inside a containerized Jupyter kernel that includes:
+If you've followed the setup instructions from `Introduction to Systems and Data: Set up for Tutorials <https://life-sciences-ml-at-tacc.readthedocs.io/en/latest/section1/set_up_for_tutorials.html>`_, you should now be running this notebook inside a containerized Jupyer kernel that includes:
 
  - TensorFlow v. 2.13.0 with GPU support
  - CUDA libraries compatible with the system
@@ -311,9 +311,6 @@ This structured DataFrame is essential for training with Keras' ``flow_from_data
     # Create a DataFrame with columns for filepath and label
     df = pd.DataFrame(data, columns=["filepath", "label"])
 
-    # (Optional) Shuffle the DataFrame to randomize order of images
-    df = df.sample(frac=1, random_state=123).reset_index(drop=True)
-
     # Show a preview of the DataFrame
     df.head()
     
@@ -351,9 +348,8 @@ If the dataset is imbalanced (i.e., some classes have far more images than other
     ## counts.values: The number of images for each class
     ## counts.index: The class labels (e.g., 'ACER', 'CNAT', 'MCAV')
     ## autopct='%1.1f%%': Display the percentage of images for each class
-    ## startangle=90: Start the pie chart at a 90-degree angle (rotated 90 degrees from the default)
     ## colors: The colors to use for each class (defined earlier)
-    axes[0].pie(counts.values, labels=counts.index, autopct='%1.1f%%', startangle=90, colors=colors)
+    axes[0].pie(counts.values, labels=counts.index, autopct='%1.1f%%', colors=colors)
     axes[0].set_title('Class Distribution (Percentage)')
 
     # Creates a Bar chart in the second plot position (axes[1])
@@ -388,10 +384,6 @@ We'll display a grid of randomly selected images, grouped by class.
     :linenos:
 
     from tensorflow.keras.preprocessing.image import load_img
-    import random
-
-    # Set seed for reproducibility
-    random.seed(123)
 
     # Set the number of images to display per class
     samples_per_class = 3
@@ -431,10 +423,7 @@ We'll display a grid of randomly selected images, grouped by class.
 
 |
 
-**Thought Challenge**: Try changing the ``random.seed`` value a few times to view different images from the dataset. What do you notice? Take a moment to write down your observations.
-
 *Remember: the quality of a machine learning model is decided largely by the quality of the dataset it was trained on!*
-
 
 Step 3: Split the Dataset and Handle Class Imbalance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -468,15 +457,15 @@ This is called **stratified sampling**.
     # First, split the original dataset into training + test sets
     train_df, test_df = train_test_split(
         df,                            # This is our DataFrame from step 1.5
-        test_size=____,                # How much of the data should be in the test set?
-        stratify=____,                 # Ensure each split maintains original class distribution
+        test_size=____,                # Keep 20% of the data in the test set
+        stratify=df["label"],          # Ensure each split maintains original class distribution
         random_state=123               # Set the random seed for reproducibility
     )
 
     # Then, split the training set into training + validation sets
     ____, ____ = train_test_split(
         ____,                          # What goes here?
-        test_size=____,                # How much of the data should be in the validation set?
+        test_size=____,                # Keep 20% of the training data in the validation set
         stratify=____,                 # Ensure each split maintains original class distribution
         random_state=123               # Set the random seed for reproducibility
     )
@@ -487,20 +476,6 @@ This is called **stratified sampling**.
     print(f"Train: {len(train_df)} images ({len(train_df)/total:.2%})")
     print(f"Validation: {len(val_df)} images ({len(val_df)/total:.2%})")
     print(f"Test: {len(test_df)} images ({len(test_df)/total:.2%})")
-
-**Thought Challenge**: Will changing the ``random_state`` value in the ``train_test_split`` function change your model's performance? Why or why not?
-
-.. toggle:: Click to show
-
-    **Answer**: Yes – even though stratification preserves class balance, changing ``random_state`` changes *which individual images* go into the training set. For example:
-
-    - With ``random_state=123``, the model might learn from images A, B, and C
-    - With ``random_state=456``, the model might learn from images D, E, and F 
- 
-    Since each image has unique properties (lighting, orientation, scale, background, etc.), the model will learn slightly different features depending on the exact training set.
-    As a result, its internal weights and final accuracy may vary. 
-
-    Try running the full training pipeline multiple times with different ``random_state`` values. Do your metrics stay stable? What might that tell you about the robustness of your model?
 
 
 3.2 Compute Class Weights
@@ -756,7 +731,7 @@ Below, we define a model that consists of three main parts:
 
     # Build a custom CNN architecture
     cnn_model = Sequential([
-        # Input layer: matches image shape
+        # Input layer: matches image shape (height, width, channels)
         Input(shape=(___, ___, __)),
 
         # Convolution Block 1
@@ -805,42 +780,44 @@ Finally, let's display our model architecture and parameter count:
 
     cnn_model.summary()
 
-**Model: "sequential"**
+.. code-block:: python-console
 
-+--------------------------------+----------------------+-------------+
-| Layer (type)                   | Output Shape         | Param #     |
-+================================+======================+=============+
-| conv2d (Conv2D)                | (None, 224, 224, 32) | 896         |
-+--------------------------------+----------------------+-------------+
-| average_pooling2d              | (None, 112, 112, 32) | 0           |
-| (AveragePooling2D)             |                      |             |
-+--------------------------------+----------------------+-------------+
-| conv2d_1 (Conv2D)              | (None, 112, 112, 64) | 18,496      |
-+--------------------------------+----------------------+-------------+
-| average_pooling2d_1            | (None, 56, 56, 64)   | 0           |
-| (AveragePooling2D)             |                      |             |
-+--------------------------------+----------------------+-------------+
-| conv2d_2 (Conv2D)              | (None, 56, 56, 128)  | 73,856      |
-+--------------------------------+----------------------+-------------+
-| average_pooling2d_2            | (None, 28, 28, 128)  | 0           |
-| (AveragePooling2D)             |                      |             |
-+--------------------------------+----------------------+-------------+
-| flatten (Flatten)              | (None, 100352)       | 0           |
-+--------------------------------+----------------------+-------------+
-| dense (Dense)                  | (None, 128)          | 12,845,184  |
-+--------------------------------+----------------------+-------------+
-| dense_1 (Dense)                | (None, 64)           | 8,256       |
-+--------------------------------+----------------------+-------------+
-| dense_2 (Dense)                | (None, 3)            | 195         |
-+--------------------------------+----------------------+-------------+
+    Model: "sequential"
 
-  **Total params**: 12,946,883 (49.39 MB)
+    +--------------------------------+----------------------+-------------+
+    | Layer (type)                   | Output Shape         | Param #     |
+    +================================+======================+=============+
+    | conv2d (Conv2D)                | (None, 224, 224, 32) | 896         |
+    +--------------------------------+----------------------+-------------+
+    | average_pooling2d              | (None, 112, 112, 32) | 0           |
+    | (AveragePooling2D)             |                      |             |
+    +--------------------------------+----------------------+-------------+
+    | conv2d_1 (Conv2D)              | (None, 112, 112, 64) | 18,496      |
+    +--------------------------------+----------------------+-------------+
+    | average_pooling2d_1            | (None, 56, 56, 64)   | 0           |
+    | (AveragePooling2D)             |                      |             |
+    +--------------------------------+----------------------+-------------+
+    | conv2d_2 (Conv2D)              | (None, 56, 56, 128)  | 73,856      |
+    +--------------------------------+----------------------+-------------+
+    | average_pooling2d_2            | (None, 28, 28, 128)  | 0           |
+    | (AveragePooling2D)             |                      |             |
+    +--------------------------------+----------------------+-------------+
+    | flatten (Flatten)              | (None, 100352)       | 0           |
+    +--------------------------------+----------------------+-------------+
+    | dense (Dense)                  | (None, 128)          | 12,845,184  |
+    +--------------------------------+----------------------+-------------+
+    | dense_1 (Dense)                | (None, 64)           | 8,256       |
+    +--------------------------------+----------------------+-------------+
+    | dense_2 (Dense)                | (None, 3)            | 195         |
+    +--------------------------------+----------------------+-------------+
 
-  **Trainable params**: 12,946,883 (49.39 MB)
+    Total params: 12,946,883 (49.39 MB)
 
-  **Non-trainable params**: 0 (0.00 B)
+    Trainable params: 12,946,883 (49.39 MB)
 
-**Thought Challenge**: Break down the model summary above, layer by layer. 
+    Non-trainable params: 0 (0.00 B)
+
+**Thought Challenge**: Describe our CNN model architecture layer-by-layer.
 
 .. toggle:: Click to show
 
@@ -871,13 +848,16 @@ Finally, let's display our model architecture and parameter count:
 Calculating Parameters in CNNs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Let's break down the parameter calculation for our model.
+For a convolutional layer, the number of parameters is determined by the size of the kernels, the number of input channels, and the number of kernels:
 
-The formula for calculating the number of parameters in a convolutional layer is:
+.. math::
 
-``(kernel_height x kernel_width x input_channels x filters) + filters``
+    \text{Parameters} = (\text{Kernel width} \times \text{Kernel height} \times \text{Input channels} + 1) \times \text{Kernels}
 
-    - the ``+ filters`` part is for the bias term (one per filter)
+- ``Kernel width x Kernel height``: The size of each kernel (e.g., a 3x3 kernel has 9 weights per input channel)
+- ``Input channels``: The number of channels in the input image (e.g., 3 for RGB images)
+- ``+1``: Each kernel also has 1 bias term.
+- ``kernels``: The number of kernels you want to use. This is how many output channels you'll get from this layer. Each kernel is applied independently and learns different features. 
 
 **Thought Challenge**: What is the formula for calculating the number of parameters in a dense layer? Can you correctly calculate the total number of parameters in our model? Write down each step of your calculation. 
 
@@ -887,38 +867,36 @@ The formula for calculating the number of parameters in a convolutional layer is
 
     1. First Conv2D:
 
-     * 3x3 kernel, 3 input channels (RGB), 32 filters
-     * (3 x 3 x 3 x 32) + 32 = 896 parameters
+     * 3x3 kernel, 3 input channels (RGB), 32 kernels
+     * (3 x 3 x 3 + 1) x 32 = 896 parameters
 
     2. Second Conv2D:
 
-     * 3x3 kernel, 32 input channels, 64 filters
-     * ( 3 x 3 x 32 x 64) + 64 = 18,496 parameters
+     * 3x3 kernel, 32 input channels, 64 kernels
+     * (3 x 3 x 32 + 1) x 64 = 18,496 parameters
 
     3. Third Conv2D:
 
-     * 3x3 kernel, 64 input channels, 128 filters
-     * (3 x 3 x 64 x 128) + 128 = 73,856 parameters
+     * 3x3 kernel, 64 input channels, 128 kernels
+     * (3 x 3 x 64 + 1) x 128 = 73,856 parameters
 
     **Dense Layers**
         
-    Formula: ``(inputs x perceptrons) + perceptrons``
+    Formula: ``(Input units x Output units) + Output units``
 
-    - the ``+ perceptrons`` part is for the bias term (one per perceptron)
+    4. First Dense:
 
-    1. First Dense:
-
-     * 100352 inputs (flattened), 128 perceptrons
+     * 100352 Input units (flattened), 128 Output units (one per perceptron)
      * (100352 x 128) + 128 = 12,845,184 parameters
 
-    2. Second Dense:
+    5. Second Dense:
 
-     * 128 inputs, 64 perceptrons
+     * 128 Input units, 64 Output units 
      * (128 x 64) + 64 = 8,256 parameters
 
-    3. Output Dense:
+    6. Output Dense:
     
-     * 64 inputs, 3 perceptrons (one per coral species)
+     * 64 Input units, 3 Output units
      * (64 x 3) + 3 = 195 parameters
 
 
