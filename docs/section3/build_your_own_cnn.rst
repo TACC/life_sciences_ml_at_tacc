@@ -458,8 +458,7 @@ This is called **stratified sampling**.
     train_df, test_df = train_test_split(
         df,                            # This is our DataFrame from step 1.5
         test_size=____,                # Keep 20% of the data in the test set
-        stratify=df["label"],          # Ensure each split maintains original class distribution
-        random_state=123               # Set the random seed for reproducibility
+        stratify=df["label"]          # Ensure each split maintains original class distribution
     )
 
     # Then, split the training set into training + validation sets
@@ -467,7 +466,6 @@ This is called **stratified sampling**.
         ____,                          # What goes here?
         test_size=____,                # Keep 20% of the training data in the validation set
         stratify=____,                 # Ensure each split maintains original class distribution
-        random_state=123               # Set the random seed for reproducibility
     )
 
     # Print split sizes
@@ -1357,7 +1355,7 @@ Refer back to Section 1: Step 6 – *Visualizing Training History* for a refresh
 .. image:: ./images/VGG19-history.png
    :width: 800px
    :align: center
-   
+
 |
 
 **Thought Challenge**: Compare the performance of our VGG19 model to our previous CNN model. What are some major differences in the training curves?
