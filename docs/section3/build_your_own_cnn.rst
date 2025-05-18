@@ -384,6 +384,7 @@ We'll display a grid of randomly selected images, grouped by class.
     :linenos:
 
     from tensorflow.keras.preprocessing.image import load_img
+    import random
 
     # Set the number of images to display per class
     samples_per_class = 3
