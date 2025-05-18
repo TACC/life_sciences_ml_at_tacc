@@ -693,6 +693,7 @@ Let's display a few images from the training geneator along with their decoded c
 
 |
 
+
 **Thought Challenge**: Look carefully at the images displayed above.
 Try running the code cell multiple times and changing the code to display images from the validation and test generators. 
 What do you notice about the images that you didn't see before (in Step 3)?
@@ -1356,6 +1357,8 @@ Refer back to Section 1: Step 6 – *Visualizing Training History* for a refresh
 .. image:: ./images/VGG19-history.png
    :width: 800px
    :align: center
+   
+|
 
 **Thought Challenge**: Compare the performance of our VGG19 model to our previous CNN model. What are some major differences in the training curves?
 
