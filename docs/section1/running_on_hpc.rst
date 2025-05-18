@@ -66,7 +66,7 @@ To start a thirty-minute interactive session on a compute node in the developmen
 
 .. note::
 
-   For this workshop, using allocation name ``frontera-training`` instead of "EXAMPLE"
+   For this workshop, using allocation name ``Frontera-Training`` instead of "EXAMPLE"
 
 If launch is successful, you will see output that includes the following excerpts:
 
@@ -132,7 +132,7 @@ You can check the files that were generated using ``ls``, and see the contents o
 
    [clx]$ ls
    duration.txt  example.slurm  example_template.slurm  my_code.py
-   [clx]$ cat duration
+   [clx]$ cat duration.txt
    Done in 3.009739637374878 seconds.
 
 To exit an interactive session, you can use the command ``logout``.
