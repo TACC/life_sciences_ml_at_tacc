@@ -37,22 +37,26 @@ At its core, TensorFlow uses multi-dimensional arrays called *tensors* to repres
 * Outputs (predictions from the model)
 
 .. list-table:: Common Tensor Types
-    :widths: 25 35 30
+    :widths: 20 27 15 30
     :align: center
     :header-rows: 1
 
     * - **Tensor Type**
       - **Example**
       - **Shape**
+      - **Description**
     * - **Scalar (Rank-0)**
       - ``5``
       - ``()``
+      - A single number. No dimensions.
     * - **Vector (Rank-1)**
       - ``[1, 2, 3]``
       - ``(3,)``
+      - A list of three numbers.
     * - **Matrix (Rank-2)**
       - ``[[1, 2, 3], [4, 5, 6]]``
       - ``(2, 3)``
+      - A table of numbers with 2 rows and 3 columns. 
 
 
 `Keras <https://www.tensorflow.org/guide/keras>`_ is the high-level API of the TensorFlow platform. 
@@ -85,7 +89,7 @@ Here's a preview of what our model code will look like:
     # 1. Define the model architecture
     model = Sequential([
         Input(shape=(number_of_features,)),    # Input layer matching our feature count
-        Dense(units=10, activation='relu'),    # Hidden layer with 10 neurons
+        Dense(units=10, activation='relu'),    # Hidden layer with 10 perceptrons
         Dense(units=1, activation='sigmoid')   # Outputs a probability between 0 and 1
     ])
 
@@ -161,9 +165,6 @@ First, we will import the Mushroom dataset using the ``ucimlrepo`` package:
     >>> import pandas as pd
     >>> import random
     >>> from ucimlrepo import fetch_ucirepo 
-
-    >>> # Set seed for reproducibility
-    >>> random.seed(123)
 
     >>> # fetch dataset 
     >>> mushroom = fetch_ucirepo(id=73) 
@@ -434,9 +435,6 @@ The code above divides our data into training and testing sets, creating four ob
    * - ``stratify``
      - Maintains the same class distribution in both splits
      - Ensures balanced representation of poisonous/edible classes
-   * - ``random_state``
-     - Controls the randomization for reproducible results
-     - Set to 123 for consistent splits across runs
 
 
 Why These Parameters Matter:
@@ -445,8 +443,6 @@ Why These Parameters Matter:
 * **Test Size**: Finding the right balance between having enough data for training while reserving sufficient data for testing is crucial. Too little test data may not reliably assess model performance; too little training data may limit learning.
 
 * **Stratification**: When working with classification problems, maintaining class proportions is essential. Without stratification, you might accidentally create a test set with disproportionate class representation, leading to misleading evaluation metrics.
-
-* **Reproducibility**: Setting a random seed ensures you can reproduce your experiments exactly, which is fundamental for scientific rigor and debugging.
 
 .. tip::
   
@@ -460,31 +456,28 @@ Step 3: Building a Sequential Model Neural Network
 Now we'll create a simple neural network for our mushroom classification task. The model will consist of:
 
 - An **input layer** that matches our feature dimensions
-- A **hidden layer** with 10 neurons and ReLU activation
+- A **hidden layer** with 10 perceptrons and ReLU activation
 - An **output layer** with sigmoid activation for binary classification
 
 This architecture provides a good starting point for understanding how neural networks learn from tabular data.
 
 .. code-block:: python
 
-    >>> # Import necessary libraries from Keras
+    >>> # Import necessary libraries from TensorFlow
     >>> import tensorflow as tf
     >>> from tensorflow.keras import Sequential
     >>> from tensorflow.keras.layers import Input, Dense
-
-    >>> # Set random seed for reproducibility
-    >>> tf.random.set_seed(123) 
 
     >>> # Create model with sequential API
     >>> model = Sequential([
     >>>     # Input layer - shape matches our feature count
     >>>     Input(shape=(112,)),  # 1D tensor with 112 features
     >>>     
-    >>>     # Hidden layer - 10 neurons with ReLU activation
+    >>>     # Hidden layer - 10 perceptrons with ReLU activation
     >>>     # ReLU allows the network to learn non-linear patterns
     >>>     Dense(10, activation='relu'),
     >>>     
-    >>>     # Output layer - single neuron with sigmoid activation
+    >>>     # Output layer - single perceptron with sigmoid activation
     >>>     # Sigmoid squashes output between 0-1, perfect for binary classification
     >>>     Dense(1, activation='sigmoid')
     >>> ])
@@ -493,37 +486,56 @@ This architecture provides a good starting point for understanding how neural ne
     >>> model.compile(
     >>>     optimizer='adam',              # Adam: efficient gradient-based optimizer
     >>>     loss='binary_crossentropy',    # Standard loss function for binary problems
-    >>>     metrics=['accuracy']           # Track accuracy during training
+    >>>     metrics=['accuracy']           # ßTrack accuracy during training
     >>> )
 
     >>> # Display model architecture and parameter count
     >>> model.summary()
-  
-**Thought Challenge**: How many parameters does the model have? Can you calculate this manually and get the same result?
+
+For fully connected layers, the number of trainable parameters can be calculated with the following formula:
+
+.. math:: 
+
+  \text{Parameters} = (\text{Input units} \times \text{Output units}) + \text{Output units}
+
+Let's understand what each part means:
+
+ 1. **Weights**: ``Input units x Output units``
+   Each Input unit connects to each Output unit, so there's one weight per connection. This forms a weight matrix of shape ``(Input units, Output units)``. 
+
+ 2. **Biases**: ``+ Output units``
+   Each output perceptron has one bias term, regardless of the number of Input units. So the total number of bias terms is equal to the number of Output units. 
+
+
+**Thought Challenge**: 
+
+How many parameters does the model have? Can you calculate this manually and get the same result?
 
 .. toggle:: Click to see the answer
 
     Let's calculate the parameters manually:
 
-    **Layer 1** (Input → Hidden):
+    **Layer 1** (Input -> Hidden):
 
-    - Input size: ``X_train.shape[1]`` (112 features after one-hot encoding)
-    - Output size: 10 neurons
-    - Weights: 112 × 10 = 1120 parameters
-    - Biases: 10 (one per neuron)
+    - Input Units: ``X_train.shape[1]`` (112 features after one-hot encoding)
+    - Output Units: 10 perceptrons
+  
+    - Weights: 112 x 10 = 1120 parameters
+    - Biases: 10 (one per Output unit (perceptrons in the next layer))
     - Total for Layer 1: 1120 + 10 = 1130 parameters
 
-    **Layer 2** (Hidden → Output):
+    **Layer 2** (Hidden -> Output):
 
-    - Input size: 10 neurons
-    - Output size: 1 neuron
+    - Input Units: 10 perceptrons
+    - Output Units: 1 perceptron
+  
     - Weights: 10 × 1 = 10 parameters
-    - Biases: 1 (for the output neuron)
+    - Biases: 1 (one per Output unit)
     - Total for Layer 2: 10 + 1 = 11 parameters
 
     **Total parameters**: 1130 + 11 = 1141 parameters
 
-    This should match the parameter count shown in the model.summary() output. Each neuron has weights for all inputs from the previous layer, plus one bias term.
+    This should match the parameter count shown in the model.summary() output.
 
 
 Training the Neural Network
@@ -801,8 +813,7 @@ Let's also print the full classification report of this model using code below
  weighted avg     0.9980    0.9979    0.9979      2438
 
 
-The accuracy of our model is 99.79%.
-99.79% of the time, this model predicted the correct label on the test data.
+The accuracy of our model is 99.79%, so 99.79% of the time, this model predicted the correct label on the test data.
 
 **Thought Challenge**: Did we build a successful model? Why or why not? Is there anything we can do to improve the model?
 
@@ -810,7 +821,7 @@ The accuracy of our model is 99.79%.
 
     **Did we build a successful model?**
     
-    Yes, by standard performance metrics, our model is remarkably successful:
+    By standard performance metrics, our model is remarkably successful:
     
     * Accuracy of 99.79% on the test set
     * Recall of 99.66% for poisonous mushrooms
@@ -820,13 +831,12 @@ The accuracy of our model is 99.79%.
     **Why it's successful:**
     
     * The model efficiently learned the patterns distinguishing edible from poisonous mushrooms
-    * Our preprocessing strategies (handling missing values, one-hot encoding) were effective
     * The architecture, despite being simple (just one hidden layer), was sufficient for this task
     * The dataset is well-structured with clear categorical features that strongly correlate with mushroom edibility
     
     **However, there are important considerations:**
     
-    In a real-world mushroom classification system, even our 99.66% recall means that approximately 4 out of 1175 poisonous mushrooms were misclassified as edible. For a life-critical application like mushroom toxicity detection, this error rate might still be too high.
+    In a real-world mushroom classification system, even our 99.66% recall means that approximately 4 out of 1175 poisonous mushrooms were misclassified as edible. For a life-critical application like mushroom toxicity detection, this error rate is still too high. 
     
     **Potential improvements:**
     
