@@ -4,11 +4,12 @@ Running Containers on HPC Systems
 High performance computing (HPC) systems serve a large role in academic computing at scale.
 In this portion of the training, we will explore methods for running containers that you develop
 on HPC systems and also discovering containers built by the community that you can utilize. After
-going through this section, you will be able to:
+going through this section, you should be able to:
 
-- Use Apptainer to execute Docker containers on a HPC system
-- Understand how to run containers that use GPUs for computation
-- Discover community curated software containers available at TACC
+* Use Apptainer to execute Docker containers on a HPC system
+* Demonstrate how to run containers that use GPUs for computation
+* Discover community curated software containers available at TACC
+
 
 Introduction to Apptainer
 -------------------------
@@ -29,100 +30,129 @@ If you are familiar with Docker, Apptainer will feel familiar.
 
 
 Login to Vista
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 
 For today's training, we will use the Vista supercomputer. To login, you need to establish a SSH connection from your laptop to the Vista system.  Instructions depend on your laptop's operating system.
 
-Mac / Linux:
 
-|   Open the application 'Terminal'
-|   ssh username@vista.tacc.utexas.edu
-|   (enter password)
-|   (enter 6-digit token)
+Mac / Linux (Use Terminal)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Open the application 'Terminal' and:
+
+.. code-block:: console
+   
+  [local]$ ssh username@vista.tacc.utexas.edu
+
+  To access the system:
+  
+  1) If not using ssh-keys, please enter your TACC password at the password prompt
+  2) At the TACC Token prompt, enter your 6-digit code followed by <return>.
+
+  (enter password)
+  (enter 6-digit token)
 
 
-Windows:
+Windows (Use WSL2 or an SSH Client)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-|   If using Windows Subsystem for Linux, use the Mac / Linux instructions.
-|   If using an application like 'PuTTY'
-|   enter Host Name: vista.tacc.utexas.edu
-|   (click 'Open')
-|   (enter username)
-|   (enter password)
-|   (enter 6-digit token)
+Open the application WSL2 :
 
+.. code-block:: console
+   
+  [local]$ ssh username@vista.tacc.utexas.edu
+
+  To access the system:
+  
+  1) If not using ssh-keys, please enter your TACC password at the password prompt
+  2) At the TACC Token prompt, enter your 6-digit code followed by <return>.
+
+  (enter password)
+  (enter 6-digit token)
+
+Or open an SSH client like `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html>`_:
+
+.. code-block:: console
+
+  Open the application 'PuTTY'
+  enter Host Name: vista.tacc.utexas.edu
+  (click 'Open')
+  (enter username)
+  (enter password)
+  (enter 6-digit token)
 
 When you have successfully logged in, you should be greeted with some welcome text and a command prompt.
 
 
 Start an Interactive Session
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Apptainer module is currently only available on compute nodes at TACC. To use Apptainer interactively,
 start an interactive session on a compute node using the ``idev`` command.
 
 .. code-block:: console
 
-	$ idev -m 40
+	[vista]$ idev -m 40
+
 
 If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be
 on a login node, but instead have a shell on a dedicated compute node.
 
 
 Load the Apptainer Module
-~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default, the ``apptainer`` command is not visible, but it can be added to the environment by loading
 the module.
 
 .. code-block:: console
 
-	$ module list
+	[gh]$ module list
 
-	$ module spider apptainer
+	[gh]$ module spider apptainer
 
-	$ module load tacc-apptainer
+	[gh]$ module load tacc-apptainer
 
-	$ module list
+	[gh]$ module list
 
 Now the apptainer command is available.
 
 .. code-block:: console
 
-	$ type apptainer
+	[gh]$ type apptainer
 
-	$ apptainer help
+	[gh]$ apptainer help
 
 
 Core Apptainer Commands
-~~~~~~~~~~~~~~~~~~~~~~~
-
-
-Pull a Docker container
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Pull a Docker Container
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Containers in the Docker registry may be downloaded and used, assuming the underlying
 architecture (e.g. x86) is the same between the container and the host.
 
 .. code-block:: console
 
-	$ apptainer pull docker://eriksf/lolcow
+	[gh]$ apptainer pull docker://eriksf/lolcow
 
-	$ ls
+	[gh]$ ls
 
 There may be some warning messages, but this command should download the latest version of the
 "lolcow" container and save it in your current working directory as ``lolcow_latest.sif``.
 
 
-Interactive shell
-^^^^^^^^^^^^^^^^^
+Interactive Shell
+~~~~~~~~~~~~~~~~~
 
 The ``shell`` command allows you to spawn a new shell within your container and interact with it
 as though it were a small virtual machine.
 
 .. code-block:: console
 
-	$ apptainer shell lolcow_latest.sif
+	[gh]$ apptainer shell lolcow_latest.sif
 
 	Apptainer>
 
@@ -148,8 +178,8 @@ Also, a number of host directories are mounted by default.
 	Docker and Apptainer have very different conventions around how host directories are mounted within the container. In many ways, Apptainer has a simpler process for working with data on the host, but it is also more prone to inadvertantly having host configurations "leak" into the container.
 
 
-Run a container's default command
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Run a Container's Default Command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Just like with Docker, Apptainer can run the default "entrypoint" or default command of a container with
 the ``run`` subcommand.  These defaults are defined in the Dockerfile (or Apptainer Definition file) that
@@ -157,16 +187,19 @@ define the actions a container should perform when someone runs it.
 
 .. code-block:: console
 
-	$ apptainer run lolcow_latest.sif
+	[gh]$ apptainer run lolcow_latest.sif
 
-     ________________________________________
-    < The time is right to make new friends. >
-     ----------------------------------------
-            \   ^__^
-             \  (oo)\_______
-                (__)\       )\/\
-                    ||----w |
-                    ||     ||
+
+.. code-block:: console
+
+   ________________________________________
+  < The time is right to make new friends. >
+   ----------------------------------------
+          \   ^__^
+           \  (oo)\_______
+              (__)\       )\/\
+                  ||----w |
+                  ||     ||
 
 
 .. Note::
@@ -174,24 +207,27 @@ define the actions a container should perform when someone runs it.
     You may receive a warning about "Setting locale failed".  This is because, by default, Apptainer sets all shell environment variables inside the container to match whatever is on the host. To override this behavior, add the ``--cleanenv`` argument to your command.
 
 
-Executing arbitrary commands
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Executing Arbitrary Commands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The exec command allows you to execute a custom command within a container. For instance, to execute
 the ``cowsay`` program within the lolcow_latest.sif container:
 
 .. code-block:: console
 
-	$ apptainer exec --cleanenv lolcow_latest.sif cowsay Apptainer runs Docker containers on HPC systems
-     _______________________________________
-    / Apptainer runs Docker containers on \
-    \ HPC systems                           /
-     ---------------------------------------
-            \   ^__^
-             \  (oo)\_______
-                (__)\       )\/\
-                    ||----w |
-                    ||     ||
+	[gh]$ apptainer exec --cleanenv lolcow_latest.sif cowsay Apptainer runs Docker containers on HPC systems
+
+.. code-block:: console
+
+    _______________________________________
+   / Apptainer runs Docker containers on \
+   \ HPC systems                           /
+    ---------------------------------------
+           \   ^__^
+            \  (oo)\_______
+               (__)\       )\/\
+                   ||----w |
+                   ||     ||
 
 .. Note::
 
@@ -202,7 +238,7 @@ the exit command:
 
 .. code-block:: console
 
-	$ exit
+	 [gh]$ exit
 
 
 Apptainer in HPC Environments
@@ -249,9 +285,8 @@ to reserve for you.
   Every HPC cluster is a little different, but they almost universally have a "User's Guide" that serves both as a quick reference for helpful commands and contains guidelines for how to be a "good citizen" while using the system.  For TACC's Vista system, the user guide is at: `https://docs.tacc.utexas.edu/hpc/vista/ <https://docs.tacc.utexas.edu/hpc/vista/>`_
 
 
-How do HPC systems fit into the development workflow?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+How do HPC Systems Fit into the Development Workflow?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A couple of things to consider when using HPC systems:
 
@@ -263,25 +298,28 @@ containers to HPC systems to do analyses at scale.  If the containers are writte
 accommodates the small differences between the Docker and Apptainer runtimes, the transition is fairly
 seamless.
 
+
 Differences between Docker and Apptainer
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Host Directories
-^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~
 
 **Docker:** None by default. Use ``-v <source>:<destination>`` to mount a source host directory to an arbitrary destination within the container.
 
 **Apptainer:** Mounts your current working directory, $HOME directory, and some system directories by default. Other defaults may be set in a system-wide configuration. The ``--bind`` flag is supported but rarely used in practice.
 
+
 User ID
-^^^^^^^
+~~~~~~~
 
 **Docker:** Defined in the Dockerfile, but containers run as root unless a different user is defined or specified on the command line.  This user ID only exists within the container, and care must be taken when working with files on the host filesystem to make sure permissions are set correctly.
 
 **Apptainer:** Containers are run in "userspace", so you are the same user and user ID both inside and outside the container.
 
+
 Image Format
-^^^^^^^^^^^^
+~~~~~~~~~~~~
 
 **Docker:** Containers are stored in layers and managed in a repository by Docker.  The ``docker images`` command will show you what containers are on your local machine and images are always referenced by their repository and tag name.
 
@@ -289,7 +327,7 @@ Image Format
 
 
 Running a Batch Job on Vista
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you are not already, please login to the Vista system, just like we did at the start of the
 previous section.  You should be on one of the login nodes of the system.
@@ -302,10 +340,10 @@ Create a file called "pi.slurm" on the work filesystem:
 
 .. code-block:: console
 
-  $ cd $WORK
-  $ mkdir life-sciences-ml-at-tacc
-  $ cd life-sciences-ml-at-tacc
-  $ nano classify.slurm
+   [vista]$ cd $WORK
+   [vista]$ mkdir life-sciences-ml-at-tacc
+   [vista]$ cd life-sciences-ml-at-tacc
+   [vista]$ nano classify.slurm
 
 Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the
 following Slurm script.
@@ -343,7 +381,7 @@ Once you are done, try submitting this file as a job to Slurm.
 
 .. code-block:: console
 
-  $ sbatch classify.slurm
+   [vista]$ sbatch classify.slurm
 
 You can check the status of your job with the command ``showq -u``.
 
@@ -351,7 +389,8 @@ Once your job has finished, take a look at the output:
 
 .. code-block:: console
 
-  $ cat output*
+   [vista]$ cat output*
+
 
 Apptainer and GPU Computing
 ---------------------------
@@ -378,16 +417,16 @@ For instance, we can use a tool like ``gpustat`` to poke at the GPU on TACC syst
 .. code-block:: console
 
   Work from a compute node
-  $ idev -m 60 -p gh
+  [vista]$ idev -m 60 -p gh
 
   Load the apptainer module
-  $ module load tacc-apptainer
+  [gh]$ module load tacc-apptainer
 
   Pull your image
-  $ apptainer pull docker://eriksf/monitor-gpu:0.1.0
+  [gh]$ apptainer pull docker://eriksf/monitor-gpu:0.1.0
 
   Test the GPU
-  $ apptainer exec --nv monitor-gpu_0.1.0.sif gpustat --json
+  [gh]$ apptainer exec --nv monitor-gpu_0.1.0.sif gpustat --json
   INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
   INFO:    gocryptfs not found, will not be able to use gocryptfs
   INFO:    Converting SIF file to temporary sandbox...
@@ -432,16 +471,16 @@ It can be tested as follows:
 .. code-block:: console
 
   Change to your $SCRATCH directory
-  $ cd $SCRATCH
+  [gh]$ cd $SCRATCH
 
   Download the test code
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/tf_test.py
+  [gh]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/tf_test.py
 
   Pull the image
-  $ apptainer pull docker://nvcr.io/nvidia/tensorflow:24.12-tf2-py3
+  [gh]$ apptainer pull docker://nvcr.io/nvidia/tensorflow:24.12-tf2-py3
 
   Run the code
-  $ apptainer exec --nv tensorflow_24.12-tf2-py3.sif python tf_test.py 2>warnings.txt
+  [gh]$ apptainer exec --nv tensorflow_24.12-tf2-py3.sif python tf_test.py 2>warnings.txt
   Tensorflow version: 2.17.0
   GPU available: True
 
@@ -471,16 +510,16 @@ It can be tested as follows:
 .. code-block:: console
 
   Change to your $SCRATCH directory
-  $ cd $SCRATCH
+  [gh]$ cd $SCRATCH
 
   Download the test code
-  $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/pytorch_matmul_scaling_test.py
+  [gh]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/pytorch_matmul_scaling_test.py
 
   Pull the image
-  $ apptainer pull docker://eriksf/pytorch-ml-container:0.2
+  [gh]$ apptainer pull docker://eriksf/pytorch-ml-container:0.2
 
   Run the code against the CPU
-  $ apptainer exec --nv pytorch-ml-container_0.2.sif python3 pytorch_matmul_scaling_test.py --no-gpu
+  [gh]$ apptainer exec --nv pytorch-ml-container_0.2.sif python3 pytorch_matmul_scaling_test.py --no-gpu
   INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
   INFO:    gocryptfs not found, will not be able to use gocryptfs
   INFO:    Converting SIF file to temporary sandbox...
@@ -517,7 +556,7 @@ The script also produces a scaling plot:
 .. code-block:: console
 
   Run the code against the GPU
-  $ apptainer exec --nv pytorch-ml-container_0.2.sif python3 pytorch_matmul_scaling_test.py
+  [gh]$ apptainer exec --nv pytorch-ml-container_0.2.sif python3 pytorch_matmul_scaling_test.py
   INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
   INFO:    gocryptfs not found, will not be able to use gocryptfs
   INFO:    Converting SIF file to temporary sandbox...
@@ -556,8 +595,8 @@ The script also produces a scaling plot:
 
 .. _transfer-learning-label:
 
-Building a GPU aware container
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Building a GPU Aware Container
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the previous couple of examples, we have used pre-built containers to test GPU capability. Here we are going
 to build a container to train a CNN for image classification using transfer learning with PyTorch.
@@ -571,7 +610,6 @@ There are 2 main approaches or scenarios used in transfer learning:
 1. **Feature Extraction**: Use the pre-trained model as a fixed feature extractor. In this case, we freeze all the
    layers of the pre-trained model and only train the final classification layer.
 2. **Fine-tuning**: Unfreeze some of the layers of the pre-trained model and jointly train the model on the new dataset.
-
 
 In this example, we will train a model to classify `hymenoptera <https://www.inaturalist.org/taxa/47201-Hymenoptera>`_
 (ants, bees, and wasps) using the dataset located `here <https://download.pytorch.org/tutorial/hymenoptera_data.zip>`_.
@@ -589,37 +627,35 @@ for computer vision.
 
    The architecture of ResNet18. Source: [2]_
 
-
 On your local laptop or VM, clone the following `repository <https://github.com/eriksf/pytorch-transfer-learning>`_:
 
 .. code-block:: console
 
-    $ git clone https://github.com/eriksf/pytorch-transfer-learning.git
+    [local]$ git clone https://github.com/eriksf/pytorch-transfer-learning.git
 
 Let's take a look at the files:
 
 .. code-block:: console
 
-    $ cd pytorch-transfer-learning
-    $ tree .
+    [local]$ cd pytorch-transfer-learning
+    [local]$ tree .
     .
     ├── Dockerfile
     ├── images
-    │   ├── silver-tailed_petalcutter_bee.jpg
-    │   └── sri_lankan_relic_ant.jpeg
+    │   ├── silver-tailed_petalcutter_bee.jpg
+    │   └── sri_lankan_relic_ant.jpeg
     ├── LICENSE
     ├── pyproject.toml
     ├── pytorch_transfer_learning
-    │   ├── __init__.py
-    │   ├── functions.py
-    │   ├── predict.py
-    │   ├── train.py
-    │   └── version.py
+    │   ├── __init__.py
+    │   ├── functions.py
+    │   ├── predict.py
+    │   ├── train.py
+    │   └── version.py
     ├── README.md
     └── uv.lock
 
     3 directories, 12 files
-
 
 This is the basic directory structure of a Python package. It was built using `uv <https://docs.astral.sh/uv/>`_
 which is a tool for building and managing Python packages, and `Click <https://click.palletsprojects.com/en/stable/>`_
@@ -631,7 +667,7 @@ The important file that controls the package and dependencies is ``pyproject.tom
 
 .. code-block:: console
 
-    $ cat pyproject.toml
+    [local]$ cat pyproject.toml
     [project]
     name = "pytorch-transfer-learning"
     version = "0.1.1"
@@ -827,21 +863,22 @@ Now let's go ahead and build the container.  This will take a few minutes, so be
 
 .. code-block:: console
 
-  $ docker build -t <username>/pytorch-transfer-learning:0.1.0 .
+  [local]$ docker build -t <username>/pytorch-transfer-learning:0.1.0 .
 
 Or for a different architecture (see `Multi-architecture builds <https://containers-at-tacc.readthedocs.io/en/latest/advanced/02.multiarch.html>`_),
 you can use, for example, the following command:
 
 .. code-block:: console
 
-  $ docker build --platform linux/arm64 -t <username>/pytorch-transfer-learning:0.1.0 .
+  [local]$ docker build --platform linux/arm64 -t <username>/pytorch-transfer-learning:0.1.0 .
 
 Once you have successfully built the image, push it up to Docker Hub with the ``docker push`` command so that
 we can pull it back down on an HPC system.
 
 .. code-block:: console
 
-  $ docker push <username>/pytorch-transfer-learning:0.1.0
+  [local]$ docker push <username>/pytorch-transfer-learning:0.1.0
+
 
 Testing the Container Locally with CPU
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -851,7 +888,7 @@ test that the program help works.
 
 .. code-block::  console
 
-  $ docker run --rm <username>/pytorch-transfer-learning:0.1.0 train --help
+  [local]$ docker run --rm <username>/pytorch-transfer-learning:0.1.0 train --help
   Usage: train [OPTIONS]
 
     Train a CNN for hymenoptera classification using transfer learning from the
@@ -877,6 +914,7 @@ We could also test the training process (or prediction) locally, because it will
 However, we will not do that here because it would take a long time (25-30 minutes to train). Instead, we will run
 the training on the Vista system, which has powerful GPUs.
 
+
 Running the Container on Vista
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -885,27 +923,27 @@ which has a single NVIDIA GH200 GPU with 95 GB of Memory.
 
 .. code-block:: console
 
-  $ idev -m 60 -p gh
+  [vista]$ idev -m 60 -p gh
 
 Once you have your node, pull the image and run it as follows:
 
 .. code-block:: console
 
   Load apptainer module
-  $ module load tacc-apptainer
+  [gh]$ module load tacc-apptainer
 
   Change to $SCRATCH directory
-  $ cd $SCRATCH
+  [gh]$ cd $SCRATCH
 
   Pull the image
-  $ apptainer pull docker://<username>/pytorch-transfer-learning:0.1.0
+  [gh]$ apptainer pull docker://<username>/pytorch-transfer-learning:0.1.0
 
   Grab the hymenoptera dataset
-  $ wget https://download.pytorch.org/tutorial/hymenoptera_data.zip
-  $ unzip hymenoptera_data.zip
+  [gh]$ wget https://download.pytorch.org/tutorial/hymenoptera_data.zip
+  [gh]$ unzip hymenoptera_data.zip
 
   Run the container
-  $ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif train --data-dir hymenoptera_data
+  [gh]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif train --data-dir hymenoptera_data
   INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
   INFO:    gocryptfs not found, will not be able to use gocryptfs
   INFO:    Converting SIF file to temporary sandbox...
@@ -1081,7 +1119,7 @@ Now that we have a trained model, we can use it to make predictions (run inferen
 
 .. code-block:: console
 
-  $ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --help
+  [gh]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --help
   INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
   INFO:    gocryptfs not found, will not be able to use gocryptfs
   INFO:    Converting SIF file to temporary sandbox...
@@ -1099,7 +1137,7 @@ Now that we have a trained model, we can use it to make predictions (run inferen
     --output-dir PATH               Set the output directory  [default: .]
     --help                          Show this message and exit.
 
-  $ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --model hymenoptera-finetuning.pt /app/images/silver-tailed_petalcutter_bee.jpg
+  [gh]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --model hymenoptera-finetuning.pt /app/images/silver-tailed_petalcutter_bee.jpg
   INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
   INFO:    gocryptfs not found, will not be able to use gocryptfs
   INFO:    Converting SIF file to temporary sandbox...
@@ -1122,6 +1160,7 @@ This script also creates an image based on the prediction and saves it to ``hyme
 
   Predicted image for 'silver-tailed_petalcutter_bee.png'
 
+
 Additional Resources
 --------------------
 
@@ -1139,7 +1178,9 @@ The material in this section is based on the following resources:
 * `Torchvision datasets <https://pytorch.org/vision/stable/datasets.html>`_
 * `Torchvision models <https://pytorch.org/vision/stable/models.html>`_
 
-**References:**
 
-.. [1] He, K., Zhang, X., Ren, S., Sun, J. (2015). Deep Residual Learning for Image Recognition. arXiv preprint arXiv:1512.03385.
-.. [2] Yoo, Seung Hoon & Geng, Hui & Chiu, T.L. & Yu, S.K. & Cho, D.C. & Heo, J. & Choi, M.S. & Choi, I.H. & Cung, C.V. & Nhung, N.V. & Min, Byung Jun. (2020). Study on the TB and non-TB diagnosis using two-step deep learning-based binary classifier. Journal of Instrumentation. 15. P10011-P10011. 10.1088/1748-0221/15/10/P10011.
+References
+^^^^^^^^^^
+
+.. [1] `He, K., Zhang, X., Ren, S., Sun, J. (2015). Deep Residual Learning for Image Recognition. arXiv preprint arXiv:1512.03385. <https://arxiv.org/abs/1512.03385>`_
+.. [2] `Yoo, Seung Hoon & Geng, Hui & Chiu, T.L. & Yu, S.K. & Cho, D.C. & Heo, J. & Choi, M.S. & Choi, I.H. & Cung, C.V. & Nhung, N.V. & Min, Byung Jun. (2020). Study on the TB and non-TB diagnosis using two-step deep learning-based binary classifier. Journal of Instrumentation. 15. P10011-P10011. 10.1088/1748-0221/15/10/P10011. <https://iopscience.iop.org/article/10.1088/1748-0221/15/10/P10011>`_

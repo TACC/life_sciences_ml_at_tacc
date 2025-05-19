@@ -1,5 +1,5 @@
-Introduction to High Performance Computing
-==========================================
+Introduction to HPC
+===================
 
 High Peformance Computing (HPC) refers to the aggregation of computing resources (i.e.
 supercomputers or clusters) to achieve performance far greater than a single workstation or server.
@@ -15,7 +15,7 @@ Basic HPC System Architecture
 -----------------------------
 
 As you prepare to use TACC systems for this workshop, it is important to understand the basic
-architecture. We can think of an HPC systeam as a very large and complicated laboratory instrument.
+architecture. We can think of an HPC system as a very large and complicated laboratory instrument.
 Users need to learn how to:
 
 * Interface with it / push the right buttons (Linux)
@@ -105,6 +105,8 @@ have set up multi-factor authentication using a token app or SMS.  You can do th
    :width: 400px
    :align: center
 
+|
+
 Then clicking on your username at the top right of the page:
 
 .. image:: ./images/TACC_dashboard.png
@@ -112,6 +114,8 @@ Then clicking on your username at the top right of the page:
    :alt: TACC Dashboard
    :width: 800px
    :align: center
+
+|
 
 And selecting "Manage Account", and, under MFA Pairing, clicking to pair:
 

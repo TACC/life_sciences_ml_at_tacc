@@ -1,16 +1,14 @@
 Decision Tree and Random Forest
 ===============================
 
-In this section we introduce the Decision Tree and Random Forest classifiers. We discuss 
-general guidelines for when to use each. Finally, we show how to implement 
-Decision Tree and Random Forest classifiers using sklearn.
+In this section we introduce the Decision Tree and Random Forest classifiers. We discuss general
+guidelines for when to use each. Finally, we show how to implement Decision Tree and Random Forest
+classifiers using SciKit-Learn. By the end of this section, you should be able to:
 
-By the end of this section, students should be able to:
+* Describe how the Decision Tree and Random Forest classifier models work at a high level
+* Describe when each model is most appropriate to use (and why)
+* Implement each using the SciKit-Learn package
 
-1. Describe how the Decision Tree and Random Forest classifier models work 
-   at a high level.
-2. Describe when each model is most appropriate to use (and why).
-3. Implement each using the sklearn package. 
 
 Decision Tree
 -------------
@@ -34,7 +32,7 @@ decision rules until arriving at a leaf node. The class of the leaf node is the 
 class for the data element. 
 
 .. figure:: ./images/DT-diabetes.png
-    :width: 4000px
+    :width: 1000px
     :align: center
     :alt: Example decision tree for the Pima Indian Diabetes dataset
 
@@ -48,6 +46,7 @@ was not used to determine their prediction in this toy example.
 
 Note that in general, a decision tree can have many levels of decision nodes, and a given 
 "feature" used as part of a decision rule could be comprised of several independent variables. 
+
 
 Algorithms For Constructing Decision Trees
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -79,7 +78,8 @@ minimize it. Intuitively, we can understand that by minimizing entropy as we mov
 tree to the leave nodes, we can have more confidence in our prediction. 
 
 There are many excellent online resources that provide more details about Decision Tree 
-algorithms; see, for example, [1].
+algorithms; see, for example, [1]_.
+
 
 Decision Trees: Interpretable Results 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -105,57 +105,65 @@ ability to understand *how* ML models arrive at their results. This in turn help
 humans to build trust in the models, particularly when deployed in production settings 
 and used on novel data. 
 
-Decision Trees in Sklearn
-^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The sklearn package provides the ``DecisionTreeClassifier`` class from the 
+Decision Trees in SciKit-Learn
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The SciKit-Learn package provides the ``DecisionTreeClassifier`` class from the 
 ``sklearn.tree`` module. We will use this class to develop a decision tree model for the 
-Pima Indians diabetes dataset. See [3] for details on the ``DecisionTreeClassifier``.
+Pima Indians diabetes dataset. See the
+`SciKit-Learn docs <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier>`_
+for details on the ``DecisionTreeClassifier``.
 
 To begin, we need to import libraries, load the data, do some preprocessing and then 
 split the data into a train and test set. 
 For expediency, we simply copy the code over from the previous notebook. For 
 a detailed explanation of the steps below, see the 
-`KNN <knn.html#k-nn-in-sklearn>`_ module. 
+`KNN <knn.html#k-nn-in-sklearn>`_ section. 
 
-.. code-block:: python3 
+.. code-block:: python
 
-   # Libraries to help with reading and manipulating data
-   import numpy as np
-   import pandas as pd
-   from sklearn.model_selection import train_test_split
+   >>> # Libraries to help with reading and manipulating data
+   >>> import numpy as np
+   >>> import pandas as pd
+   >>> from sklearn.model_selection import train_test_split
 
-   data = pd.read_csv("diabetes.csv")
-   # Glucose, BMI, Insulin, Skin Thickness, Blood Pressure contains values which are 0
-   data.loc[data.Glucose == 0, 'Glucose'] = data.Glucose.median()
-   data.loc[data.BMI == 0, 'BMI'] = data.BMI.median()
-   data.loc[data.Insulin == 0, 'Insulin'] = data.Insulin.median()
-   data.loc[data.SkinThickness == 0, 'SkinThickness'] = data.SkinThickness.median()
-   data.loc[data.BloodPressure == 0, 'BloodPressure'] = data.BloodPressure.median()
+   >>> data = pd.read_csv("diabetes.csv")
+   >>> # Glucose, BMI, Insulin, Skin Thickness, Blood Pressure contains values which are 0
+   >>> data.loc[data.Glucose == 0, 'Glucose'] = data.Glucose.median()
+   >>> data.loc[data.BMI == 0, 'BMI'] = data.BMI.median()
+   >>> data.loc[data.Insulin == 0, 'Insulin'] = data.Insulin.median()
+   >>> data.loc[data.SkinThickness == 0, 'SkinThickness'] = data.SkinThickness.median()
+   >>> data.loc[data.BloodPressure == 0, 'BloodPressure'] = data.BloodPressure.median()
 
-   # x are the dependent variables and y is the target variable
-   X = data.drop('Outcome',axis=1)
-   y = data['Outcome']
+   >>> # x are the dependent variables and y is the target variable
+   >>> X = data.drop('Outcome',axis=1)
+   >>> y = data['Outcome']
 
-   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=1)
+   >>> X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=1)
+
+.. note::
+
+   The diabetes data set is available at
+   `this URL <https://raw.githubusercontent.com/joestubbs/coe379L-sp24/master/datasets/unit02/diabetes.csv>`_
 
 We are now ready to instantiate and fit our ``DecisionTreeClassifier``. Several 
 parameters may be passed, but in the code below we accept the defaults except for the 
 ``random_state`` -- this attribute controls the randomness in the training algorithm 
 enabling the results to be reproducible. 
 
-.. code-block:: python3 
+.. code-block:: python
 
    >>> from sklearn.tree import DecisionTreeClassifier
    >>> model = DecisionTreeClassifier(random_state=1).fit(X_train, y_train)
 
 We can use ``classification_report`` to get the performance:
 
-.. code-block:: python3 
+.. code-block:: python
 
-   from sklearn.metrics import classification_report
-   print(f"Performance on TEST\n*******************\n{classification_report(y_test, model.predict(X_test))}")
-   print(f"Performance on TRAIN\n********************\n{classification_report(y_train, model.predict(X_train))}")
+   >>> from sklearn.metrics import classification_report
+   >>> print(f"Performance on TEST\n*******************\n{classification_report(y_test, model.predict(X_test))}")
+   >>> print(f"Performance on TRAIN\n********************\n{classification_report(y_train, model.predict(X_train))}")
 
    Performance on TEST
    *******************
@@ -185,24 +193,24 @@ overfitting to the training data.
 There is also a ``plot_tree()`` from the ``sklearn.tree`` module that we can use to inspect 
 the tree:  
 
-.. code-block:: python3 
+.. code-block:: python
 
-   from sklearn import tree
-   tree.plot_tree(model)
+   >>> from sklearn import tree
+   >>> tree.plot_tree(model)
 
 .. figure:: ./images/Pima_DT_plot.png
-    :width: 4000px
+    :width: 1000px
     :align: center
 
 We see that the tree is rather complex and this could in part explain the overfitting. 
-
 
 
 Decision Trees: Strengths and Weaknesses 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section we discuss the strengths and weaknesses of the Decision Tree model at a 
-high level. 
+high level.
+
 
 Decision Tree Strengths
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -219,11 +227,12 @@ Decision Tree Strengths
   making them efficient to use. 
 
 .. figure:: ./images/DT_vs_linear_class_decision_boundary.png
-    :width: 4000px
+    :width: 1000px
     :align: center
     :alt: Comparison of decision boundary for example decision tree and linear classifier
 
-    Comparison of decision boundary for example decision tree and linear classifier. Citation: [1]
+    Comparison of decision boundary for example decision tree and linear classifier. Ref: [1]_
+
 
 Decision Tree Weaknesses
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -236,11 +245,10 @@ Decision Tree Weaknesses
   changes in the training data, meaning they don't generalize well. 
   As an example: if one takes a training dataset, splits it in half, and trains two trees on 
   each half, it is not uncommon for the two trees to turn out very differently. 
-* *Computational Complexity of Learning*: The learning phase for decision trees is known to be 
+* *Computational complexity of learning*: The learning phase for decision trees is known to be 
   computationally complex such that learning an optimal tree has no known efficient algorithm. 
   Existing algorithms use heuristics and other approximations, which are efficient, but may 
   result in a highly non-optimal tree. 
-
 
 
 Random Forest
@@ -248,7 +256,7 @@ Random Forest
 
 As mentioned above, decision trees tend to be relatively poor performers compared to other 
 methods. One of the major issues with decision trees is the high degree of variance relative 
-to the training data. 
+to the training data.
 
 We mentioned above that if you split a training set into two subsets and train two decision 
 trees on the two subsets you often get very different trees. That's a problem.
@@ -259,7 +267,7 @@ from a distribution, you tend to reduce the variance across the samples.
 National Public Radio conducted an experiment in 2015 where they published a photo of a cow 
 named Penelope online and asked users to guess the weight of the cow. 
 A total of 17,000 guesses were submitted, and the average guess was 1,287 pounds. 
-Penelope’s actual weight was 1,355 pounds, so the crowd got it to within 5 percent.
+Penelope's actual weight was 1,355 pounds, so the crowd got it to within 5 percent.
 
 This replicated a similar study from a 1906 county fair in England where participants guessed 
 the weight of a 1,200 pound ox. The median of all of the guesses was less than 1% off, beating 
@@ -270,14 +278,17 @@ trees based on a radnom sampling of the features, and then create a single model
 an "average" of all of the trees. 
 
 We won't go into more of the details behind the algorithms for random forest, but again, 
-there are many good online resources; for example, [2]. 
+there are many good online resources; for example, see [2]_
 
-Random Forest in Sklearn
-^^^^^^^^^^^^^^^^^^^^^^^^
 
-The sklearn package provides the ``RandomForestClassifier`` class from the 
-``sklearn.ensemble`` module. We will use this class to develop a random forest model for the 
-Pima Indians diabetes dataset. See [4] for details.
+Random Forest in SciKit-Learn
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The SciKit-Learn package provides the ``RandomForestClassifier`` class from the 
+``sklearn.ensemble`` module. We will use this section to develop a random forest model for the 
+Pima Indians diabetes dataset. See the
+`SciKit-Learn docs <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html>`__
+for details.
 
 There are some important hyperparameters for the ``RandomForestClassifier``. 
 
@@ -308,26 +319,26 @@ if nothing else is being executed at the time, set it to the total number of cor
    1 minutes to more than 10 minutes or more, depending on the hardware. On my laptop, 
    it ran in about 3 minutes. 
 
-.. code-block:: python3 
+.. code-block:: python
 
-   from sklearn.ensemble import RandomForestClassifier
-   from sklearn.model_selection import GridSearchCV
+   >>> from sklearn.ensemble import RandomForestClassifier
+   >>> from sklearn.model_selection import GridSearchCV
 
-   model = RandomForestClassifier()
-   param_grid = {
-      "n_estimators": np.arange(start=10, stop=100, step=2),
-      "max_depth": np.arange(start=2, stop=20),
-      "min_samples_leaf": np.arange(start=1, stop=5),
-      "class_weight": [{0: 0.1, 1: 0.9}, {0: 0.2, 1: 0.8}, {0: 0.3, 1: 0.7}],
-   }
+   >>> model = RandomForestClassifier()
+   >>> param_grid = {
+   >>>    "n_estimators": np.arange(start=10, stop=100, step=2),
+   >>>    "max_depth": np.arange(start=2, stop=20),
+   >>>    "min_samples_leaf": np.arange(start=1, stop=5),
+   >>>    "class_weight": [{0: 0.1, 1: 0.9}, {0: 0.2, 1: 0.8}, {0: 0.3, 1: 0.7}],
+   >>> }
 
-   gscv = GridSearchCV(model, param_grid, cv=5, n_jobs=8, scoring="recall", )
-   gscv.fit(X_train, y_train)
-   gscv.best_params_   
+   >>> gscv = GridSearchCV(model, param_grid, cv=5, n_jobs=8, scoring="recall", )
+   >>> gscv.fit(X_train, y_train)
+   >>> gscv.best_params_   
 
 The output should look similar to: 
 
-.. code-block:: bash 
+.. code-block:: text
 
    {'class_weight': {0: 0.3, 1: 0.7},
     'max_depth': 2,
@@ -339,22 +350,22 @@ If the cell is taking a long time to run on your machine, you could try
 hard-coding the ``class_weight`` to the ``{0: 0.3, 1:0.7}`` value. 
 From experimentation, this has seemed to always be optimal and will reduce your 
 search space some. (For example, on my computer it reduces the run time from 5 minutes 
-to 3 minutes).  
+to 3 minutes).
 
 We can get at the best model found use the ``best_estimator_`` attribute, as before: 
 
-.. code-block:: python3 
+.. code-block:: python
 
    >>> model = gscv.best_estimator_
 
 With this approach, we see a big improvement in recall:
 
-.. code-block:: python3 
+.. code-block:: python
    :emphasize-lines: 10, 21
 
-   from sklearn.metrics import classification_report
-   print(f"Performance on TEST\n*******************\n{classification_report(y_test, model.predict(X_test))}")
-   print(f"Performance on TRAIN\n********************\n{classification_report(y_train, model.predict(X_train))}")   
+   >>> from sklearn.metrics import classification_report
+   >>> print(f"Performance on TEST\n*******************\n{classification_report(y_test, model.predict(X_test))}")
+   >>> print(f"Performance on TRAIN\n********************\n{classification_report(y_train, model.predict(X_train))}")   
 
    Performance on TEST
    *******************
@@ -382,10 +393,17 @@ The model achieves 85% recall on the test set (and 89% on train) compared to our
 decision tree which achieved just 58% on recall. 
 
 
-References and Additional Resources
------------------------------------
+Additional Resources
+--------------------
 
-1. Lecture 14 (March 8): Decision trees; UC Berkeley CS189/289A: Introduction to Machine Learning. https://people.eecs.berkeley.edu/~jrs/189/lec/14.pdf
-2. Breiman, “Random Forests”, Machine Learning, 45(1), 5-32, 2001. *Available online:* https://link.springer.com/article/10.1023/A:1010933404324
-3. Decision Tree Classifier in SKlearn. https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier
-4. Random Forest Classifier in SKlearn. https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
+* Adapted from: 
+  `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
+* `SciKit-Learn: DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html#sklearn.tree.DecisionTreeClassifier>`_
+* `SciKit-Learn: RandomForestClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html>`_
+
+
+References
+^^^^^^^^^^
+
+.. [1] `Lecture 14 (March 8): Decision trees; UC Berkeley CS189/289A: Introduction to Machine Learning. <https://people.eecs.berkeley.edu/~jrs/189/lec/14.pdf>`_ 
+.. [2] `Breiman, “Random Forests”, Machine Learning, 45(1), 5-32, 2001. <https://link.springer.com/article/10.1023/A:1010933404324>`_

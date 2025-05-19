@@ -6,19 +6,19 @@ For this exercise, we will use the `Mushroom dataset from the Audobon Society Fi
 This dataset includes 22 physical characteristics of ~8,000 mushrooms spanning 23 species of gilled mushrooms in the Agaricus and Lepiota Family.
 Our task is to predict whether a mushroom is edible or poisonous based on its physical characteristics.
 
-By the end of this excercise participants will be able to:
+By the end of this exercise, you should be able to:
 
-1. Import the Mushroom dataset from the UCI Machine Learning Repository.
-2. Examine and preprocess the data to be fed to the neural network.
-3. Build a sequential model neural network using TensorFlow Keras.
-4. Evaluate the model's performance on test data.
-
+* Import the Mushroom dataset from the UCI Machine Learning Repository
+* Examine and preprocess the data to be fed to the neural network
+* Build a sequential model neural network using TensorFlow Keras
+* Evaluate the model's performance on test data
 
 
 TensorFlow and Keras Fundamentals
 ---------------------------------
 
 Before we dive into the hands-on exercise, let's briefly introduce the tools we'll be using.
+
 
 TensorFlow and Keras
 ^^^^^^^^^^^^^^^^^^^^
@@ -37,22 +37,26 @@ At its core, TensorFlow uses multi-dimensional arrays called *tensors* to repres
 * Outputs (predictions from the model)
 
 .. list-table:: Common Tensor Types
-    :widths: 25 35 30
+    :widths: 20 27 15 30
     :align: center
     :header-rows: 1
 
     * - **Tensor Type**
       - **Example**
       - **Shape**
+      - **Description**
     * - **Scalar (Rank-0)**
       - ``5``
       - ``()``
+      - A single number. No dimensions.
     * - **Vector (Rank-1)**
       - ``[1, 2, 3]``
       - ``(3,)``
+      - A list of three numbers.
     * - **Matrix (Rank-2)**
       - ``[[1, 2, 3], [4, 5, 6]]``
       - ``(2, 3)``
+      - A table of numbers with 2 rows and 3 columns. 
 
 
 `Keras <https://www.tensorflow.org/guide/keras>`_ is the high-level API of the TensorFlow platform. 
@@ -60,6 +64,7 @@ It provides a simple and intuitive way to define neural network architectures, a
 
 Keras simplifies every step of the machine learning workflow, including data preprocessing, model building, training, and deployment.
 Unless you're developing custom tools on top of TensorFlow, you should use Keras as your default API for deep learning tasks. 
+
 
 Building Models with Keras
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -75,15 +80,16 @@ The basic workflow we'll follow is:
 
 Here's a preview of what our model code will look like:
 
-.. code-block:: python3
+.. code-block:: python
+    :linenos:
 
-    from tensorflow.keras.models import Sequential
+    from tensorflow.keras import Sequential
     from tensorflow.keras.layers import Input, Dense
 
     # 1. Define the model architecture
     model = Sequential([
         Input(shape=(number_of_features,)),    # Input layer matching our feature count
-        Dense(units=10, activation='relu'),    # Hidden layer with 10 neurons
+        Dense(units=10, activation='relu'),    # Hidden layer with 10 perceptrons
         Dense(units=1, activation='sigmoid')   # Outputs a probability between 0 and 1
     ])
 
@@ -120,7 +126,33 @@ Tutorial Setup and Materials
 
 All materials and instructions for running this tutorial in the `TACC Analysis Portal <https://tap.tacc.utexas.edu/>`_ are available in our GitHub repository: `TACC Deep Learning Tutorials <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_.
 
-Step 1: Importing and examining the data
+Step 0: Check GPU Availability and TensorFlow Version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before training deep learning models, it's important to check whether TensorFlow can access the GPU on your machine. Training on a GPU is significantly faster than on a CPU, especially for large image datasets. 
+
+If you've followed the setup instructions in the `TACC Deep Learning Tutorials README <https://github.com/kbeavers/tacc-deep-learning-tutorials>`_, and you've run the ``install_kernel.sh`` script on **Frontera**, you should now be running this notebook inside a containerized Jupyter kernel that includes:
+
+ - TensorFlow v. 2.13.0 with GPU support
+ - CUDA libraries compatible with the system
+ - All required Python packages pre-installed
+
+This cell will confirm that your environment is correctly configured (TIP: Make sure you change your kernel to ``Day3-tf-213``).
+
+.. code-block:: python
+
+    >>> import tensorflow as tf
+    >>> print(tf.config.list_physical_devices('GPU'))
+
+.. code-block:: text
+
+    Devices: [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU'),
+    PhysicalDevice(name='/physical_device:GPU:1', device_type='GPU'),
+    PhysicalDevice(name='/physical_device:GPU:2', device_type='GPU'),
+    PhysicalDevice(name='/physical_device:GPU:3', device_type='GPU')]
+
+
+Step 1: Importing and Examining the Data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Mushroom dataset is available in the University of California, Irvine Machine Learning Repository, which is a popular repository for machine learning datasets.
@@ -128,45 +160,41 @@ Conveniently, the ``ucimlrepo`` Python package provides a simple interface to do
 
 First, we will import the Mushroom dataset using the ``ucimlrepo`` package:
 
-.. code-block:: python3
+.. code-block:: python
 
-    import pandas as pd
-    import random
-    from ucimlrepo import fetch_ucirepo 
+    >>> import pandas as pd
+    >>> from ucimlrepo import fetch_ucirepo 
 
-    # Set seed for reproducibility
-    random.seed(123)
-
-    # fetch dataset 
-    mushroom = fetch_ucirepo(id=73) 
+    >>> # fetch dataset 
+    >>> mushroom = fetch_ucirepo(id=73) 
 
 Let's inspect the metadata:
 
-.. code-block:: python3
+.. code-block:: python
 
-    print("Dataset Overview:", mushroom.metadata.abstract)
-    print("Number of Instances:", mushroom.metadata.num_instances)
-    print("Number of Features:", mushroom.metadata.num_features)
-    print("Has Missing Values:", mushroom.metadata.has_missing_values)
+    >>> print("Dataset Overview:", mushroom.metadata.abstract)
+    >>> print("Number of Instances:", mushroom.metadata.num_instances)
+    >>> print("Number of Features:", mushroom.metadata.num_features)
+    >>> print("Has Missing Values:", mushroom.metadata.has_missing_values)
 
-.. code-block:: python-console
+.. code-block:: text
 
-    # Dataset Overview: From Audobon Society Field Guide; mushrooms described in terms of physical characteristics; classification: poisonous or edible
-    # Number of Instances: 8124
-    # Number of Features: 22
-    # Has Missing Values: yes
+    Dataset Overview: From Audobon Society Field Guide; mushrooms described in terms of physical characteristics; classification: poisonous or edible
+    Number of Instances: 8124
+    Number of Features: 22
+    Has Missing Values: yes
 
 We know that the Mushroom dataset has 8124 instances (samples) and 22 features (physical characteristics), and there are missing values in the dataset.
 Now that we have loaded the dataset, let's separate the features (``X``) from the target variable and examine the structure of our feature data.
 
-.. code-block:: python3
+.. code-block:: python
 
-    X = mushroom.data.features
-    print(X.info())
+    >>> X = mushroom.data.features
+    >>> print(X.info())
 
 Examine the outout of ``X.info()``:
 
-.. code-block:: python-console
+.. code-block:: text
 
     <class 'pandas.core.frame.DataFrame'>
     RangeIndex: 8124 entries, 0 to 8123
@@ -201,14 +229,14 @@ Examine the outout of ``X.info()``:
 
 Next, let's isolate and examine our target variable ``y``:
 
-.. code-block:: python3
+.. code-block:: python
 
-    y = mushroom.data.targets 
-    print(y.info())
+    >>> y = mushroom.data.targets 
+    >>> print(y.info())
 
 Examine the outout of ``y.info()``:
 
-.. code-block:: python-console
+.. code-block:: text
 
     <class 'pandas.core.frame.DataFrame'>
     RangeIndex: 8124 entries, 0 to 8123
@@ -221,15 +249,16 @@ Examine the outout of ``y.info()``:
     None
 
 In pandas, a Dtype (data type) specifies how the data in a column should be stored and interpreted.
-**See Day 1 for more information on Dtypes.** 
+See the section on `Exploratory Data Analysis (EDA) <../section1/exploratory_data_analysis.html>`_
+for more information on Dtypes.
 
 When we see a Dtype of ``object``, it typically means the column contains strings or a mix of different data types. Let's examine our data further:
 
-.. code-block:: python3
+.. code-block:: python
 
-    print(X.head(3))
+    >>> print(X.head(3))
 
-.. code-block:: python-console
+.. code-block:: text
 
       cap-shape cap-surface cap-color bruises odor gill-attachment gill-spacing  \
     0         x           s         n       t    p               f            c   
@@ -264,14 +293,13 @@ Here are a few examples of the categorical encodings:
  * **cap-color**: 'n' (brown), 'y' (yellow), 'w' (white), etc.
  * **odor**: 'p' (pungent), 'a' (almond), 'l' (anise), etc.
 
-
 Next, let's take a look at the target variable:
 
-.. code-block:: python3
+.. code-block:: python
 
-    print(y.head())
+    >>> print(y.head())
 
-.. code-block:: python-console
+.. code-block:: text
 
       poisonous
     0         p
@@ -283,11 +311,10 @@ Next, let's take a look at the target variable:
 The target variable contains two categorical labels: ``p`` (poisonous) and ``e`` (edible).
 With this insight into our dataset's structure, our next step is to prepare the data for model training.
 
-
 **Thought Challenge:** What are some things that you have noticed about the data that you think we will need to fix before feeding it to the neural network? Pause here and write down your thoughts before continuing.
 
 
-Step 2: Data pre-processing
+Step 2: Data Pre-processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Our exploration of the Mushroom dataset reveals a collection of 8124 samples with 22 features and a single target variable. Before proceeding with model development, several preprocessing challenges need to be addressed:
@@ -298,13 +325,13 @@ Our exploration of the Mushroom dataset reveals a collection of 8124 samples wit
 
 First, let's handle the missing values. Let's see how many missing values are in the dataset, and where they are located:
 
-.. code-block:: python3
+.. code-block:: python
 
-    missing_values = X.isnull().sum()
-    print("Columns with missing values:")
-    print(missing_values[missing_values > 0])
+    >>> missing_values = X.isnull().sum()
+    >>> print("Columns with missing values:")
+    >>> print(missing_values[missing_values > 0])
 
-.. code-block:: python-console
+.. code-block:: text
     
     Columns with missing values:
     stalk-root    2480
@@ -313,18 +340,18 @@ First, let's handle the missing values. Let's see how many missing values are in
 The output shows that ``stalk-root`` is missing data for 2480 samples, while all other features have complete data.
 Let's remove this column from the dataset:
 
-.. code-block:: python3
+.. code-block:: python
 
-    X_clean = X.drop(columns='stalk-root')
+    >>> X_clean = X.drop(columns=['stalk-root'])
     
 Now we need to encode our categorical variables into a format suitable for the neural network. We'll use one-hot encoding via ``pd.get_dummies()`` to transform each categorical feature into multiple binary columns. For example, if a feature has three possible values (A, B, C), it will be converted into three separate columns, where only one column will have a value of 1 (True) and the others 0 (False):
 
-.. code-block:: python3
+.. code-block:: python
 
-    X_encoded = pd.get_dummies(X_clean)
-    print(X_encoded.head(2))
+    >>> X_encoded = pd.get_dummies(X_clean)
+    >>> print(X_encoded.head(2))
 
-.. code-block:: python-console
+.. code-block:: text
 
        cap-shape_b  cap-shape_c  cap-shape_f  cap-shape_k  cap-shape_s  \
     0        False        False        False        False        False   
@@ -349,45 +376,47 @@ Now, instead of having 22 features, we have 112 features, each representing a bi
 Finally, let's encode the target variable. We will simply convert the string labels ``p`` and ``e`` into binary numeric values of 1 and 0, respectively.
 In this case, 1 will represent a poisonous mushroom and 0 will represent an edible mushroom.
 
-.. code-block:: python3
+.. code-block:: python
 
-    y_encoded = y['poisonous'].map({'p': 1, 'e': 0})
+    >>> y_encoded = y['poisonous'].map({'p': 1, 'e': 0})
 
 Now would be a good time to check the class distribution of our dataset:
 
 .. code-block:: python3
 
-    print("\nClass Distribution:")
-    print(y_encoded.value_counts())
-    print("\nPercentage:")
-    print(y_encoded.value_counts(normalize=True) * 100)
+    >>> print("\nClass Distribution:")
+    >>> print(y_encoded.value_counts())
+    >>> print("\nPercentage:")
+    >>> print(y_encoded.value_counts(normalize=True) * 100)
 
 We have a roughly balanced dataset with 51.8% of the samples being edible and 48.2% being poisonous.
 We can now split the dataset into training and test sets:
 
-.. code-block:: python3
+.. code-block:: python
 
-    from sklearn.model_selection import train_test_split
+    >>> from sklearn.model_selection import train_test_split
 
-    # Split the dataset into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_encoded,
-        y_encoded,
-        test_size=0.3,
-        stratify=y_encoded,
-        random_state=123
-    )
+    >>> # Split the dataset into training and testing sets
+    >>> X_train, X_test, y_train, y_test = train_test_split(
+    >>>     X_encoded,
+    >>>     y_encoded,
+    >>>     test_size=0.3,
+    >>>     stratify=y_encoded,
+    >>>     random_state=123
+    >>> )
 
-    # Examine the shape of the training and testing sets
-    print("Training set shape:", X_train.shape, y_train.shape)
-    print("Testing set shape:", X_test.shape, y_test.shape)
+    >>> # Examine the shape of the training and testing sets
+    >>> print("Training set shape:", X_train.shape, y_train.shape)
+    >>> print("Testing set shape:", X_test.shape, y_test.shape)
 
 .. code-block:: python-console
 
     Training set shape: (5686, 112) (5686,)
     Testing set shape: (2438, 112) (2438,)
 
-**Understanding the Train-Test Split**
+
+Understanding the Train-Test Split
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The code above divides our data into training and testing sets, creating four objects:
 ``X_train``, ``X_test``, ``y_train``, and ``y_test``.
@@ -405,94 +434,111 @@ The code above divides our data into training and testing sets, creating four ob
    * - ``stratify``
      - Maintains the same class distribution in both splits
      - Ensures balanced representation of poisonous/edible classes
-   * - ``random_state``
-     - Controls the randomization for reproducible results
-     - Set to 123 for consistent splits across runs
 
-**Why These Parameters Matter:**
+
+Why These Parameters Matter:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Test Size**: Finding the right balance between having enough data for training while reserving sufficient data for testing is crucial. Too little test data may not reliably assess model performance; too little training data may limit learning.
 
 * **Stratification**: When working with classification problems, maintaining class proportions is essential. Without stratification, you might accidentally create a test set with disproportionate class representation, leading to misleading evaluation metrics.
 
-* **Reproducibility**: Setting a random seed ensures you can reproduce your experiments exactly, which is fundamental for scientific rigor and debugging.
+.. tip::
+  
+    While our dataset has roughly balanced classes, stratification becomes especially important with
+    imbalanced datasets. Always consider using ``stratify`` as a best practice.
 
-**Tip**: While our dataset has roughly balanced classes, stratification becomes especially important with imbalanced datasets. Always consider using ``stratify`` as a best practice.
 
-
-Step 3: Building a sequential model neural network 
+Step 3: Building a Sequential Model Neural Network 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now we'll create a simple neural network for our mushroom classification task. The model will consist of:
 
 - An **input layer** that matches our feature dimensions
-- A **hidden layer** with 10 neurons and ReLU activation
+- A **hidden layer** with 10 perceptrons and ReLU activation
 - An **output layer** with sigmoid activation for binary classification
 
 This architecture provides a good starting point for understanding how neural networks learn from tabular data.
 
+.. code-block:: python
 
-.. code-block:: python3
+    >>> # Import necessary libraries from TensorFlow
+    >>> import tensorflow as tf
+    >>> from tensorflow.keras import Sequential
+    >>> from tensorflow.keras.layers import Input, Dense
 
-    # Import necessary libraries from Keras
-    import tensorflow as tf
-    from tensorflow.keras import Sequential
-    from tensorflow.keras.layers import Input, Dense
+    >>> # Create model with sequential API
+    >>> model = Sequential([
+    >>>     # Input layer - shape matches our feature count
+    >>>     Input(shape=(112,)),  # 1D tensor with 112 features
+    >>>     
+    >>>     # Hidden layer - 10 perceptrons with ReLU activation
+    >>>     # ReLU allows the network to learn non-linear patterns
+    >>>     Dense(10, activation='relu'),
+    >>>     
+    >>>     # Output layer - single perceptron with sigmoid activation
+    >>>     # Sigmoid squashes output between 0-1, perfect for binary classification
+    >>>     Dense(1, activation='sigmoid')
+    >>> ])
 
-    # Set random seed for reproducibility
-    tf.random.set_seed(123) 
+    >>> # Compile the model with appropriate settings for binary classification
+    >>> model.compile(
+    >>>     optimizer='adam',              # Adam: efficient gradient-based optimizer
+    >>>     loss='binary_crossentropy',    # Standard loss function for binary problems
+    >>>     metrics=['accuracy']           # ßTrack accuracy during training
+    >>> )
 
-    # Create model with sequential API
-    model = Sequential([
-        # Input layer - shape matches our feature count
-        Input(shape=(112,)),  # 1D tensor with 112 features
-        
-        # Hidden layer - 10 neurons with ReLU activation
-        # ReLU allows the network to learn non-linear patterns
-        Dense(10, activation='relu'),
-        
-        # Output layer - single neuron with sigmoid activation
-        # Sigmoid squashes output between 0-1, perfect for binary classification
-        Dense(1, activation='sigmoid')
-    ])
+    >>> # Display model architecture and parameter count
+    >>> model.summary()
 
-    # Compile the model with appropriate settings for binary classification
-    model.compile(
-        optimizer='adam',              # Adam: efficient gradient-based optimizer
-        loss='binary_crossentropy',    # Standard loss function for binary problems
-        metrics=['accuracy']           # Track accuracy during training
-    )
+For fully connected layers, the number of trainable parameters can be calculated with the following formula:
 
-    # Display model architecture and parameter count
-    model.summary()
-  
-**Thought Challenge**: How many parameters does the model have? Can you calculate this manually and get the same result?
+.. math:: 
+
+  \text{Parameters} = (\text{Input units} \times \text{Output units}) + \text{Output units}
+
+Let's understand what each part means:
+
+ 1. **Weights**: ``Input units x Output units``
+   Each Input unit connects to each Output unit, so there's one weight per connection. This forms a weight matrix of shape ``(Input units, Output units)``. 
+
+ 2. **Biases**: ``+ Output units``
+   Each output perceptron has one bias term, regardless of the number of Input units. So the total number of bias terms is equal to the number of Output units. 
+
+
+**Thought Challenge**: 
+
+How many parameters does the model have? Can you calculate this manually and get the same result?
 
 .. toggle:: Click to see the answer
 
-      Let's calculate the parameters manually:
-      
-      **Layer 1** (Input → Hidden):
+    Let's calculate the parameters manually:
 
-      - Input size: ``X_train.shape[1]`` (112 features after one-hot encoding)
-      - Output size: 10 neurons
-      - Weights: 112 × 10 = 1120 parameters
-      - Biases: 10 (one per neuron)
-      - Total for Layer 1: 1120 + 10 = 1130 parameters
-      
-      **Layer 2** (Hidden → Output):
+    **Layer 1** (Input -> Hidden):
 
-      - Input size: 10 neurons
-      - Output size: 1 neuron
-      - Weights: 10 × 1 = 10 parameters
-      - Biases: 1 (for the output neuron)
-      - Total for Layer 2: 10 + 1 = 11 parameters
-      
-      **Total parameters**: 1130 + 11 = 1141 parameters
-      
-      This should match the parameter count shown in the model.summary() output. Each neuron has weights for all inputs from the previous layer, plus one bias term.
+    - Input Units: ``X_train.shape[1]`` (112 features after one-hot encoding)
+    - Output Units: 10 perceptrons
+  
+    - Weights: 112 x 10 = 1120 parameters
+    - Biases: 10 (one per Output unit (perceptrons in the next layer))
+    - Total for Layer 1: 1120 + 10 = 1130 parameters
 
-**Training the Neural Network**
+    **Layer 2** (Hidden -> Output):
+
+    - Input Units: 10 perceptrons
+    - Output Units: 1 perceptron
+  
+    - Weights: 10 × 1 = 10 parameters
+    - Biases: 1 (one per Output unit)
+    - Total for Layer 2: 10 + 1 = 11 parameters
+
+    **Total parameters**: 1130 + 11 = 1141 parameters
+
+    This should match the parameter count shown in the model.summary() output.
+
+
+Training the Neural Network
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 With our model built and compiled, we can now train it on our data. Before executing the training code, let's understand the key parameters we'll use:
 
@@ -515,34 +561,34 @@ With our model built and compiled, we can now train it on our data. Before execu
 
 .. toggle:: Click to see the answer
 
-      The ``batch_size`` parameter determines how many samples the model processes before updating its weights.
-      
-      **Effects of batch size:**
-      
-      - **Small batch sizes** (e.g., 8-32):
-        - Use less memory
-        - Update weights more frequently
-        - Can help the model escape local minima
-        - May make training slower overall
-      
-      - **Large batch sizes** (e.g., 128-512):
-        - More efficient use of GPU/CPU
-        - More stable training (less "noisy" updates)
-        - Require more memory
-        - May get stuck in poor solutions
-      
-      The batch size of 32 in our example is relatively small, which is good for learning complex patterns in modest-sized datasets.
+    The ``batch_size`` parameter determines how many samples the model processes before updating its weights.
+    
+    **Effects of batch size:**
+    
+    - **Small batch sizes** (e.g., 8-32):
+      - Use less memory
+      - Update weights more frequently
+      - Can help the model escape local minima
+      - May make training slower overall
+    
+    - **Large batch sizes** (e.g., 128-512):
+      - More efficient use of GPU/CPU
+      - More stable training (less "noisy" updates)
+      - Require more memory
+      - May get stuck in poor solutions
+    
+    The batch size of 32 in our example is relatively small, which is good for learning complex patterns in modest-sized datasets.
 
 Now let's train our model with these parameters:
 
-.. code-block:: python3
+.. code-block:: python
 
-    # Train the model with the specified parameters
-    model.fit(X_train, y_train, validation_split=0.2, epochs=5, batch_size=32, verbose=2)
+    >>> # Train the model with the specified parameters
+    >>> model.fit(X_train, y_train, validation_split=0.2, epochs=5, batch_size=32, verbose=2)
 
 Below shows the output of the training process:
 
-.. code-block:: python-console
+.. code-block:: text
 
     Epoch 1/5
     143/143 - 0s - 3ms/step - accuracy: 0.8709 - loss: 0.3543 - val_accuracy: 0.9569 - val_loss: 0.1458
@@ -581,59 +627,61 @@ Looking at our training results after 5 epochs, we can observe:
 
 Let's visualize our training progress before moving on:
 
-.. code-block:: python3
+.. code-block:: python
 
-    import matplotlib.pyplot as plt
+    >>> import matplotlib.pyplot as plt
     
-    # Create a simple visualization of training history
-    plt.figure(figsize=(10, 4))
+    >>> # Create a simple visualization of training history
+    >>> plt.figure(figsize=(10, 4))
     
-    # Plot training & validation accuracy
-    plt.subplot(1, 2, 1)
-    plt.plot([0.8709, 0.9776, 0.9894, 0.9949, 0.9985], label='Training Accuracy')
-    plt.plot([0.9569, 0.9851, 0.9938, 0.9982, 0.9982], label='Validation Accuracy')
-    plt.title('Model Accuracy')
-    plt.ylabel('Accuracy')
-    plt.xlabel('Epoch')
-    plt.legend()
+    >>> # Plot training & validation accuracy
+    >>> plt.subplot(1, 2, 1)
+    >>> plt.plot([0.8709, 0.9776, 0.9894, 0.9949, 0.9985], label='Training Accuracy')
+    >>> plt.plot([0.9569, 0.9851, 0.9938, 0.9982, 0.9982], label='Validation Accuracy')
+    >>> plt.title('Model Accuracy')
+    >>> plt.ylabel('Accuracy')
+    >>> plt.xlabel('Epoch')
+    >>> plt.legend()
 
-    # Plot training & validation loss
-    plt.subplot(1, 2, 2)
-    plt.plot([0.3543, 0.0964, 0.0481, 0.0288, 0.0186], label='Training Loss')
-    plt.plot([0.1458, 0.0638, 0.0364, 0.0230, 0.0157], label='Validation Loss')
-    plt.title('Model Loss')
-    plt.ylabel('Loss')
-    plt.xlabel('Epoch')
-    plt.legend()
+    >>> # Plot training & validation loss
+    >>> plt.subplot(1, 2, 2)
+    >>> plt.plot([0.3543, 0.0964, 0.0481, 0.0288, 0.0186], label='Training Loss')
+    >>> plt.plot([0.1458, 0.0638, 0.0364, 0.0230, 0.0157], label='Validation Loss')
+    >>> plt.title('Model Loss')
+    >>> plt.ylabel('Loss')
+    >>> plt.xlabel('Epoch')
+    >>> plt.legend()
     
-    plt.tight_layout()
-    plt.show()
+    >>> plt.tight_layout()
+    >>> plt.show()
 
 .. figure:: ./images/mushroom-training-progress.png
     :width: 600px
     :align: center
     :alt: Training and validation metrics over epochs
 
+|
+
 This high performance is promising, but we should verify it on our completely separate test set, which the model has never seen during training. This will give us the most reliable measure of how well our model might perform in real-world scenarios.
 
 
-Step 4: Evaluate the model's performance on test data
+Step 4: Evaluate the Model's Performance on Test Data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The true test of our model's capabilities comes from evaluating it on our completely separate test dataset. Let's see how our neural network performs when classifying mushrooms it has never encountered before!
 
-.. code-block:: python3
+.. code-block:: python
 
-    # Make predictions on the test data
-    y_pred=model.predict(X_test)
+    >>> # Make predictions on the test data
+    >>> y_pred=model.predict(X_test)
 
 For a binary classification problem like our (poisonous vs edible), the model outputs probabilities between 0 and 1 for each sample. Let's show the first sample's prediction:
 
-.. code-block:: python3
+.. code-block:: python
 
-    y_pred[0]
+    >>> y_pred[0]
 
-.. code-block:: python-console
+.. code-block:: text
     
     array([0.00309971], dtype=float32)
 
@@ -647,12 +695,12 @@ For example, our output value is 0.00309971, which means that the model is 99.99
 
 The model outputs probability values, but for practical mushroom classification, we need definitive "edible" or "poisonous" predictions. We need to convert these continuous probability values into discrete class labels:
 
-.. code-block:: python3
+.. code-block:: python
 
-    import numpy as np
+    >>> import numpy as np
     
-    # Convert probabilities to binary predictions using a threshold of 0.5
-    y_pred_final = (y_pred > 0.5).astype(int)
+    >>> # Convert probabilities to binary predictions using a threshold of 0.5
+    >>> y_pred_final = (y_pred > 0.5).astype(int)
     
 This code performs what's called "thresholding":
 
@@ -668,25 +716,23 @@ This code performs what's called "thresholding":
 
 The 0.5 threshold represents the decision boundary - the point where the model is equally confident in either class. We could adjust this threshold if we wanted to be more conservative about certain types of errors (e.g., lowering the threshold would classify more mushrooms as poisonous, reducing the chance of missing toxic ones).
 
-
 Now, let's visualize the model's prediction accuracy with a **confusion matrix**. 
 This will allow us to see how many correct vs incorrect predictions were made using the model above.
 
+.. code-block:: python
 
-.. code-block:: python3
+    >>> from sklearn.metrics import confusion_matrix
+    >>> import seaborn as sns
 
-    from sklearn.metrics import confusion_matrix
-    import seaborn as sns
+    >>> # Create confusion matrix
+    >>> cm=confusion_matrix(y_test,y_pred_final)
 
-    # Create confusion matrix
-    cm=confusion_matrix(y_test,y_pred_final)
-
-    # Create visualization
-    plt.figure(figsize=(10,7))          # Set figure size to 10x7 inches
-    sns.heatmap(cm,annot=True,fmt='d')  # Create heatmap with annotations and display counts as integers
-    plt.xlabel('Predicted')             # Label x-axis as 'Predicted'
-    plt.ylabel('Truth')                 # Label y-axis as 'Truth'
-    plt.show()                          # Display the plot
+    >>> # Create visualization
+    >>> plt.figure(figsize=(10,7))          # Set figure size to 10x7 inches
+    >>> sns.heatmap(cm,annot=True,fmt='d')  # Create heatmap with annotations and display counts as integers
+    >>> plt.xlabel('Predicted')             # Label x-axis as 'Predicted'
+    >>> plt.ylabel('Truth')                 # Label y-axis as 'Truth'
+    >>> plt.show()                          # Display the plot
 
 Output of the above confusion matrix is as follows:
 
@@ -709,7 +755,9 @@ Reading the matrix:
 * **Bottom-left**: False Negatives (FN) - Poisonous mushrooms incorrectly classified as edible
 * **Bottom-right**: True Positives (TP) - Correctly identified poisonous mushrooms 
 
-**Key Classification Metrics**
+
+Key Classification Metrics
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 From these confusion matrix values, we can calculate several important evaluation metrics:
 
@@ -747,11 +795,10 @@ From these confusion matrix values, we can calculate several important evaluatio
 
 Let's also print the full classification report of this model using code below
 
-.. code-block:: python3
+.. code-block:: python
 
-    from sklearn.metrics import classification_report
-
-    print(classification_report(y_test,y_pred_final, digits=4))
+    >>> from sklearn.metrics import classification_report
+    >>> print(classification_report(y_test,y_pred_final, digits=4))
 
 .. code-block:: python-console
 
@@ -765,8 +812,7 @@ Let's also print the full classification report of this model using code below
  weighted avg     0.9980    0.9979    0.9979      2438
 
 
-The accuracy of our model is 99.79%.
-99.79% of the time, this model predicted the correct label on the test data.
+The accuracy of our model is 99.79%, so 99.79% of the time, this model predicted the correct label on the test data.
 
 **Thought Challenge**: Did we build a successful model? Why or why not? Is there anything we can do to improve the model?
 
@@ -774,7 +820,7 @@ The accuracy of our model is 99.79%.
 
     **Did we build a successful model?**
     
-    Yes, by standard performance metrics, our model is remarkably successful:
+    By standard performance metrics, our model is remarkably successful:
     
     * Accuracy of 99.79% on the test set
     * Recall of 99.66% for poisonous mushrooms
@@ -784,13 +830,12 @@ The accuracy of our model is 99.79%.
     **Why it's successful:**
     
     * The model efficiently learned the patterns distinguishing edible from poisonous mushrooms
-    * Our preprocessing strategies (handling missing values, one-hot encoding) were effective
     * The architecture, despite being simple (just one hidden layer), was sufficient for this task
     * The dataset is well-structured with clear categorical features that strongly correlate with mushroom edibility
     
     **However, there are important considerations:**
     
-    In a real-world mushroom classification system, even our 99.66% recall means that approximately 4 out of 1175 poisonous mushrooms were misclassified as edible. For a life-critical application like mushroom toxicity detection, this error rate might still be too high.
+    In a real-world mushroom classification system, even our 99.66% recall means that approximately 4 out of 1175 poisonous mushrooms were misclassified as edible. For a life-critical application like mushroom toxicity detection, this error rate is still too high. 
     
     **Potential improvements:**
     
@@ -807,3 +852,14 @@ The accuracy of our model is 99.79%.
     **Real-world deployment considerations:**
     
     Even with an improved model, it would be ethically questionable to deploy such a system as the sole decision-maker for mushroom consumption. It should be presented as a tool to assist experts rather than replace human judgment, especially for life-critical decisions.
+
+
+Additional Resources
+--------------------
+
+* Adapted from: 
+  `COE 379L: Software Design For Responsible Intelligent Systems <https://coe-379l-sp24.readthedocs.io/en/latest/index.html>`_
+* `Mushroom dataset from the Audobon Society Field Guide <https://archive.ics.uci.edu/dataset/73/mushroom>`_
+* `Tensorflow <https://www.tensorflow.org/>`_
+* `Keras Guide <https://www.tensorflow.org/guide/keras>`_
+* `Keras Sequential Model <https://www.tensorflow.org/guide/keras/sequential_model>`_

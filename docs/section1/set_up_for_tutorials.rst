@@ -1,25 +1,22 @@
 Set up for Tutorials
 ====================
 
-Set up for Deep Learning Tutorial
----------------------------------
+This section provides instructions for setting up the environment and gathering the correct files 
+for two hands-on tutorials.
 
-This repository contains hands-on tutorials and materials that accompany
-the `Deep Learning
-section <https://life-sciences-ml-at-tacc.readthedocs.io/en/latest/section3/overview.html>`__
-of the Life Sciences Machine Learning Institute at the `Texas Advanced
-Computing Center (TACC) <https://tacc.utexas.edu/>`__.
 
-.. _1-accessing-frontera:
+Set Up For Frontera
+------------------- 
 
-1. Accessing Frontera
-^^^^^^^^^^^^^^^^^^^^^
 
-Log into Frontera using SSH:
+Step 1. Log in to Frontera
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: bash
+Log in to Frontera using SSH:
 
-   ssh username@frontera.tacc.utexas.edu
+.. code:: console
+
+   [local]$ ssh username@frontera.tacc.utexas.edu
    (username@frontera.tacc.utexas.edu) Password: 
    (username@frontera.tacc.utexas.edu) TACC Token Code:
 
@@ -28,293 +25,270 @@ Log into Frontera using SSH:
    # Texas Advanced Computing Center, The University of Texas at Austin
    # ------------------------------------------------------------------------------
 
-.. _2-getting-the-tutorial-materials:
 
-2. Getting the Tutorial Materials
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 2. Gather the Tutorial Materials
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Navigate to your scratch directory and clone this tutorial repository:
 
-.. code:: bash
+.. code:: console
 
-   cds # shortcut for cd #SCRATCH
-   git clone https://github.com/kbeavers/tacc-deep-learning-tutorials.git
+   [frontera]$ cds # shortcut for cd $SCRATCH
+   [frontera]$ git clone https://github.com/kbeavers/tacc-deep-learning-tutorials
 
-.. _3-environment-setup:
 
-3. Environment Setup
-^^^^^^^^^^^^^^^^^^^^
+Step 3. Set up Environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. _a-start-an-interactive-session:
+Start an interactive session on a development node, then run the setup script.
 
-a. Start an Interactive Session
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code:: console
 
-.. code:: bash
+   [frontera]$ cds
+   [frontera]$ idev -m 20
+   ...
+   [clx]$ # You are now in an interactive session on a compute node
 
-   cds
-   idev -m 20
-
-.. _b-set-up-the-container-environment:
-
-b. Set up the Container Environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: bash
+.. code:: console
 
    # Load the Apptainer module
-   module load tacc-apptainer
+   [clx]$ module load tacc-apptainer
 
    # Pull the Docker container image created for this tutorial
-   apptainer pull docker://kbeavers/tf-213:frontera
+   [clx]$ apptainer pull docker://kbeavers/tf-213:frontera
 
    # Run the kernel setup script
-   cd tacc-deep-learning-tutorials
-   bash ./scripts/install_kernel.sh
+   [clx]$ cd tacc-deep-learning-tutorials/
+   [clx]$ bash ./scripts/install_kernel.sh
 
-.. _4-dataset-preparation:
 
-4. Dataset Preparation
+Step 4. Dataset Preparation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Extract the provided coral species image dataset.
+
+.. code:: console
+
+   [clx]$ bash ./scripts/download_dataset.sh
+
+
+Step 5. Copy the Notebooks
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Copy the tutorial notebooks to your home directory. These notebooks are provided as blank templates
+for you to fill in as you work through the exercises.
+
+.. code:: console
+
+   [clx]$ cp ./tutorials/Mushroom-ANN-tutorial.ipynb $HOME/
+   [clx]$ cp ./tutorials/Coral-CNN-tutorial.ipynb $HOME/
+
+At this point, you should log out of the interactive session.
+
+.. code:: console
+
+   [clx]$ logout
+   ...
+   [frontera]$ # You are now back on the Frontera login node
+
+
+Step 6. Launch Jupyter
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Extract the provided coral species image dataset
+Log in to the `TACC Analysis Portal <https://tap.tacc.utexas.edu/jobs/>`_ and configure your session
+as follows:
 
-.. code:: bash
+* **System:** Frontera
+* **Application:** Jupyter Notebook
+* **Project:** Frontera-Training
+* **Queue:** rtx
+* **Job Name:** DL-Training
+* **Time Limit:** 2:0:0
+* **Reservation:** LSC-ML-Institute-May19
 
-   bash ./scripts/download_dataset.sh
+.. warning::
 
-.. _5-launching-the-tutorial:
-
-5. Launching the Tutorial
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. _a-copy-the-tutorial-notebooks-to-your-home-directory:
-
-a. Copy the tutorial notebooks to your home directory
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: bash
-
-   cp ./tutorials/Mushroom-ANN-tutorial.ipynb $HOME/
-   cp ./tutorials/Coral-CNN-tutorial.ipynb $HOME/
-
-These notebooks are provided as blank templates for you to fill in as
-you work through the exercises. To complete this tutorial:
-
-1. Follow the step-by-step instructions on our
-   `ReadTheDocs <https://life-sciences-ml-at-tacc.readthedocs.io/en/latest/section3/overview.html>`__.
-2. Write the code from the ReadTheDocs page into the corresponding empty
-   cells in your notebook.
-3. Execute each cell to build your ANN/CNN and see the results.
-
-If you get stuck, a completed solution is available within the
-``tutorials`` directory of this repository.
-
-.. _b-access-the-tacc-analysis-portal-and-configure-your-session-as-follows:
-
-b. Access the `TACC Analysis Portal <https://tap.tacc.utexas.edu/jobs/>`__ and configure your session as follows:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--  System: Frontera
--  Application: Jupyter Notebook
--  Project:
--  Queue: rtx
--  Job Name: DL-Training
--  Time Limit: 2:0:0
--  Reservation: (or leave blank if no reservation)
-
-.. _c-final-steps:
-
+   The reservation name changes day by day.
 
 .. image::  ./images/TAP_1.job_submittting.png
-   :target: ./images/TAP_1.job_submittting.png
    :alt:  Figure 1. Submitting a job through TAP 
 
-
-
-c. Final Steps:
-~~~~~~~~~~~~~~~
-
--  Click 'Submit' and wait for the job to start
--  Click 'Connect' when the a node becomes available
+* Click 'Submit' and wait for the job to start
+* Click 'Connect' when the a node becomes available
 
 .. image::  ./images/TAP_2.job_connect.png
-   :target: ./images/TAP_2.job_connect.png
    :alt:  Figure 2 Submitting a job through TAP 
  
-
-- The TAP job will open the user $HOME directory. Open ``Mushroom-ANN-tutorial.ipynb`` or ``Coral-CNN-tutorial.ipynb``.
+* The TAP job will open the user ``$HOME`` directory. Open ``Mushroom-ANN-tutorial.ipynb`` or
+  ``Coral-CNN-tutorial.ipynb``.
 
 .. image::  ./images/TAP_3.jupyter_HOME.png
-   :target: ./images/TAP_3.jupyter_HOME.png
    :alt:  Figure 3 TAP session will log into user $HOME 
 
-
--  Change your kernel to ``tf-213``. Click on the menu ``kernel``, then ``Change kernel``, and select the kernel ``tf-213``. Trust the kernel by clicking on the button "Not trusted" at the top right 
+* Change your kernel to ``Day3-tf-213``. Click on the menu ``kernel``, then ``Change kernel``, and select the kernel ``Day3-tf-213``. Trust the kernel by clicking on the button "Not trusted" at the top right 
 
 .. image::  ./images/TAP_4.kernel_change.png
-   :target: ./images/TAP_4.kernel_change.png
    :alt:  Figure 4 Changing the kernel version ant trust the kernel
 
--  The Jupyter notebook will ask confirmation before trusting the kernel.
+* The Jupyter notebook will ask confirmation before trusting the kernel.
 
 .. image::  ./images/TAP_5.jupyter.trusting.png
-   :target: ./images/TAP_5.jupyter.trusting.png
    :alt:  Figure 5 Kernel trusting confirmation
 
--  After clicking "trust" on the confirmation button, the button at the top right will appear as "Trusted".
+* After clicking "trust" on the confirmation button, the button at the top right will appear as "Trusted".
 
 .. image::  ./images/TAP_6.jupyter.trusted.png
-   :target: ./images/TAP_6.jupyter.trusted.png
    :alt:  Figure 6 Kernel trusted
 
--  The Jupyer notebook will be ready to be run. Note: The kernel may take a few moments to initialize on first use.
+* The Jupyer notebook will be ready to be run. Note: The kernel may take a few moments to initialize on first use.
 
 
-
-
-
-
-
-Set up for the CNN Tutorial
----------------------------
-
-On Day 3 we will run a hands-on Convolutional Neural Network (CNN) tutorial.
-Here we provide the instruction to retrieve the necessary files and set up the enviroment.
-
-1. Accessing Frontera
+Complete the Tutorial
 ^^^^^^^^^^^^^^^^^^^^^
 
-Log in to Frontera using SSH:
+To complete this tutorial:
 
-.. code-block:: bash
-    
-    ssh username@frontera.tacc.utexas.edu
-    (username@frontera.tacc.utexas.edu) Password: 
-    (username@frontera.tacc.utexas.edu) TACC Token Code:
+1. Follow the step-by-step instructions on our
+   `ReadTheDocs <https://life-sciences-ml-at-tacc.readthedocs.io/en/latest/section3/overview.html>`_.
+2. Write the code from the ReadTheDocs page into the corresponding empty cells in your notebook.
+3. Execute each cell to build your ANN/CNN and see the results.
 
-    # ------------------------------------------------------------------------------
-    # Welcome to the Frontera Supercomputer
-    # Texas Advanced Computing Center, The University of Texas at Austin
-    # ------------------------------------------------------------------------------
+If you get stuck, a completed solution is available within the ``tutorials`` directory of the
+repository you cloned previously.
 
-2. Getting the Tutorial Materials
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Navigate to your $SCRATCH directory and clone the tutorial repository:
-
-.. code-block:: bash
-
-    cds  # shortcut for cd $SCRATCH
-    git clone git@github.com:kbeavers/coral-species-CNN-tutorial.git
-
-3. Environment Setup
-^^^^^^^^^^^^^^^^^^^^
-
-a) Start an Interactive Session:
-
-.. code-block:: bash
-
-    cds
-    idev -m 20
-
-b) Set up the Container Environment:
-
-.. code-block:: bash
-
-    # Load the apptainer module
-    module load tacc-apptainer
-
-    # Pull the Docker container image created for this tutorial
-    apptainer pull docker://kbeavers/tf-cuda101-frontera:0.1
-
-    # Run the kernel setup script
-    bash ./coral-species-CNN-tutorial/scripts/install_kernel.sh
-
-4. Dataset Preparation
+Check GPU Availability
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Extract the provided coral species image dataset:
+Before training deep learning models on HPC systems, it's important to check whether TensorFlow can
+access the GPU. Training on a GPU is significantly faster than on a CPU, especially for large image
+datasets.
 
-.. code-block:: bash
+If you've followed the setup instructions in the previous section, and you've run the
+``install_kernel.sh`` script on Frontera, you should now be running the tutorial notebook inside a
+containerized Jupyter kernel that includes:
 
-    cd coral-species-CNN-tutorial
-    bash ./scripts/download_dataset.sh
+* TensorFlow (v2.13) with GPU support
+* CUDA libraries compatible with the system 
+* All required Python packages pre-installed
 
-5. Launching the Tutorial
-^^^^^^^^^^^^^^^^^^^^^^^^^
+To confirm that your environment is correctly configured, run the following code cell in the
+tutorial notebook:
 
-a) Copy the tutorial notebook to your $HOME directory:
+.. tip::
 
-.. code-block:: bash
-
-    cp ./tutorials/Coral-CNN.ipynb $HOME/
-
-b) Access the TACC Analysis Portal and configure your session as follows:
-
-   - System: Frontera
-   - Application: Jupyter Notebook
-   - Project: <your-allocation>
-   - Queue: rtx
-   - Job Name: CNN-Training
-   - Time Limit: 2:0:0
-   - Reservation: <your-reservation>
-
-c) Final Steps:
-
-   - Click 'Submit' and wait for the job to start
-   - Click 'Connect' when available
-   - Open ``Coral-CNN.ipynb`` in your $HOME directory
-   - Change your kernel to ``tf-cuda101``
-   - Trust the kernel if necessary
-
-Note: The kernel may take a few moments to initialize on first use. 
-
-
-
-6. Check GPU Availability
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Before training deep learning models on HPC systems, it's important to check whether TensorFlow can access the GPU. 
-Training on a GPU is significantly faster than on a CPU, especially for large image datasets.
-
-If you've followed the setup instructions in the previous section, and you've run the ``install_kernel.sh`` script on Frontera, you should now be running the tutorial notebook inside a containerized Jupyter kernel that includes:
-
-- TensorFlow (v. _____) with GPU support
-- CUDA libraries compatible with the system 
-- All required Python packages pre-installed
-
-To confirm that your environment is correctly configured, run the following code cell in the tutorial notebook (TIP: Make sure to change your kernel to ``tf-cuda101``):
+   Make sure to change your kernel to ``Day3-tf-213``.
 
 .. code-block:: python
 
-    import tensorflow as tf
-
-    # Check if TensorFlow can detect the GPU
-    print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-
-    # Print TensorFlow version
-    print(tf.__version__)
-
-
-
-Use of Jupyter on Vista 
------------------------
-
-Vista needs additional modules for the use of Jupyter.
-We can add them to the default environment with the following commands:
-
-.. code-block:: bash
-
-    # Load the gcc module
-    module load gcc
-    # Load the python3 module
-    module load python3
-    # save as the default environment
-    module save 
-
-The commands need to be run only once, when we log in on Vista for the first time.
+   >>> import tensorflow as tf
+   
+   >>> # Check if TensorFlow can detect the GPU
+   >>> print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+   
+   >>> # Print TensorFlow version
+   >>> print(tf.__version__)
 
 
+Set Up For Vista
+---------------- 
 
+Step 1. Log in to Vista
+^^^^^^^^^^^^^^^^^^^^^^^
 
+Log in to Vista using SSH:
+
+.. code:: console
+
+   [local]$ ssh username@vista.tacc.utexas.edu
+   (username@vista.tacc.utexas.edu) Password: 
+   (username@vista.tacc.utexas.edu) TACC Token Code:
+
+   # ------------------------------------------------------------------------------
+   # Welcome to the Vista Supercomputer
+   # Texas Advanced Computing Center, The University of Texas at Austin
+   # ------------------------------------------------------------------------------
+
+Step 2. Set up Environment
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Download the setup script (``install_kernels.sh``) and run it to set up the environment. This script will copy the Jupyter
+kernel image files into your SCRATCH directory and install the kernel definition files into your HOME directory.
+
+.. code:: console
+
+   # Change to your SCRATCH directory
+   [vista]$ cds
+   
+   # Download the setup script
+   [vista]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section4/files/install_kernels.sh
+
+   # Run the setup script
+   [vista]$ bash ./install_kernels.sh
+   Copying tensorflow-ml-container_0.1.sif to /scratch/03762/eriksf...
+   Copying pytorch-ml-container_0.4.sif to /scratch/03762/eriksf...
+   Kernel directory created at ~/.local/share/jupyter/kernels/Day4-tf-217 and kernel.json has been added.
+   Kernel directory created at ~/.local/share/jupyter/kernels/Day4-pt-251 and kernel.json has been added.
+
+.. warning::
+
+   Vista by default does not have the Python3 module loaded, nor is it in the default module path.
+   This means that if you try to run a Jupyter Notebook on Vista, it will return an error. To fix
+   this, you must manually log in to Vista on the command line and perform the following steps:
+
+   .. code-block:: console
+
+      [vista]$ module load gcc
+      [vista]$ module load python3
+      [vista]$ module save
+
+   This is a one-time setup step. After this, you can use TAP to launch Jupyter Notebooks on Vista.
+
+Step 3. Launch Jupyter
+^^^^^^^^^^^^^^^^^^^^^^
+
+Log in to the `TACC Analysis Portal <https://tap.tacc.utexas.edu/jobs/>`_ and configure your session
+as follows:
+
+* **System:** Vista
+* **Application:** Jupyter Notebook
+* **Project:** frontera-training
+* **Queue:** gh
+* **Reservation:** LSC-ML-Institute-May22
+
+.. warning::
+
+   The reservation name changes day by day.
+
+.. image::  ./images/TAP1_vista_job_submitting.png
+   :alt:  Figure 1. Submitting a job through TAP 
+
+* Click 'Submit' and wait for the job to start
+* Click 'Connect' when the a node becomes available
+
+.. image::  ./images/TAP2_vista_connect.png
+   :alt:  Figure 2 Submitting a job through TAP 
+ 
+* By default on Vista, the Jupyter Notebook job will open with the Jupyter Lab interface showing the user
+  ``$HOME`` directory on the left. If the kernels are installed properly, you should see the
+  ``Day4-tf-217`` and ``Day4-pt-251`` kernels listed in the Launcher tab under the Notebook section.
+
+.. image::  ./images/TAP3_vista_jupyter_lab_home.png
+   :alt:  Figure 3 Jupyter Lab interface showing user $HOME 
+
+.. note::
+
+   If you prefer to use the classic Jupyter Notebook interface instead of Jupyter Lab, you can edit the URL
+   in your browser to replace the word "/lab" with "/tree". 
+
+* To verify that the kernels are installed properly in the Jupyter Notebook interface, click on the "New" dropdown
+  menu in the upper right to see the ``Day4-tf-217`` or ``Day4-pt-251`` kernels.
+
+.. image::  ./images/TAP4_vista_jupyter_notebook_home.png
+   :alt:  Figure 4 Jupyter Notebook interface showing user $HOME
+
+* The Jupyter notebooks are now ready to be launched.
+
+.. note::
+
+   The kernel may take a few moments to initialize on first use.

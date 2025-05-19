@@ -64,6 +64,10 @@ To start a thirty-minute interactive session on a compute node in the developmen
    
    [frontera]$ idev -A EXAMPLE   
 
+.. note::
+
+   For this workshop, using allocation name ``Frontera-Training`` instead of "EXAMPLE"
+
 If launch is successful, you will see output that includes the following excerpts:
 
 .. code-block:: console
@@ -88,6 +92,16 @@ If launch is successful, you will see output that includes the following excerpt
 
 EXERCISE
 ^^^^^^^^
+
+.. note::
+
+   In case you didn't donwload the code in the previous section, you can download by doing:
+   
+   .. code-block:: console
+   
+      [frontera]$ cdw
+      [frontera]$ wget https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/firststeps.zip
+      [frontera]$ unzip firststeps.zip
 
 Let's execute some Python code that determines the larger of two numbers. The code also includes a
 3-second delay before finishing. Note, the ``[clx]`` syntax in the prompt refers to an interactive
@@ -118,20 +132,11 @@ You can check the files that were generated using ``ls``, and see the contents o
 
    [clx]$ ls
    duration.txt  example.slurm  example_template.slurm  my_code.py
-   [clx]$ cat duration
+   [clx]$ cat duration.txt
    Done in 3.009739637374878 seconds.
 
 To exit an interactive session, you can use the command ``logout``.
 
-.. note::
-
-   In case you didn't donwload the code in the previous section, you can download by doing:
-   
-   .. code-block:: console
-   
-      [frontera]$ cdw
-      [frontera]$ wget https://github.com/TACC/life_sciences_ml_at_tacc/raw/refs/heads/main/docs/section1/files/firststeps.zip
-      [frontera]$ unzip firststeps.zip
 
 
 Run Non-Interactively with sbatch
@@ -325,19 +330,19 @@ and ``Esc``.
 
 Entering VIM insert mode:
 
-.. code-block:: bash
+.. code-block:: text
 
    > i
 
 Entering VIM normal mode:
 
-.. code-block:: bash
+.. code-block:: text
 
    > Esc
 
 A summary of the most important keys to know for normal mode are (more on your cheat sheet):
 
-.. code-block:: bash
+.. code-block:: text
 
    # Navigating the file:
 
