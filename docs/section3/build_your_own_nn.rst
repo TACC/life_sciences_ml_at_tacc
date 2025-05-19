@@ -164,6 +164,8 @@ First, we will import the Mushroom dataset using the ``ucimlrepo`` package:
 
     >>> import pandas as pd
     >>> from ucimlrepo import fetch_ucirepo 
+    >>> import random
+    >>> random.seed(123)
 
     >>> # fetch dataset 
     >>> mushroom = fetch_ucirepo(id=73) 
@@ -434,6 +436,9 @@ The code above divides our data into training and testing sets, creating four ob
    * - ``stratify``
      - Maintains the same class distribution in both splits
      - Ensures balanced representation of poisonous/edible classes
+   * - ``random_state``
+     - Controls the shuffling of data before splitting
+     - Ensures we get the same samples in train/test splits each time we run the code
 
 
 Why These Parameters Matter:
@@ -442,6 +447,8 @@ Why These Parameters Matter:
 * **Test Size**: Finding the right balance between having enough data for training while reserving sufficient data for testing is crucial. Too little test data may not reliably assess model performance; too little training data may limit learning.
 
 * **Stratification**: When working with classification problems, maintaining class proportions is essential. Without stratification, you might accidentally create a test set with disproportionate class representation, leading to misleading evaluation metrics.
+
+* **Random State**: Without setting ``random_state``, you'd get a different train/test split each time you run the code. When you set a fixed value here, you'll get the same splits, allowing you to make fair comparisons when you make changes to your model. 
 
 .. tip::
   
@@ -467,10 +474,13 @@ This architecture provides a good starting point for understanding how neural ne
     >>> from tensorflow.keras import Sequential
     >>> from tensorflow.keras.layers import Input, Dense
 
+    >>> # Set random seed for reproducibility
+    >>> tf.random.set_seed(123)
+
     >>> # Create model with sequential API
     >>> model = Sequential([
     >>>     # Input layer - shape matches our feature count
-    >>>     Input(shape=(112,)),  # 1D tensor with 112 features
+    >>>     Input(shape=(112,)),  # Each sample is a 1D tensor with 112 features
     >>>     
     >>>     # Hidden layer - 10 perceptrons with ReLU activation
     >>>     # ReLU allows the network to learn non-linear patterns
@@ -590,24 +600,24 @@ Below shows the output of the training process:
 
 .. code-block:: text
 
-    Epoch 1/5
-    143/143 - 0s - 3ms/step - accuracy: 0.8709 - loss: 0.3543 - val_accuracy: 0.9569 - val_loss: 0.1458
-    Epoch 2/5
-    143/143 - 0s - 969us/step - accuracy: 0.9776 - loss: 0.0964 - val_accuracy: 0.9851 - val_loss: 0.0638
-    Epoch 3/5
-    143/143 - 0s - 723us/step - accuracy: 0.9894 - loss: 0.0481 - val_accuracy: 0.9938 - val_loss: 0.0364
-    Epoch 4/5
-    143/143 - 0s - 739us/step - accuracy: 0.9949 - loss: 0.0288 - val_accuracy: 0.9982 - val_loss: 0.0230
-    Epoch 5/5
-    143/143 - 0s - 738us/step - accuracy: 0.9985 - loss: 0.0186 - val_accuracy: 0.9982 - val_loss: 0.0157
+  Epoch 1/5
+  143/143 - 1s - loss: 0.3543 - accuracy: 0.8709 - val_loss: 0.1458 - val_accuracy: 0.9569 - 1s/epoch - 9ms/step
+  Epoch 2/5
+  143/143 - 0s - loss: 0.0966 - accuracy: 0.9756 - val_loss: 0.0647 - val_accuracy: 0.9851 - 398ms/epoch - 3ms/step
+  Epoch 3/5
+  143/143 - 0s - loss: 0.0486 - accuracy: 0.9888 - val_loss: 0.0372 - val_accuracy: 0.9938 - 398ms/epoch - 3ms/step
+  Epoch 4/5
+  143/143 - 0s - loss: 0.0291 - accuracy: 0.9954 - val_loss: 0.0235 - val_accuracy: 0.9982 - 394ms/epoch - 3ms/step
+  Epoch 5/5
+  143/143 - 0s - loss: 0.0192 - accuracy: 0.9976 - val_loss: 0.0161 - val_accuracy: 0.9991 - 386ms/epoch - 3ms/step
 
 Let's understand what this output tells us:
 
 1. **Progress metrics**:
 
   - ``143/143``: Shows progress through the training batches; 143 batches were completed out of 143, and each batch contains 32 samples (as specified by ``batch_size=32``)
-  - ``0s``: Indicates the time taken for each epoch; here, the first epoch took <1 second to complete.
-  - ``3ms/step``: This indicates the average time taken per training step (one forward and backward pass through a single batch) during training.
+  - ``1s``: Indicates the time taken for each epoch; here, the first epoch took <1 second to complete.
+  - ``9ms/step``: This indicates the average time taken per training step (one forward and backward pass through a single batch) during training.
 
 2. **Training metrics**:
 
@@ -683,7 +693,7 @@ For a binary classification problem like our (poisonous vs edible), the model ou
 
 .. code-block:: text
     
-    array([0.00309971], dtype=float32)
+    array([0.00323989], dtype=float32)
 
 This shows the probability for the first mushroom sample in the test set.
 The output is a single value between 0 and 1, where:
@@ -691,7 +701,7 @@ The output is a single value between 0 and 1, where:
  - Values closer to 1 indicate the model is more confident that the sample is poisonous.
  - Values closer to 0 indicate the model is more confident that the sample is edible.
 
-For example, our output value is 0.00309971, which means that the model is 99.9969% confident that the sample is edible.
+For example, our output value is 0.00323989, which means that the model is ~99.68% confident that the sample is edible.
 
 The model outputs probability values, but for practical mushroom classification, we need definitive "edible" or "poisonous" predictions. We need to convert these continuous probability values into discrete class labels:
 
@@ -804,15 +814,15 @@ Let's also print the full classification report of this model using code below
 
                precision    recall  f1-score   support
 
-            0     0.9968    0.9992    0.9980      1263
-            1     0.9991    0.9966    0.9979      1175
+            0     0.9976    0.9992    0.9984      1263
+            1     0.9991    0.9974    0.9983      1175
 
-     accuracy                         0.9979      2438
-    macro avg     0.9980    0.9979    0.9979      2438
- weighted avg     0.9980    0.9979    0.9979      2438
+     accuracy                         0.9984      2438
+    macro avg     0.9984    0.9983    0.9984      2438
+ weighted avg     0.9984    0.9984    0.9984      2438
 
 
-The accuracy of our model is 99.79%, so 99.79% of the time, this model predicted the correct label on the test data.
+The accuracy of our model is 99.84%, so 99.84% of the time, this model predicted the correct label on the test data.
 
 **Thought Challenge**: Did we build a successful model? Why or why not? Is there anything we can do to improve the model?
 
@@ -822,10 +832,10 @@ The accuracy of our model is 99.79%, so 99.79% of the time, this model predicted
     
     By standard performance metrics, our model is remarkably successful:
     
-    * Accuracy of 99.79% on the test set
-    * Recall of 99.66% for poisonous mushrooms
+    * Accuracy of 99.84% on the test set
+    * Recall of 99.74% for poisonous predictions
     * Precision of 99.91% for poisonous predictions
-    * F1-score of 99.79%
+    * F1-score of 99.83% for poisonous predictions
     
     **Why it's successful:**
     
@@ -835,7 +845,7 @@ The accuracy of our model is 99.79%, so 99.79% of the time, this model predicted
     
     **However, there are important considerations:**
     
-    In a real-world mushroom classification system, even our 99.66% recall means that approximately 4 out of 1175 poisonous mushrooms were misclassified as edible. For a life-critical application like mushroom toxicity detection, this error rate is still too high. 
+    In a real-world mushroom classification system, even our 99.74% recall means that approximately 3 out of 1000 poisonous mushrooms were misclassified as edible. For a life-critical application like mushroom toxicity detection, this error rate is still too high. 
     
     **Potential improvements:**
     
