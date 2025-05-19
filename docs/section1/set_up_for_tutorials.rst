@@ -33,7 +33,7 @@ Navigate to your scratch directory and clone this tutorial repository:
 
 .. code:: console
 
-   [frontera]$ cds # shortcut for cd #SCRATCH
+   [frontera]$ cds # shortcut for cd $SCRATCH
    [frontera]$ git clone https://github.com/kbeavers/tacc-deep-learning-tutorials
 
 
