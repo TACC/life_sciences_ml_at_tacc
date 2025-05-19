@@ -14,6 +14,6 @@ considerations and evaluation in life science applications.
    linear_classification
    model_quality
    knn
-   log_regression_and_NB
    decision_tree_and_random_forest
+   log_regression_and_NB
    data_standardization_and_pipelines
