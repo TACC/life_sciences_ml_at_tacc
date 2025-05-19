@@ -77,12 +77,30 @@ and reproducible.
    .. code-block:: console
    
       # On the command line:
-      $ pip install --user requests pandas
+      $ pip3 install --user requests pandas
       
       - or -
       
       # In a Jupyter notebook:
-      ! pip install --user requests pandas
+      ! pip3 install --user requests pandas
+
+
+.. warning::
+
+   Frontera is getting pretty old! The ``requests`` library (rather, one of the dependencies of the
+   ``requests`` library - ``urllib3``) may have compatibility issues with Python on Frontera. You
+   may need to install an older version of ``urllib3`` in order to get this to work:
+
+   .. code-block:: console
+
+      # On the command line:
+      $ pip3 install --user "urllib3<=2.0"
+      
+      - or -
+      
+      # In a Jupyter notebook:
+      ! pip3 install --user "urllib3<=2.0"
+
 
 This method avoids the need for manual downloading or unzipping and ensures your code can be run
 from any location with internet access.
@@ -109,9 +127,9 @@ column is a **Series**, each row is indexed (blue box), and column headers serve
    
    .. code-block:: python
    
-      import pandas as pd
-      data = pd.read_csv('Austin_Animal_Center_Outcomes.csv')
-      display(data)
+      >>> import pandas as pd
+      >>> data = pd.read_csv('Austin_Animal_Center_Outcomes.csv')
+      >>> display(data)
 
 
 Understanding the Structure

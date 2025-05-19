@@ -337,7 +337,7 @@ ans training data set. As before, we'll use the ``accuracy_score`` convenience f
 Cross-Validation
 ----------------
 
-Let's return to the matter of deterining the value for the *k* in the KNN model. In the code above, 
+Let's return to the matter of determining the value for the *k* in the KNN model. In the code above, 
 we simply chose a value of *k=3* without any thought. We can do better. 
 
 At a high level, the approach we will take is to train a bunch of different KNN models for

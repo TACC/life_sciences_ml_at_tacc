@@ -26,7 +26,7 @@ To learn about the command line options available for ``idev``, use ``idev -help
 
 .. code-block:: console
    
-   [frontera]$ idev -help
+   [frontera]$ idev --help
    ...
    OPTION ARGUMENTS         DESCRIPTION
    -A     account_name      sets account name (default: in .idevrc)

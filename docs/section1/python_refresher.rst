@@ -285,16 +285,16 @@ You can also **add a new key:value pair**:
 
 .. code-block:: python3
 
-   >>> eng2spa['four'] = 'cuatro'
+   >>> eng2spa['four'] = 'quatro'
    >>> print(eng2spa['four'])
-   cuatro
+   quatro
 
 Now the dictionary contains:
 
 .. code-block:: python3
 
    >>> print(eng2spa)
-   {'one': 'UNO', 'two': 'dos', 'three': 'tres', 'four': 'cuatro'}
+   {'one': 'UNO', 'two': 'dos', 'three': 'tres', 'four': 'quatro'}
 
 
 Conditionals and Control Loops
@@ -380,10 +380,11 @@ The ``break`` statement can also be used to escape loops:
    >>> i = 0
    >>>
    >>> while (i < 10):
+   ...     i = i + 1
    ...     if (i==5):
    ...         break
    ...     print( f'i = {i}' )
-   ...     i = i + 1
+
 
 .. note::
 
@@ -658,7 +659,7 @@ has a method for generating random numbers called 'random'.
    for i in range(5):
        print(random.random())
 
-.. code-block:: bash
+.. code-block:: text
 
    0.47115888799541383
    0.5202615354150987
@@ -678,7 +679,7 @@ For example, if you wanted to download the
 `names <https://pypi.org/project/names/>`_ library and use it in your Python
 code, you would do the following:
 
-.. code-block:: bash
+.. code-block:: console
 
    [frontera]$ pip3 install --user names
    Collecting names
@@ -698,6 +699,9 @@ in your own home directory.
    If you are using a Jupyter notebook, you can install packages directly from
    the notebook by using the ``!`` operator. For example, ``! pip3 install --user names``.
 
+   After executing the ``pip install`` cell, you may need to restart the kernel before trying to use
+   the library.
+
 .. code-block:: python3
    :linenos:
 
@@ -706,7 +710,7 @@ in your own home directory.
    for i in range(5):
        print(names.get_full_name())
 
-.. code-block:: bash
+.. code-block:: text
 
    Johnny Campbell
    Lawrence Webb
