@@ -77,6 +77,9 @@ This cell will confirm that your environment is correctly configured (TIP: Make 
     # Print TensorFlow version
     print(tf.__version__)
 
+    # Set random seed for reproducibility
+    tf.random.set_seed(123)
+
 You should see the following output:
 
 .. code-block:: text
@@ -459,7 +462,8 @@ This is called **stratified sampling**.
     train_df, test_df = train_test_split(
         df,                            # This is our DataFrame from step 1.5
         test_size=____,                # Keep 20% of the data in the test set
-        stratify=df["label"]          # Ensure each split maintains original class distribution
+        stratify=df["label"],          # Ensure each split maintains original class distribution
+        random_state=123               # Set random seed for reproducibility
     )
 
     # Then, split the training set into training + validation sets
@@ -467,6 +471,7 @@ This is called **stratified sampling**.
         ____,                          # What goes here?
         test_size=____,                # Keep 20% of the training data in the validation set
         stratify=____,                 # Ensure each split maintains original class distribution
+        random_state=123               # Set random seed for reproducibility
     )
 
     # Print split sizes
@@ -615,19 +620,22 @@ All generators return batches of preprocessed image tensors and their correspond
         batch_size=BATCH_SIZE,      # Number of images per batch
         class_mode='categorical',   # One-hot encode the labels
         color_mode='rgb',           # Use RGB color channels
-        shuffle=True                # Randomize order of images
+        shuffle=True,                # Randomize order of images
+        seed=123                    # Set random seed for reproducibility
     )
 
     # Validation generator
     val_generator = val_datagen.flow_from_dataframe(
         # ... same parameters as above ...
-        shuffle=False               # Keep original order for validation
+        shuffle=False,               # Keep original order for validation
+        seed=123                    # Set random seed for reproducibility
     )
 
     # Test generator
     test_generator = test_datagen.flow_from_dataframe(
         # ... same parameters as above ...
-        shuffle=False               # Keep original order for testing
+        shuffle=False,               # Keep original order for testing
+        seed=123                    # Set random seed for reproducibility
     )
 
 
@@ -927,18 +935,18 @@ Example output:
 .. code-block:: python-console
 
     Epoch 1/15
-    9/9 [==============================] - 14s 2s/step - loss: 1.0338 - accuracy: 0.4737 - val_loss: 1.0179 - val_accuracy: 0.5075
+    9/9 [==============================] - 5s 391ms/step - loss: 1.1136 - accuracy: 0.3195 - val_loss: 1.0908 - val_accuracy: 0.3731
     Epoch 2/15
-    9/9 [==============================] - 9s 1s/step - loss: 1.0466 - accuracy: 0.4436 - val_loss: 1.0264 - val_accuracy: 0.4627
+    9/9 [==============================] - 4s 468ms/step - loss: 1.1017 - accuracy: 0.2932 - val_loss: 1.0911 - val_accuracy: 0.3582
     Epoch 3/15
-    9/9 [==============================] - 8s 905ms/step - loss: 1.0224 - accuracy: 0.4624 - val_loss: 0.9770 - val_accuracy: 0.5373
+    9/9 [==============================] - 4s 464ms/step - loss: 1.0936 - accuracy: 0.4023 - val_loss: 1.0823 - val_accuracy: 0.4627
     Epoch 4/15
-    9/9 [==============================] - 11s 1s/step - loss: 1.0178 - accuracy: 0.4624 - val_loss: 1.0147 - val_accuracy: 0.4776
+    9/9 [==============================] - 4s 468ms/step - loss: 1.0937 - accuracy: 0.3534 - val_loss: 1.0762 - val_accuracy: 0.4328
     Epoch 5/15
-    9/9 [==============================] - 9s 899ms/step - loss: 1.0065 - accuracy: 0.4699 - val_loss: 0.9736 - val_accuracy: 0.5075
+    9/9 [==============================] - 4s 464ms/step - loss: 1.0869 - accuracy: 0.3985 - val_loss: 1.0671 - val_accuracy: 0.4627
     ...
     Epoch 15/15
-    9/9 [==============================] - 10s 1s/step - loss: 0.9717 - accuracy: 0.5038 - val_loss: 1.0668 - val_accuracy: 0.3731
+    9/9 [==============================] - 4s 472ms/step - loss: 1.0374 - accuracy: 0.4662 - val_loss: 0.9806 - val_accuracy: 0.5672
 
 
 Visualizing Training History
@@ -1002,21 +1010,7 @@ We use the ``cnn_history`` object returned by the ``fit()`` method to plot the t
 
 The plots above show the training and validation accuracy/loss over 15 epochs.
 
-**Thought Challenge**: What do you notice about the training and validation accuracy and loss? What does this tell you about the model's learning performance (i.e. overfitting, underfitting, healthy learning)? Write down your answer before checking our interpretation below.
-
-.. toggle:: Click to show
-
-    **Accuracy (Left Plot)**
-     - Training accuracy starts around 47% and gradually improves to about 50% by the end of training
-     - Validation accuracy shows higher volatility - it remains above training accuracy for most epochs (reaching ~58% at epoch 11), but drops dramatically in the final epoch to ~37%
-     - The gap between training and validation accuracy varies significantly throughout training
-
-    **Loss (Right Plot)**
-     - Training loss fluctuates but generally decreases over time from ~1.03 to ~0.97
-     - Validation loss is generally lower than training loss through most epochs, showing some instability
-     - There's a concerning spike in validation loss at the final epoch, jumping to ~1.07
-
-    **Interpretation**: The model shows signs of both underfitting and instability. The relatively low accuracy suggests the model struggles to learn effective patterns from the data. The final drop in validation accuracy paired with the spike in validation loss indicates potential overfitting or training instability in later epochs. The erratic validation metrics suggest the model may be sensitive to the specific examples in each validation batch.
+**Thought Challenge**: What do you notice about the training and validation accuracy and loss? What does this tell you about the model's learning performance (i.e. overfitting, underfitting, healthy learning)?
 
 
 Step 7: Evaluate the Model on the Test Set
@@ -1043,8 +1037,8 @@ Example output:
 
 .. code-block:: text
 
-    Test Accuracy: 34.52%
-    Test Loss: 1.1921
+    Test Accuracy: 44.05%
+    Test Loss: 1.0581
 
 Our model correctly classifies the test images about 35% of the time, and our loss is still quite high.
 While these numbers provide a snapshot of performance, they don't tell the whole story. Let's dig deeper with a confusion matrix.
@@ -1116,13 +1110,13 @@ Example output:
     Classification Report:
                   precision    recall  f1-score   support
 
-            ACER       0.35      0.93      0.51        27
-            CNAT       0.38      0.12      0.18        26
-            MCAV       0.20      0.03      0.06        31
+            ACER       0.50      0.52      0.51        27
+            CNAT       0.42      0.50      0.46        26
+            MCAV       0.40      0.32      0.36        31
 
-        accuracy                           0.35        84
-       macro avg       0.31      0.36      0.25        84
-    weighted avg       0.30      0.35      0.24        84
+        accuracy                           0.44        84
+       macro avg       0.44      0.45      0.44        84
+    weighted avg       0.44      0.44      0.44        84
 
 Click below to see a brief explanation of the metrics in the classification report.
 
@@ -1319,25 +1313,19 @@ Example Output:
 .. code-block:: text
 
     Epoch 1/15
-    9/9 [==============================] - 14s 1s/step - loss: 4.4430 - accuracy: 0.5188 - val_loss: 0.2631 - val_accuracy: 0.9104 - lr: 1.0000e-04
+    9/9 [==============================] - 7s 379ms/step - loss: 4.3120 - accuracy: 0.5263 - val_loss: 0.4430 - val_accuracy: 0.8657 - lr: 1.0000e-04
     Epoch 2/15
-    9/9 [==============================] - 7s 855ms/step - loss: 0.6687 - accuracy: 0.8271 - val_loss: 0.4558 - val_accuracy: 0.8806 - lr: 1.0000e-04
+    9/9 [==============================] - 5s 503ms/step - loss: 0.7271 - accuracy: 0.8346 - val_loss: 0.3540 - val_accuracy: 0.9104 - lr: 1.0000e-04
     Epoch 3/15
-    9/9 [==============================] - 6s 602ms/step - loss: 0.7846 - accuracy: 0.8308 - val_loss: 0.2493 - val_accuracy: 0.9254 - lr: 1.0000e-04
+    9/9 [==============================] - 4s 479ms/step - loss: 0.7825 - accuracy: 0.8120 - val_loss: 0.4158 - val_accuracy: 0.8507 - lr: 1.0000e-04
     Epoch 4/15
-    9/9 [==============================] - 7s 768ms/step - loss: 0.3062 - accuracy: 0.9023 - val_loss: 0.2185 - val_accuracy: 0.9403 - lr: 1.0000e-04
+    9/9 [==============================] - 4s 480ms/step - loss: 0.4168 - accuracy: 0.8684 - val_loss: 0.3532 - val_accuracy: 0.8806 - lr: 1.0000e-04
     Epoch 5/15
-    9/9 [==============================] - 8s 881ms/step - loss: 0.3746 - accuracy: 0.8947 - val_loss: 0.1510 - val_accuracy: 0.9552 - lr: 1.0000e-04
+    9/9 [==============================] - 4s 474ms/step - loss: 0.5239 - accuracy: 0.8835 - val_loss: 0.4578 - val_accuracy: 0.8806 - lr: 1.0000e-04
     Epoch 6/15
-    9/9 [==============================] - 6s 718ms/step - loss: 0.3481 - accuracy: 0.9023 - val_loss: 0.1624 - val_accuracy: 0.9552 - lr: 1.0000e-04
+    9/9 [==============================] - 4s 470ms/step - loss: 0.4025 - accuracy: 0.8835 - val_loss: 1.0588 - val_accuracy: 0.8209 - lr: 1.0000e-04
     Epoch 7/15
-    9/9 [==============================] - 7s 790ms/step - loss: 0.2909 - accuracy: 0.9323 - val_loss: 0.4297 - val_accuracy: 0.8955 - lr: 1.0000e-04
-    Epoch 8/15
-    9/9 [==============================] - 7s 749ms/step - loss: 0.2124 - accuracy: 0.9474 - val_loss: 0.4730 - val_accuracy: 0.8955 - lr: 1.0000e-04
-    Epoch 9/15
-    9/9 [==============================] - 6s 643ms/step - loss: 0.2254 - accuracy: 0.9474 - val_loss: 0.3024 - val_accuracy: 0.9254 - lr: 5.0000e-05
-    Epoch 10/15
-    9/9 [==============================] - 8s 861ms/step - loss: 0.2725 - accuracy: 0.9323 - val_loss: 0.4518 - val_accuracy: 0.8955 - lr: 5.0000e-05
+    9/9 [==============================] - 4s 488ms/step - loss: 0.5346 - accuracy: 0.8496 - val_loss: 0.2890 - val_accuracy: 0.9104 - lr: 1.0000e-04
 
 
 Visualizing Training History
@@ -1385,10 +1373,10 @@ Example output:
 
 .. code-block:: text
 
-    Test Accuracy: 92.86%
-    Test Loss: 0.2990
+    Test Accuracy: 86.90%
+    Test Loss: 0.9072
 
-Our model correctly classifies the test images about 93% of the time. What an improvement!
+Our model correctly classifies the test images about 87% of the time. What an improvement!
 
 
 Visualize Predictions with a Confusion Matrix
@@ -1457,13 +1445,13 @@ Example output:
     Classification Report (VGG19):
                precision    recall  f1-score   support
 
-         ACER       1.00      1.00      1.00        27
-         CNAT       0.83      0.96      0.89        26
-         MCAV       0.96      0.84      0.90        31
+         ACER       1.00      0.89      0.94        27
+         CNAT       0.76      0.96      0.85        26
+         MCAV       0.89      0.77      0.83        31
 
-     accuracy                           0.93        84
-    macro avg       0.93      0.93      0.93        84
- weighted avg       0.93      0.93      0.93        84
+     accuracy                           0.87        84
+    macro avg       0.88      0.87      0.87        84
+ weighted avg       0.88      0.87      0.87        84
 
 **Thought Challenge**: Compare the performance of our VGG19 model to our previous CNN model. What are some major differences in the classification report? Are there still any problematic classes that the model is struggling with? If so, what do you think is causing this?
 
