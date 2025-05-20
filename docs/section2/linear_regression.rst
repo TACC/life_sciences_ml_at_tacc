@@ -81,7 +81,7 @@ some additional properties. How does our model perform?
 
 *Solution:*
 
-We plug the points into the equation :math:`Y = 200.83(X - 1) + 320` and compute :math:`Y`:
+We plug the points into the equation :math:`Y = 0.4958(X) + 44.1833` and compute :math:`Y`:
 
 * Oligo 3: Predicted Value = :math:`0.4958(40) + 44.183 = 64°C`
 * Oligo 4: Predicted Value = :math:`0.4958(60) + 44.183 = 73.9°C`
