@@ -23,11 +23,11 @@ end of this section, you should be able to:
 .. note:: 
 
    The following examples should be done in a Jupyter Notebook on Vista with the ``Day4-pt-251``
-   kernel. If you are doing this elsewhere, you need to first install the ``transformers`` library:
+   kernel. If you are doing this elsewhere, you need to install a few libraries:
 
    .. code-block:: console
 
-       $ pip install --user transformers
+       $ pip install --user transformers scikit-learn pandas einops
 
 
 Example 1: DNA Sequence Context
@@ -47,7 +47,7 @@ DNABERT and DNABERT-2 are transformer-based architectures modeled after Google's
 BERT (Bidirectional Encoder Representations from Transformers) deviates from the traditional 
 transformer architecture in that it only uses the encoder portion of the original model. Traditional
 transformers include both an encoder and decoder for sequence-to-sequence tasks like translation,
-but BERT-like models are designed solely for understanding language, not generating it.
+but BERT-like models are designed solely for *understanding language*, not generating it.
 
 The original DNABERT tokenized k-mer sequences with fixed length as input, and added a CLS token (a
 tag representing meaning of entire sentence), a SEP token (sentence separator) and MASK tokens (to
@@ -59,7 +59,7 @@ classification.
    :width: 800
    :align: center
 
-   The origina DNABERT model [1]_ (shown above) was improved in DNABERT-2 [2]_
+   The original DNABERT model [1]_ (shown above) was improved in DNABERT-2 [2]_
 
 
 Some of the key innovations of DNABERT-2 over the original DNABERT include:
@@ -72,7 +72,7 @@ Some of the key innovations of DNABERT-2 over the original DNABERT include:
    patterns.
 
 2. **Enhanced Model Architecture:** DNABERT-2 improves upon the original model by replacing the
-   original embeddigns with Attention with Linear Biases (ALiBi) embeddings, which overcome
+   original embeddings with Attention with Linear Biases (ALiBi) embeddings, which overcome
    limitations with input length and allow the model to handle inputs of unlimited length without
    performance issues. Also, DNABERT-2 incorporates Flash Attention, an optimized mechanism for 
    improved IO to accelerate training and inference and reducing memory requirements.
@@ -98,18 +98,8 @@ detection, chromatin state classification, and variant effect prediction.
 Try it Out
 ^^^^^^^^^^
 
-Let's perform a simple classification task using DNABERT-2. 
-
-.. tip::
-
-   You may also need to install this library from within your Jupyter Notebook:
-
-   .. code-block:: python
-
-      >>> pip install --user einops
-
-
-First, use the ``transformers.pipeline`` method to load the 117M parameter model from
+Let's perform a simple classification task using DNABERT-2. First, use the ``transformers.pipeline``
+method to load the 117M parameter model from
 `Hugging Face <https://huggingface.co/zhihan1996/DNABERT-2-117M>`__:
 
 .. code-block:: python
@@ -120,87 +110,235 @@ First, use the ``transformers.pipeline`` method to load the 117M parameter model
    >>> tokenizer = AutoTokenizer.from_pretrained('zhihan1996/DNABERT-2-117M', trust_remote_code=True)
    >>> model = AutoModel.from_pretrained('zhihan1996/DNABERT-2-117M', trust_remote_code=True)
 
-
-Then, tokenize the DNA sequence with the efficient BPE method used by the model. This fragments the
-sequence into variable length k-mers and assigns each k-mer a unique token ID (embedding):
+Then, try *tokenizing* a sample DNA sequence using the tokenizer provided by the authors. This
+fragments the sequence into variable length k-mers and assigns each k-mer a unique token ID:
 
 .. code-block:: python
 
-   >>> dna = 'ACGTAGCATCGGATCTATCTATCGACACTTGGTTATCGATCTACGAGCATCTCGTTAGC'  # Example sequence
-   >>> inputs = tokenizer(dna, return_tensors = 'pt')['input_ids']
+   >>> dna = 'ACGTAGCATCGGATCTATCTATCGACACTTGGTTATCGATCTACGAGCATCTCGTTAGC'  # sample sequence
+   >>> inputs = tokenizer(dna, return_tensors='pt')['input_ids']
+   >>> print(type(inputs))
+   >>> print(inputs.shape)
    >>> print(inputs)
 
 .. code-block:: text
 
-   tensor([[  2, 101, 1543, 352, 583, ..., 103,   3]])
+   <class 'torch.Tensor'>
+   torch.Size([1, 17])
+   tensor([[   1,    5,  194,   32,  757, 1239, 2092,  294,   24,  359,   88,   93,
+           32,   75,   77,   19,    2]])
 
+The tokenizer gives you back a tensor (in this case, a vector) of token IDs. With DNABERT-2, the
+first token (``1``) and last token (``2``) are always the same - the CLS and SEP tokens. The rest of
+the sequence is broken down and given an encoded ID from a look up table.
 
-Run the model to get the hidden states. The model will return a tensor as output.
+Can we see how the sequence was tokenized? Yes! Let's do a little reverse engineering to see how
+the author's tokenizer broke down the sequence into k-mers:
 
 .. code-block:: python
 
-   >>> hidden_states = model(inputs)[0] # [1, sequence_length, 768]
-   >>> print(hidden_states.shape)
-   >>> print(hidden_states[0])
-
+   >>> token_ids = inputs[0].tolist()
+   >>> tokens = tokenizer.convert_ids_to_tokens(token_ids)
+   >>> print(tokens)
 
 .. code-block:: text
 
-   torch.Size([1, 17, 768])
-   tensor([[-0.0458,  0.0782,  0.1223,  ...,  0.2533,  0.1660,  0.0863],
-           [-0.0590, -0.0850,  0.1442,  ...,  0.2694,  0.0734, -0.0645],
-           [-0.2030,  0.2774,  0.0958,  ..., -0.1426,  0.1620,  0.1039],
-           ...,
-           [-0.0018, -0.0709,  0.1182,  ...,  0.1514, -0.2617,  0.1708],
-           [-0.0510,  0.0114,  0.1349,  ..., -0.1366, -0.0012,  0.2496],
-           [ 0.0246,  0.2306,  0.1297,  ...,  0.1221,  0.1937, -0.0584]],
-          grad_fn=<SelectBackward0>)
+   ['[CLS]', 'A', 'CGTA', 'GCA', 'TCGGA', 'TCTATCTA', 'TCGACA', 'CTTGG', 'TTA', 'TCGA', 'TCTA', 'CGA', 'GCA', 'TCTC', 'GTTA', 'GC', '[SEP]']
 
+*What are some general observations you can make about the tokenization?*
 
-Next, we can get the output sequence embeddings:
+Lets now turn our attention to the model. To see details of the model architecture, you can inspect
+the ``model`` object that we created above: 
 
-.. code-block:: python 
+.. code-block:: python
 
-   >>> # embedding with mean pooling
-   >>> embedding_mean = torch.mean(hidden_states[0], dim=0)
-   >>> print(embedding_mean.shape) # expect to be 768
+   >>> print(model)
+
+*Click below to expand the model architecture - notice anything familiar?*
+
+.. toggle::
+
+   .. code-block:: text
+
+      BertModel(
+        (embeddings): BertEmbeddings(
+          (word_embeddings): Embedding(4096, 768)
+          (token_type_embeddings): Embedding(2, 768)
+          (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+        )
+        (encoder): BertEncoder(
+          (layer): ModuleList(
+            (0-11): 12 x BertLayer(
+              (attention): BertUnpadAttention(
+                (self): BertUnpadSelfAttention(
+                  (dropout): Dropout(p=0.0, inplace=False)
+                  (Wqkv): Linear(in_features=768, out_features=2304, bias=True)
+                )
+                (output): BertSelfOutput(
+                  (dense): Linear(in_features=768, out_features=768, bias=True)
+                  (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+                  (dropout): Dropout(p=0.1, inplace=False)
+                )
+              )
+              (mlp): BertGatedLinearUnitMLP(
+                (gated_layers): Linear(in_features=768, out_features=6144, bias=False)
+                (act): GELU(approximate='none')
+                (wo): Linear(in_features=3072, out_features=768, bias=True)
+                (dropout): Dropout(p=0.1, inplace=False)
+                (layernorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              )
+            )
+          )
+        )
+        (pooler): BertPooler(
+          (dense): Linear(in_features=768, out_features=768, bias=True)
+          (activation): Tanh()
+        )
+      )
+
+This pre-trained model by itself does not have broad utility. We need to fine tune the model to a 
+specific task (e.g. classification). For this example, we will fine tune it to build a classifier
+to predict whether a sequence is from a coding region of DNA or not.
+
+We have previously downloaded and modified a DNA sequence dataset from
+`Kaggle <https://www.kaggle.com/datasets/adnanyaramis/coding-noncoding-dna-sequences>`_. The adapted
+dataset contains two columns: the sequence and a label (1=coding, 0=non-coding). The dataset is in
+CSV format and can be downloaded directly from this
+`URL <https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section5/files/Coding_NonCoding_DNA_Sequences.csv>`_.
+Since the data is available on the web, it is easiest to use pandas to just read it in directly.
+
+.. code-block:: python
+
+   >>> import pandas as pd
+   >>> data = pd.read_csv('https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section5/files/Coding_NonCoding_DNA_Sequences.csv')
+   >>> print(data.shape)
+   >>> print(data.head())
 
 .. code-block:: text
 
-   torch.Size([768])
+      (65321, 2)
+                                           DNA_sequence  Target
+   0  CTCTTGCGGTCGATCTGGTCACGGGTGATGGTGAAGGTTACGTAGT...       1
+   1  TCGCGGTCCCGAGCCTGATCGTGCGCCGCGCCAACACGACGGTCGA...       1
+   2  GGCTACGACGTGACCGCGGGGCAGGTGCTCGTGACCAACGGCGGCA...       1
+   3  CAGGTAGGTGCCACAGTAGTAAGCGGTGATGCAGTTGCCCCTGAAT...       1
+   4  GAGTTGTCCTGGTAAGATTCTTACCCATGCGAATCACGTCGAAAGG...       1
 
+It appears there are 65,321 rows and 2 columns. How many of each class are included in the dataset?
 
 .. code-block:: python
 
-   >>> # embedding with max pooling
-   >>> embedding_max = torch.max(hidden_states[0], dim=0)[0]
-   >>> print(embedding_max.shape) # expect to be 768
+   >>> data['Target'].value_counts()
 
 .. code-block:: text
 
-   torch.Size([768])
+      Target
+   0    45603
+   1    19718
+   Name: count, dtype: int64
 
-
-You can also average over the sequence length to get a fixed-size embedding:
-
-.. code-block:: python
-
-   >>> sequence_embedding = hidden_state.mean(dim=1)
-
-And finally use that tensor to classify the sequence:
+It's about 70% non-coding and 30% coding DNA. This is a fairly large data set - more data generally
+is better for training a model. However to save time in this workshop, let's subsample it to just
+1000 sequences, checking to make sure that it preserves the ratio:
 
 .. code-block:: python
-
-   >>> import torch.nn as nn
    
-   >>> classifier = nn.Sequential(
-   >>>     nn.Linear(768, 2),  # 2 classes: promoter or not
-   >>>     nn.Softmax(dim=1)
-   >>> )
-   
-   >>> logits = classifier(sequence_embedding)
-   >>> pred = torch.argmax(logits, dim=1)
-   >>> print(f"Predicted class: {pred.item()} (0 = non-promoter, 1 = promoter)")
+   >>> data_subset = data.sample(1000)
+   >>> print(data_subset['Target'].value_counts())
+
+.. code-block:: text
+
+      Target
+   0    694
+   1    306
+   Name: count, dtype: int64
+
+That's pretty close - we have narrowed it down to 1000 sequences, 694 of which are from non-coding
+regions of DNA, and 306 of which are from coding regions. 
+
+Next, let's use the tokenizer that we pulled from Hugging Face to slice up those 1000 sequences into
+short k-mers (of variable length), then encode them into a tensor of token IDs. 
+
+
+.. code-block:: python
+
+   >>> data_subset_list = data_subset.DNA_sequence.values.tolist() 
+   >>> inputs = tokenizer(data_subset_list, return_tensors="pt", padding=True)["input_ids"]
+
+
+Then, use the model that we pulled from Hugging Face to get the embeddings, given the token IDs.
+The embeddings are a mathematical representation of the hidden states of the model. 
+
+.. warning::
+
+   This step will take about 3 or 4 minutes for 1000 sequences.
+
+
+.. code-block:: python
+
+   >>> embeddings = model(inputs)
+   >>> embedding_data = torch.mean(embeddings[0], dim=1).detach().numpy()
+
+
+Given those embeddings and the known labels (coding or non-coding), we can train a simple classifier
+to predict the labels of unknown DNA sequences. For this example, we can use a Random Forest 
+Classifier. As we have seen before, we split our embeddings (which we treat as features) and labels
+into train and test sets. Then, we fit the RF classifer to the training set and predict the labels
+of our test set.
+
+.. code-block:: python
+
+   >>> from sklearn.ensemble import RandomForestClassifier
+   >>> from sklearn.model_selection import train_test_split
+
+   >>> X_train, X_test, y_train, y_test = train_test_split(embedding_data, data_subset.Target, test_size=0.3, stratify=data_subset.Target, random_state=1)
+   >>> rf = RandomForestClassifier()
+   >>> rf.fit(X_train, y_train)
+   >>> y_pred = rf.predict(X_test)
+
+How did we do?
+
+.. code-block:: python
+
+   >>> from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+   >>> acc = accuracy_score(y_test, y_pred)
+   >>> precision = precision_score(y_test, y_pred)
+   >>> recall = recall_score(y_test, y_pred)
+   >>> f1 = f1_score(y_test, y_pred)
+
+.. code-block:: python
+
+   >>> print(f'accuracy = {acc}')
+   >>> print(f'precision = {precision}')
+   >>> print(f'recall = {recall}')
+   >>> print(f'f1 = {f1}')
+
+.. code-block:: text
+
+   accuracy = 0.6766666666666666
+   precision = 0.48148148148148145
+   recall = 0.13541666666666666
+   f1 = 0.21138211382113822
+
+Accuracy of 0.676 is not too bad for fine tuning on that small subset of labeled DNA. Would accuracy
+improve if we trained over the entire dataset?
+
+What about that sequence from above? 
+
+.. code-block:: python
+
+   >>> dna = 'ACGTAGCATCGGATCTATCTATCGACACTTGGTTATCGATCTACGAGCATCTCGTTAGC'
+   >>> dna_tokenized = tokenizer(dna, return_tensors='pt')['input_ids']
+   >>> dna_embedded = model(dna_tokenized)
+   >>> dna_embedded_data = torch.mean(dna_embedded[0], dim=1).detach().numpy()
+   >>> pred=rf.predict(dna_embedded_data)
+   >>> print(pred)
+
+.. code-block:: text
+
+   [0]
 
 Congratulations! You've successfully completed a simple classification task using DNABERT-2.
 
@@ -364,11 +502,15 @@ Other Notable Protein Sequence Models
   natural language prompts
 
 
+
+
 Additional Resources
 --------------------
 
 * `DNABERT-2 on Hugging Face <https://huggingface.co/zhihan1996/DNABERT-2-117M>`_
 * `DNABERT-2 on GitHub <https://github.com/MAGICS-LAB/DNABERT_2>`_
+* `DNABERT-2 Classification Exercise Adapted from <https://www.kaggle.com/code/gabrielcabas/dnabert-for-classification>`_
+* `Coding and Non-noncoding Data Adapted from <Data adapted from https://www.kaggle.com/datasets/adnanyaramis/coding-noncoding-dna-sequences>`_
 * `ProtGPT2 on Hugging Face <https://huggingface.co/nferruz/ProtGPT2>`_
 * `LLM Applications in Bioinformatics Review 1 <https://www.sciencedirect.com/science/article/pii/S2001037024003209>`_
 * `LLM Applications in Bioinformatics Review 2 <https://pmc.ncbi.nlm.nih.gov/articles/PMC10802675/>`_
