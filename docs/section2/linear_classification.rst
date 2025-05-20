@@ -14,7 +14,7 @@ look at validation and overfitting. By the end of this section, you should be ab
 Introduction
 ------------
 
-Classification is the problem of predicting an independent variable that takes values from a finite,
+Classification is the problem of predicting a dependent variable that takes values from a finite,
 discrete set. An ML model that predicts such a dependent variable is called a *classifier*. The
 possible values are called *classes*.
 
@@ -121,8 +121,7 @@ Let :math:`X_1, ..., X_n` be :math:`n` different data points in our training set
 
 
 Our goal is to find the optimal choices of :math:`m` and :math:`b`. For simplicity, we'll assume
-that :math:`b=0` (i.e., that the line goes through the origin) just like we did with Linear
-Regression. 
+that :math:`b=0` (i.e., that the line goes through the origin). 
 
 Therefore, we want to find a choice of :math:`m` so that: 
 
