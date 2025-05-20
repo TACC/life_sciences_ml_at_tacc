@@ -63,6 +63,8 @@ cat <<EOL > ~/.local/share/jupyter/kernels/$KERNEL_DIR/kernel.json
     "--nv",
     "--bind",
     "/run/user:/run/user",
+    "--env",
+    "HF_HOME=$SCRATCH/cache",
     "$SCRATCH/$IMAGE_PT",
     "python3",
     "-m",
