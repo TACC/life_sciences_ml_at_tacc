@@ -509,8 +509,8 @@ Additional Resources
 
 * `DNABERT-2 on Hugging Face <https://huggingface.co/zhihan1996/DNABERT-2-117M>`_
 * `DNABERT-2 on GitHub <https://github.com/MAGICS-LAB/DNABERT_2>`_
-* `DNABERT-2 Classification Exercise Adapted from <https://www.kaggle.com/code/gabrielcabas/dnabert-for-classification>`_
-* `Coding and Non-noncoding Data Adapted from <Data adapted from https://www.kaggle.com/datasets/adnanyaramis/coding-noncoding-dna-sequences>`_
+* `DNABERT-2 Classification Exercise Adapted from Kaggle <https://www.kaggle.com/code/gabrielcabas/dnabert-for-classification>`_
+* `Coding and Non-noncoding Data Adapted from Kaggle <https://www.kaggle.com/datasets/adnanyaramis/coding-noncoding-dna-sequences>`_
 * `ProtGPT2 on Hugging Face <https://huggingface.co/nferruz/ProtGPT2>`_
 * `LLM Applications in Bioinformatics Review 1 <https://www.sciencedirect.com/science/article/pii/S2001037024003209>`_
 * `LLM Applications in Bioinformatics Review 2 <https://pmc.ncbi.nlm.nih.gov/articles/PMC10802675/>`_
