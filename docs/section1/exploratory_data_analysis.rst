@@ -594,16 +594,16 @@ Exercise: Which Day Has the Most and Least Outcomes?
     .. code-block:: text
 
         weekday_name
-        Monday       178
-        Tuesday      146
-        Wednesday    126
-        Sunday       100
-        Thursday      96
-        Friday        68
-        Saturday      61
+        Tuesday      6807
+        Saturday     6605
+        Friday       6209
+        Monday       6180
+        Wednesday    5952
+        Thursday     5735
+        Sunday       5647
         Name: count, dtype: int64
 
-    From the result, we can see that Mondays had the most outcomes, while Saturdays had the fewest
+    From the result, we can see that Tuesdays had the most outcomes, while Sundays had the fewest
     in this filtered dataset. This kind of temporal insight is often valuable when planning staffing
     or outreach for shelters.
 
@@ -634,7 +634,7 @@ The result might look like:
 
 .. code-block:: text
 
-    3762 days 00:00:00
+    4233 days 07:05:00
 
 This tells us the filtered dataset covers approximately 10.3 years of outcomes for dogs.
 
