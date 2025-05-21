@@ -308,6 +308,108 @@ model is selected.
    Open WebUI - Chat interface with llama3.1:8b selected.
 
 
+RAG Example
+~~~~~~~~~~~
+
+Now that we have the Open WebUI chat interface open, we can try running a simple RAG example. The first task is to
+install an improved embedding model. Navigate to the lower left corner of the page and click on your name
+and then "Admin Panel". On the admin panel, select the "Settings" tab and then "Models" pane. On the Models
+pane, select the "Manage Models" button (downward arrow) on the far right side of the page to open the dialog box.
+Enter "bge-m3" in the "Pull a model from Ollama.com" text box and click the "Pull" button to the right. This will pull the
+BGE-M3 embedding model from Ollama.com.
+
+.. figure:: ./images/rag_load_embedding_model.png
+   :width: 600
+   :align: center
+
+   Open WebUI - Manage Models dialog box.
+
+With the model fully downloaded and verified, close the dialog box, and we should now be looking at the "Models"
+pane.
+
+.. figure:: ./images/rag_models_list.png
+   :width: 600
+   :align: center
+
+   Open WebUI - Models pane.
+
+
+Select the "pencil" icon next to the "bge-m3" model to open the "Edit Model" dialog box. Scroll down to
+"Advanced Params" section and click on the "Show" button to the right. This will show the advanced parameters for the
+model. Scroll down to the "Context Length (Ollama)" parameter, click on the number to the right and set it to 8192. This will increase the
+context length for the embedding model to 8192 tokens. Scroll back up to the top of the dialog box and click the
+"Back" button to close the dialog box. This will take us back to the "Models" pane.
+
+.. figure:: ./images/rag_embedding_model_settings.png
+   :width: 600
+   :align: center
+
+   Open WebUI - Model Setting dialog box.
+
+The last bit of set up we're going to do is to update the "Document" settings. Navigate to the "Admin Panel" once
+again and select the "Settings" tab and then "Documents" pane. On the Documents pane, we're going to update the
+"Chunk Size" to 3000 under the "General" grouping and under the "Embedding" grouping we're going to set the 
+"Embedding Model Engine" to "Ollama" (drop-down menu) and set the "Embedding Model" to "bge-m3". These settings
+affect how the external documents are chunked and embedded. Finally, click the "Save" button to save the changes.
+
+.. figure:: ./images/rag_document_settings.png
+   :width: 600
+   :align: center
+
+   Open WebUI - Document settings pane.
+
+With our models in place and settings updated, let's give our RAG example a try. Here we're going to upload
+two machine learning papers, `Random Forests <https://link.springer.com/article/10.1023/A:1010933404324>`_, and
+`Greedy function approximation: A gradient boosting machine <https://projecteuclid.org/journals/annals-of-statistics/volume-29/issue-5/Greedy-function-approximation-A-gradient-boosting-machine/10.1214/aos/1013203451.full>`_
+and then ask some comparative questions. To get started, open this documentation in a new tab of the Firefox
+browser in your DCV session. Go to each of the above two links and save each paper as a PDF (click on the
+"Download PDF" button). With our documents downloaded, Click on the "New Chat" button
+in the upper left corner of the page to bring us to the main chat interface. At the chat prompt, click on the "+"
+button in the left side of the prompt box and select "Upload Files".
+
+.. figure:: ./images/rag_upload_documents.png
+   :width: 600
+   :align: center
+
+   Open WebUI - Add documents.
+
+This will open a file browser. Navigate to the directory where you saved the two papers, select both of them,
+and click the "Open" button. This will upload the two documents to the Open WebUI chat interface.
+
+.. figure:: ./images/rag_upload_documents_dialog.png
+   :width: 600
+   :align: center
+
+   Open WebUI - Add documents - File browser.
+
+With the documents uploaded, we can now ask some questions. In the chat prompt, type something like the
+following question:
+
+   "The articles provided talk about related but slightly different machine learning approaches. Can you
+   provide me with a summary and a table where you describe different use cases and where each of the methods
+   has advantages and disadvantages?"
+
+.. figure:: ./images/rag_add_prompt.png
+   :width: 600
+   :align: center
+
+   Open WebUI - Prompt with uploaded documents.
+
+The model will then process the documents and generate a response based on the content of the papers.
+
+.. figure:: ./images/rag_query_results.png
+   :width: 600
+   :align: center
+
+   Open WebUI - RAG response.
+
+Exercise
+^^^^^^^^
+
+With this RAG setup in Open WebUI in place, try out some of your own documents/papers and ask the model
+relevant questions about them. Feel free to also experiment with other models and settings.
+
+
 Additional Resources
 --------------------
 
@@ -318,6 +420,7 @@ The material in this section is based on the following resources:
 * `From ELIZA to GPT-4: The Grand Odyssey of Language Models <https://pub.towardsai.net/history-of-llms-931e041ef176>`_
 * `Understanding how LLM inference works with llama.cpp <https://www.omrimallis.com/posts/understanding-how-llm-inference-works-with-llama-cpp/>`_
 * `What is Retrieval Augmented Generation (RAG)? <https://www.datacamp.com/blog/what-is-retrieval-augmented-generation-rag>`_
+* `Part V: Bringing it all together - RAG with ollama and Open WebUI <https://www.linkedin.com/pulse/part-v-bringing-all-together-rag-ollama-open-webui-insigene-vfqxc/>`_
 
 **References:**
 
