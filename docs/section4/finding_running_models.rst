@@ -273,7 +273,6 @@ Finally, we will use the model to predict the sentiment of a piece of French tex
     >>> classifier = pipeline("sentiment-analysis", model= model, tokenizer=tokenizer)
     >>> result = classifier(text)
     >>> print(result)
-    >>> [{'label': '5 stars', 'score': 0.7264368534088135}]
 
 
 Additional Resources
