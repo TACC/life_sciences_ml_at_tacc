@@ -272,7 +272,7 @@ The embeddings are a mathematical representation of the hidden states of the mod
 
 .. warning::
 
-   This step will take about 3 or 4 minutes for 1000 sequences.
+   This step may take about 3 or 4 minutes for 1000 sequences.
 
 
 .. code-block:: python
@@ -282,65 +282,168 @@ The embeddings are a mathematical representation of the hidden states of the mod
 
 
 Given those embeddings and the known labels (coding or non-coding), we can train a simple classifier
-to predict the labels of unknown DNA sequences. For this example, we can use a Random Forest 
-Classifier. As we have seen before, we split our embeddings (which we treat as features) and labels
-into train and test sets. Then, we fit the RF classifer to the training set and predict the labels
-of our test set.
+to predict the labels of unknown DNA sequences. For this example, we can use a Naive Bayes
+Classifier, which typically works well with high-dimension data. As we have seen before, we split
+our embeddings (which we treat as features) and labels into train and test sets. Then, we fit the
+classifer to the training set and predict the labels of our test set.
 
 .. code-block:: python
 
-   >>> from sklearn.ensemble import RandomForestClassifier
+   >>> from sklearn.naive_bayes import GaussianNB
    >>> from sklearn.model_selection import train_test_split
 
    >>> X_train, X_test, y_train, y_test = train_test_split(embedding_data, data_subset.Target, test_size=0.3, stratify=data_subset.Target, random_state=1)
-   >>> rf = RandomForestClassifier()
-   >>> rf.fit(X_train, y_train)
-   >>> y_pred = rf.predict(X_test)
+   >>> gnb = GaussianNB()
+   >>> y_pred = gnb.fit(X_train, y_train).predict(X_test)
+
 
 How did we do?
 
 .. code-block:: python
 
-   >>> from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+   >>> from sklearn.metrics import classification_report
 
-   >>> acc = accuracy_score(y_test, y_pred)
-   >>> precision = precision_score(y_test, y_pred)
-   >>> recall = recall_score(y_test, y_pred)
-   >>> f1 = f1_score(y_test, y_pred)
-
-.. code-block:: python
-
-   >>> print(f'accuracy = {acc}')
-   >>> print(f'precision = {precision}')
-   >>> print(f'recall = {recall}')
-   >>> print(f'f1 = {f1}')
+   >>> print(f"Performance on TEST\n*******************\n{classification_report(y_test, gnb.predict(X_test))}")
+   >>> print(f"Performance on TRAIN\n********************\n{classification_report(y_train, gnb.predict(X_train))}")
 
 .. code-block:: text
 
-   accuracy = 0.6766666666666666
-   precision = 0.48148148148148145
-   recall = 0.13541666666666666
-   f1 = 0.21138211382113822
+   Performance on TEST
+   *******************
+                 precision    recall  f1-score   support
+   
+              0       0.83      0.69      0.76       214
+              1       0.46      0.65      0.54        86
+   
+       accuracy                           0.68       300
+      macro avg       0.65      0.67      0.65       300
+   weighted avg       0.72      0.68      0.69       300
+   
+   Performance on TRAIN
+   ********************
+                 precision    recall  f1-score   support
+   
+              0       0.86      0.71      0.78       500
+              1       0.49      0.71      0.58       200
+   
+       accuracy                           0.71       700
+      macro avg       0.68      0.71      0.68       700
+   weighted avg       0.76      0.71      0.72       700
 
-Accuracy of 0.676 is not too bad for fine tuning on that small subset of labeled DNA. Would accuracy
-improve if we trained over the entire dataset?
 
-What about that sequence from above? 
+Accuracy of 0.68 is not great - but this is using the embeddings alone as our features. Could we get
+a better outcome if we trained over all ~65K sequences? Can we get a
+better outcome if we fine tune the original DNABERT-2 model that was previously trained on
+**32B bases**, and then use their baked-in sequence classifier?
+
+.. toggle::
+
+   .. note::
+   
+      You can also give it just one sequence for classification. For example, give it the sequence from 
+      above:
+   
+      .. code-block:: python
+      
+         >>> dna = 'ACGTAGCATCGGATCTATCTATCGACACTTGGTTATCGATCTACGAGCATCTCGTTAGC'
+         >>> dna_tokenized = tokenizer(dna, return_tensors='pt')['input_ids']
+         >>> dna_embedded = model(dna_tokenized)
+         >>> dna_embedded_data = torch.mean(dna_embedded[0], dim=1).detach().numpy()
+         >>> pred=gnb.predict(dna_embedded_data)
+         >>> print(pred)
+      
+      .. code-block:: text
+      
+         [0]
+
+
+Rather than trying to run all of the Python code required for this in the Jupyter notebook, a quick
+check of the author's `GitHub repo <https://github.com/MAGICS-LAB/DNABERT_2>`_ shows they wrote a
+convenience script to do exactly what we want to do - fine tune their model with our input sequences
+for a classification task.
+
+In order to run their script, we just need to clone their GitHub repo, and prepare three input
+files: ``train.csv``, ``test.csv``, and ``dev.csv`` (this last one is what they call their 
+validation set).
+
+We can prepare those three files by sub-sampling our 1000-sequence subset:
 
 .. code-block:: python
 
-   >>> dna = 'ACGTAGCATCGGATCTATCTATCGACACTTGGTTATCGATCTACGAGCATCTCGTTAGC'
-   >>> dna_tokenized = tokenizer(dna, return_tensors='pt')['input_ids']
-   >>> dna_embedded = model(dna_tokenized)
-   >>> dna_embedded_data = torch.mean(dna_embedded[0], dim=1).detach().numpy()
-   >>> pred=rf.predict(dna_embedded_data)
-   >>> print(pred)
+   >>> import os
+   >>> scratch = os.environ.get('SCRATCH')
+   >>> os.mkdir(f'{scratch}/sample_data_for_dnabert2')
 
-.. code-block:: text
+   >>> data_subset.iloc[:600].to_csv(f'{scratch}/sample_data_for_dnabert2/train.csv', index=False)
+   >>> data_subset.iloc[600:750].to_csv(f'{scratch}/sample_data_for_dnabert2/dev.csv', index=False)
+   >>> data_subset.iloc[750:].to_csv(f'{scratch}/sample_data_for_dnabert2/test.csv', index=False)
 
-   [0]
+*Does anyone see any potential problems with this approach?*
 
-Congratulations! You've successfully completed a simple classification task using DNABERT-2.
+Next, open up a terminal from Jypyter Lab and clone the DNABERT-2 GitHub repo:
+
+.. code-block:: console
+
+   [gh]$ cds     # cd to SCRATCH
+   [gh]$ git clone https://github.com/MAGICS-LAB/DNABERT_2
+   [gh]$ cd DNABERT_2/finetune/
+
+Then, run the training script. The container image was prepared
+previously by installing the dependencies listed in the author's GitHub repo.
+
+.. warning::
+
+   This step may take about 15 minutes for 5 epochs.
+
+.. code-block:: console
+
+   [gh]$ module load tacc-apptainer
+   [gh]$ export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
+   [gh]$ apptainer exec docker://wjallen/dnabert2:1.0 \
+                        python train.py \
+                        --model_name_or_path zhihan1996/DNABERT-2-117M \
+                        --data_path ${SCRATCH}/sample_data_for_dnabert2/\
+                        --kmer -1 \
+                        --run_name DNABERT2_test \
+                        --model_max_length 100 \
+                        --per_device_train_batch_size 8 \
+                        --per_device_eval_batch_size 16 \
+                        --gradient_accumulation_steps 1 \
+                        --learning_rate 3e-5 \
+                        --num_train_epochs 5 \
+                        --fp16 \
+                        --save_steps 200 \
+                        --output_dir output/ \
+                        --evaluation_strategy steps \
+                        --eval_steps 200 \
+                        --warmup_steps 50 \
+                        --logging_steps 100 \
+                        --overwrite_output_dir True \
+                        --log_level info \
+                        --find_unused_parameters False
+
+*What is learning_rate? Is it set to a small number or a big number here? Why is it set the way it
+is? Any other notable parameters?*
+
+If successful, the script outputs the results to the ``output/`` directory, which you can check as
+follows:
+
+.. code-block:: console
+
+   [gh]$ cat output/results/DNABERT2_test/eval_results.json 
+   {"eval_loss": 0.5799916386604309,
+    "eval_accuracy": 0.696,
+    "eval_f1": 0.5968084203378321,
+    "eval_matthews_correlation": 0.2162526926317811,
+    "eval_precision": 0.6257488069854807,
+    "eval_recall": 0.5929735004879513,
+    "eval_runtime": 24.8139,
+    "eval_samples_per_second": 10.075,
+    "eval_steps_per_second": 0.645,
+    "epoch": 5.0 }
+
+Slightly better than the Naive Bayes classifier we trained above, but not by much. Congratulations!
+You've successfully completed a simple classification task using DNABERT-2.
 
 
 Other Notable DNA Sequence Models
@@ -500,8 +603,6 @@ Other Notable Protein Sequence Models
 * `ESMFold <https://doi.org/10.1126/science.ade2574>`_ - Protein folding mechanisms and interactions
 * `ProGen <https://doi.org/10.1038/s41587-022-01618-2>`_ - Generate novel protein sequences given
   natural language prompts
-
-
 
 
 Additional Resources
