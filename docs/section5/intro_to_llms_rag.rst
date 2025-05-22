@@ -173,13 +173,13 @@ We will use the open-source `Firefox <https://www.mozilla.org/en-US/firefox/new/
 .. code-block:: console
 
    # Move to the scratch directory
-   $ cd $SCRATCH
+   [vista]$ cd $SCRATCH
 
    # Download the Firefox install script
-   $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section5/files/install_firefox_linux-aarch64.sh
+   [vista]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section5/files/install_firefox_linux-aarch64.sh
 
    # Run the install script
-   $ . ./install_firefox_linux-aarch64.sh
+   [vista]$ . ./install_firefox_linux-aarch64.sh
    Downloading firefox...
    Extracting firefox to /home1/03762/eriksf/bin...
    Linking /home1/03762/eriksf/bin/firefox/firefox to ff...
@@ -197,10 +197,10 @@ with the appropriate options.
 .. code-block:: console
 
     # Download the start script
-    $ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section5/files/start-openwebui.sh
+    [vista]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section5/files/start-openwebui.sh
     
     # Run the start script
-    $ . ./start-openwebui.sh 
+    [vista]$ . ./start-openwebui.sh 
 
     Currently Loaded Modules:
       1) ucc/1.3.0      4) TACC            7) nvpl/25.3
@@ -238,7 +238,8 @@ with the appropriate options.
     Starting open-webui instance...
     Running start script...
     To stop open-webui, type 'apptainer instance stop openwebui1'
-    $ apptainer instance list
+
+    [vista]$ apptainer instance list
     INSTANCE NAME    PID        IP    IMAGE
     openwebui1       1435449          /tmp/rootfs-1217685323/root
 
@@ -252,7 +253,7 @@ navigate to the following URL, http://localhost:8080. This will open the Open We
 .. code-block:: console
 
    # Open Firefox
-   $ ff &
+   [vista]$ ff &
 
 With the browser open to the start page, click the "Get started" link at the bottom of the page.
 
@@ -337,8 +338,8 @@ pane.
 Select the "pencil" icon next to the "bge-m3" model to open the "Edit Model" dialog box. Scroll down to
 "Advanced Params" section and click on the "Show" button to the right. This will show the advanced parameters for the
 model. Scroll down to the "Context Length (Ollama)" parameter, click on the number to the right and set it to 8192. This will increase the
-context length for the embedding model to 8192 tokens. Scroll back up to the top of the dialog box and click the
-"Back" button to close the dialog box. This will take us back to the "Models" pane.
+context length for the embedding model to 8192 tokens. Scroll to the bottom and click the 'Save &
+Update' button. This will take us back to the "Models" pane.
 
 .. figure:: ./images/rag_embedding_model_settings.png
    :width: 600
