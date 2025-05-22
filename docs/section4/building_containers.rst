@@ -510,7 +510,7 @@ on the command line:
 
 .. code-block:: console
 
-   [local]$ docker run --rm -v $PWD:/images username/image_classifier:0.1 image_classifier.py /images/dog.jpg
+   [local]$ docker run --rm -v $PWD:/images username/image-classifier:0.1 image_classifier.py /images/dog.jpg
    Downloading: "https://download.pytorch.org/models/resnet101-cd907fc2.pth" to /root/.cache/torch/hub/checkpoints/resnet101-cd907fc2.pth
    100%|██████████| 171M/171M [00:01<00:00, 106MB/s]
    Classifying /images/dog.jpg with ResNet101...
