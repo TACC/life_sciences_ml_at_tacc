@@ -27,11 +27,11 @@ end of this section, you should be able to:
 
    .. code-block:: console
 
-       $ pip install --user transformers scikit-learn pandas einops
+       $ pip install --user transformers scikit-learn pandas einops peft
 
 
-Example 1: DNA Sequence Context
--------------------------------
+Example 1: DNA Sequence Classification
+--------------------------------------
 
 **DNABERT-2** is an advanced transformer-based foundation model designed for analyzing DNA sequences
 across multiple species. It builds upon the original DNABERT model by introducing significant
@@ -39,6 +39,7 @@ improvements in tokenization and architecture, and it is trained on genomes from
 species. This allows DNABERT-2 to perform well on a wide range of genomic tasks, including promoter
 prediction, gene expression analysis, DNA methylation detection, and more.
 
+*Given DNA sequences and labels, how would we approach a classification task?*
 
 How it Works
 ^^^^^^^^^^^^
@@ -78,7 +79,7 @@ Some of the key innovations of DNABERT-2 over the original DNABERT include:
    improved IO to accelerate training and inference and reducing memory requirements.
 
 3. **Genome Understanding Evaluation (GUE) Benchmark:** The original DNABERT was trained on human
-   sequences alone. DNABERT-2 is trained on genomces from 135 different species, enhancing its
+   sequences alone. DNABERT-2 is trained on genomes from 135 different species, enhancing its
    generalizability across diverse organisms. To assess and compare genome models effectively, the
    developers introduced the GUE benchmark, a massive amalgam of 36 datasets for 9 different genomic
    tasks.
@@ -358,8 +359,8 @@ better outcome if we fine tune the original DNABERT-2 model that was previously 
 
 
 Rather than trying to run all of the Python code required for this in the Jupyter notebook, a quick
-check of the author's `GitHub repo <https://github.com/MAGICS-LAB/DNABERT_2>`_ shows they wrote a
-convenience script to do exactly what we want to do - fine tune their model with our input sequences
+check of the author's `GitHub repo <https://github.com/MAGICS-LAB/DNABERT_2>`_ shows they wrote a 
+convenient script to do exactly what we want to do - fine tune their model with our input sequences
 for a classification task.
 
 In order to run their script, we just need to clone their GitHub repo, and prepare three input
@@ -470,13 +471,12 @@ How it Works
 ^^^^^^^^^^^^
 
 ProtGPT2 works by leveraging a GPT-2-like transformer architecture. GPT-2 (Generative Pretrained
-Transformer 2) also deviates from the traditional transformer architecture by only using the decoder
-portion of the model. As mentioned above, the full transformer includes both an encoder and decoder
-for tasks like translation, but GPT-2-like models are designed for generative tasks such as text
-completion. It uses a unidirectional (left-to-right) attention mechanism, meaning each token pays
-attention (attention is all you need!) only to previous tokens, which enables text generation. This
-contrasts with *bidirectional* models like BERT, which use bidirectional attention for deeper
-language understanding.
+Transformer 2) also deviates from the traditional transformer, but this architecture only uses the
+decoder portion of the model. As mentioned above, the full transformer includes both an encoder and
+decoder for tasks like translation, but GPT-2-like models are designed for generative tasks such as
+text completion. It uses a unidirectional (left-to-right) attention mechanism, meaning each token
+pays attention (attention is all you need!) only to previous tokens, which enables text generation.
+This contrasts with *bidirectional* models like BERT, which use bidirectional attention for deeper
 
 ProtGPT2 is trained specifically on protein sequence data. The model learns patterns, motifs, and
 structural features inherent in protein sequences by analyzing vast datasets of known proteins. This
