@@ -80,6 +80,11 @@ The basic workflow we'll follow is:
 
 Here's a preview of what our model code will look like:
 
+.. warning::
+
+   The code below is just a template and will not run as-is. It needs to be modified as described 
+   below.
+
 .. code-block:: python
     :linenos:
 
@@ -510,10 +515,10 @@ For fully connected layers, the number of trainable parameters can be calculated
 Let's understand what each part means:
 
  1. **Weights**: ``Input units x Output units``
-   Each Input unit connects to each Output unit, so there's one weight per connection. This forms a weight matrix of shape ``(Input units, Output units)``. 
+    Each Input unit connects to each Output unit, so there's one weight per connection. This forms a weight matrix of shape ``(Input units, Output units)``. 
 
  2. **Biases**: ``+ Output units``
-   Each output perceptron has one bias term, regardless of the number of Input units. So the total number of bias terms is equal to the number of Output units. 
+    Each output perceptron has one bias term, regardless of the number of Input units. So the total number of bias terms is equal to the number of Output units. 
 
 
 **Thought Challenge**: 

@@ -304,15 +304,15 @@ In total, VGG-16 has 13 convolutional layers and 3 dense layers, giving it a tot
 
 VGG-16 is available in the keras.applications package and can be imported using following code.
 
-.. code-block:: python3
+.. code-block:: python
 
-    from keras.applications.vgg16 import VGG16
+    >>> from keras.applications.vgg16 import VGG16
 
-    # Create the VGG16 model (using the weights trained on ImageNet)
-    model_vgg16 = VGG16(weights='imagenet')
+    >>> # Create the VGG16 model (using the weights trained on ImageNet)
+    >>> model_vgg16 = VGG16(weights='imagenet')
 
-    # Print the model architecture
-    model_vgg16.summary()
+    >>> # Print the model architecture
+    >>> model_vgg16.summary()
 
 **Other Important Architectures**
 
@@ -336,6 +336,6 @@ Additional Resources
 References
 ^^^^^^^^^^
 
-.. [1] Minfei, L., Yidong, G., Ze, C., Zhi, W., Erik, S., & Branko, Š. (2022). Microstructure-informed deep convolutional neural network for predicting short-term creep modulus of cement paste. Cement and Concrete Research, 152, 106681. http://dx.doi:10.1016/j.cemconres.2021.106681
+.. [1] Minfei, L., Yidong, G., Ze, C., Zhi, W., Erik, S., & Branko, Š. (2022). Microstructure-informed deep convolutional neural network for predicting short-term creep modulus of cement paste. Cement and Concrete Research, 152, 106681. http://dx.doi.org/10.1016/j.cemconres.2021.106681
 .. [2] Simonyan, K., & Zisserman, A. (2015). Very Deep Convolutional Networks for Large-Scale Image Recognition. arXiv [Cs.CV]. Retrieved from http://arxiv.org/abs/1409.1556
 .. [3] Learning, G. (2021, September 23). Everything you need to know about VGG16. Medium. https://medium.com/@mygreatlearning/everything-you-need-to-know-about-vgg16-7315defb5918 
