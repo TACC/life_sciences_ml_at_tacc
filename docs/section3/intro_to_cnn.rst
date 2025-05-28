@@ -134,7 +134,7 @@ This process is often referred to as **downsampling** or **downscaling**.
     :align: center
     :alt: 
 
-    Average and Max Pooling. Source: [1]_
+    Average and Max Pooling. Adapted from: [1]_
 
 Consider the above example of a 4 x 4 feature map.
 We can apply a 2 x 2 pooling filter with a stride (step size) of 2 pixels. 
