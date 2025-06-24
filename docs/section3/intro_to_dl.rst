@@ -222,7 +222,7 @@ This code will output:
 2. **Preserves Ranking**: Highest input gets highest probability
 3. **Relative Differences Matter**: Amplifies differences between inputs
 
-**In Neural Networks**: ``Softmax`` is used in the output layer for multi-class classification problems, like identifyig which animal species (cat, dog, bird) is in an image.
+**In Neural Networks**: ``Softmax`` is used in the output layer for multi-class classification problems, like identifying which animal species (cat, dog, bird) is in an image.
 
 
 The ``ReLU`` Activation Function
