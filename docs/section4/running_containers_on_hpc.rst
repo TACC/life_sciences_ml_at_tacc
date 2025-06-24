@@ -84,6 +84,18 @@ Or open an SSH client like `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/
 When you have successfully logged in, you should be greeted with some welcome text and a command prompt.
 
 
+Set Up Your Environment
+^^^^^^^^^^^^^^^^^^^^^^^
+
+In order to achieve faster pulls and avoid too much strain on the ``$WORK`` filesystem, we will set
+up a cache directory for Apptainer on ``$SCRATCH``. Either run this every time you login, or add it
+to your ``.bashrc`` file so it is done automatically:
+
+.. code-block:: console
+
+  [vista]$ export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
+
+
 Start an Interactive Session
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -136,7 +148,7 @@ architecture (e.g. x86) is the same between the container and the host.
 
 .. code-block:: console
 
-	[gh]$ apptainer pull docker://eriksf/lolcow
+  [gh]$ apptainer pull docker://eriksf/lolcow
 
 	[gh]$ ls
 
@@ -274,6 +286,7 @@ On a HPC system, your job submission script would look something like:
   #SBATCH --reservation <my_reservation>       # a reservation only active during the training
 
   module load tacc-apptainer
+  export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
   apptainer exec docker://python:latest /usr/local/bin/python --version
 
 This example is for the Slurm scheduler, a popular one used by all TACC systems.  Each of the #SBATCH lines
@@ -361,6 +374,7 @@ following Slurm script.
   #SBATCH --reservation <my_reservation>       # a reservation only active during the training
 
   module load tacc-apptainer
+  export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
 
   cd $SCRATCH
 

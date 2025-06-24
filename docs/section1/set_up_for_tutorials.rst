@@ -53,6 +53,7 @@ Start an interactive session on a development node, then run the setup script.
 
    # Load the Apptainer module
    [clx]$ module load tacc-apptainer
+   [clx]$ export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
 
    # Pull the Docker container image created for this tutorial
    [clx]$ apptainer pull docker://kbeavers/tf-213:frontera
@@ -219,6 +220,7 @@ kernel image files into your SCRATCH directory and install the kernel definition
 
    # Change to your SCRATCH directory
    [vista]$ cds
+   [vista]$ export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
    
    # Download the setup script
    [vista]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/refs/heads/main/docs/section4/files/install_kernels.sh
