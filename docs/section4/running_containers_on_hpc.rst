@@ -17,7 +17,7 @@ Introduction to Apptainer
 .. Note::
 
     Prerequisites
-	This section uses the Vista compute cluster to run Apptainer. An active allocation on Vista is required, though most content will apply to any system that supports Apptainer.
+	This section uses the Frontera compute cluster to run Apptainer. An active allocation on Frontera is required, though most content will apply to any system that supports Apptainer.
 
 At face value, Apptainer is an alternative container implementation to Docker that has an overlapping
 set of features but some key differences as well.  Apptainer is commonly available on shared clusters,
@@ -29,10 +29,10 @@ Apptainer simply as a runtime to execute containers on HPC systems.
 If you are familiar with Docker, Apptainer will feel familiar.
 
 
-Login to Vista
-^^^^^^^^^^^^^^
+Login to Frontera
+^^^^^^^^^^^^^^^^^
 
-For today's training, we will use the Vista supercomputer. To login, you need to establish a SSH connection from your laptop to the Vista system.  Instructions depend on your laptop's operating system.
+For today's training, we will use the Frontera supercomputer. To login, you need to establish a SSH connection from your laptop to the Frontera system.  Instructions depend on your laptop's operating system.
 
 
 Mac / Linux (Use Terminal)
@@ -42,7 +42,7 @@ Open the application 'Terminal' and:
 
 .. code-block:: console
    
-  [local]$ ssh username@vista.tacc.utexas.edu
+  [local]$ ssh username@frontera.tacc.utexas.edu
 
   To access the system:
   
@@ -60,7 +60,7 @@ Open the application WSL2 :
 
 .. code-block:: console
    
-  [local]$ ssh username@vista.tacc.utexas.edu
+  [local]$ ssh username@frontera.tacc.utexas.edu
 
   To access the system:
   
@@ -75,7 +75,7 @@ Or open an SSH client like `PuTTY <https://www.chiark.greenend.org.uk/~sgtatham/
 .. code-block:: console
 
   Open the application 'PuTTY'
-  enter Host Name: vista.tacc.utexas.edu
+  enter Host Name: frontera.tacc.utexas.edu
   (click 'Open')
   (enter username)
   (enter password)
@@ -93,7 +93,7 @@ to your ``.bashrc`` file so it is done automatically:
 
 .. code-block:: console
 
-  [vista]$ export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
+  [frontera]$ export APPTAINER_CACHEDIR=$SCRATCH/apptainer_cache
 
 
 Start an Interactive Session
@@ -104,7 +104,7 @@ start an interactive session on a compute node using the ``idev`` command.
 
 .. code-block:: console
 
-	[vista]$ idev -m 40
+	[frontera]$ idev -m 40
 
 
 If prompted to use a reservation, choose yes.  Once the command runs successfully, you will no longer be
@@ -119,21 +119,21 @@ the module.
 
 .. code-block:: console
 
-	[gh]$ module list
+	[rtx]$ module list
 
-	[gh]$ module spider apptainer
+	[rtx]$ module spider apptainer
 
-	[gh]$ module load tacc-apptainer
+	[rtx]$ module load tacc-apptainer
 
-	[gh]$ module list
+	[rtx]$ module list
 
 Now the apptainer command is available.
 
 .. code-block:: console
 
-	[gh]$ type apptainer
+	[rtx]$ type apptainer
 
-	[gh]$ apptainer help
+	[rtx]$ apptainer help
 
 
 Core Apptainer Commands
@@ -148,9 +148,9 @@ architecture (e.g. x86) is the same between the container and the host.
 
 .. code-block:: console
 
-  [gh]$ apptainer pull docker://eriksf/lolcow
+  [rtx]$ apptainer pull docker://eriksf/lolcow
 
-	[gh]$ ls
+	[rtx]$ ls
 
 There may be some warning messages, but this command should download the latest version of the
 "lolcow" container and save it in your current working directory as ``lolcow_latest.sif``.
@@ -164,7 +164,7 @@ as though it were a small virtual machine.
 
 .. code-block:: console
 
-	[gh]$ apptainer shell lolcow_latest.sif
+	[rtx]$ apptainer shell lolcow_latest.sif
 
 	Apptainer>
 
@@ -199,7 +199,7 @@ define the actions a container should perform when someone runs it.
 
 .. code-block:: console
 
-	[gh]$ apptainer run lolcow_latest.sif
+	[rtx]$ apptainer run lolcow_latest.sif
 
 
 .. code-block:: console
@@ -227,7 +227,7 @@ the ``cowsay`` program within the lolcow_latest.sif container:
 
 .. code-block:: console
 
-	[gh]$ apptainer exec --cleanenv lolcow_latest.sif cowsay Apptainer runs Docker containers on HPC systems
+	[rtx]$ apptainer exec --cleanenv lolcow_latest.sif cowsay Apptainer runs Docker containers on HPC systems
 
 .. code-block:: console
 
@@ -250,7 +250,7 @@ the exit command:
 
 .. code-block:: console
 
-	 [gh]$ exit
+	 [rtx]$ exit
 
 
 Apptainer in HPC Environments
@@ -339,13 +339,13 @@ Image Format
 **Apptainer:** Containers are files.  Apptainer can build a container on the fly if you specify a repository, but ultimately they are stored as individual files, with all the benefits and dangers inherent to files.
 
 
-Running a Batch Job on Vista
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Running a Batch Job on Frontera
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you are not already, please login to the Vista system, just like we did at the start of the
+If you are not already, please login to the Frontera system, just like we did at the start of the
 previous section.  You should be on one of the login nodes of the system.
 
-We will not be editing much text directly on Vista, but we need to do a little.  If you have a text
+We will not be editing much text directly on Frontera, but we need to do a little.  If you have a text
 editor you prefer, use it for this next part.  If not, the ``nano`` text editor is probably the most
 accessible for those new to Linux.
 
@@ -353,10 +353,10 @@ Create a file called "pi.slurm" on the work filesystem:
 
 .. code-block:: console
 
-   [vista]$ cd $WORK
-   [vista]$ mkdir life-sciences-ml-at-tacc
-   [vista]$ cd life-sciences-ml-at-tacc
-   [vista]$ nano classify.slurm
+   [frontera]$ cd $WORK
+   [frontera]$ mkdir life-sciences-ml-at-tacc
+   [frontera]$ cd life-sciences-ml-at-tacc
+   [frontera]$ nano classify.slurm
 
 Those commands should open a new file in the nano editor.  Either type in (or copy and paste) the
 following Slurm script.
@@ -395,7 +395,7 @@ Once you are done, try submitting this file as a job to Slurm.
 
 .. code-block:: console
 
-   [vista]$ sbatch classify.slurm
+   [frontera]$ sbatch classify.slurm
 
 You can check the status of your job with the command ``showq -u``.
 
@@ -403,7 +403,7 @@ Once your job has finished, take a look at the output:
 
 .. code-block:: console
 
-   [vista]$ cat output*
+   [frontera]$ cat output*
 
 
 Apptainer and GPU Computing
@@ -431,42 +431,84 @@ For instance, we can use a tool like ``gpustat`` to poke at the GPU on TACC syst
 .. code-block:: console
 
   Work from a compute node
-  [vista]$ idev -m 60 -p gh
+  [frontera]$ idev -m 60 -p rtx
 
   Load the apptainer module
-  [gh]$ module load tacc-apptainer
+  [rtx]$ module load tacc-apptainer
 
   Pull your image
-  [gh]$ apptainer pull docker://eriksf/monitor-gpu:0.1.0
+  [rtx]$ apptainer pull docker://eriksf/monitor-gpu:0.1.0
 
   Test the GPU
-  [gh]$ apptainer exec --nv monitor-gpu_0.1.0.sif gpustat --json
-  INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
+  [rtx]$ apptainer exec --nv monitor-gpu_0.1.0.sif gpustat --json
   INFO:    gocryptfs not found, will not be able to use gocryptfs
-  INFO:    Converting SIF file to temporary sandbox...
   {
-      "hostname": "c608-151.vista.tacc.utexas.edu",
-      "driver_version": "560.35.03",
-      "query_time": "2025-04-09T13:44:37.312641",
-      "gpus": [
-          {
-              "index": 0,
-              "uuid": "GPU-6248a92d-df2d-db15-af4e-b0e000650adb",
-              "name": "NVIDIA GH200 120GB",
-              "temperature.gpu": 27,
-              "fan.speed": null,
-              "utilization.gpu": 0,
-              "utilization.enc": 0,
-              "utilization.dec": 0,
-              "power.draw": 78,
-              "enforced.power.limit": 900,
-              "memory.used": 0,
-              "memory.total": 97871,
-              "processes": []
-          }
-      ]
+    "hostname": "c196-091.frontera.tacc.utexas.edu",
+    "driver_version": "535.113.01",
+    "query_time": "2025-07-14T13:54:45.131136",
+    "gpus": [
+        {
+            "index": 0,
+            "uuid": "GPU-418e7e3b-d61c-5b99-f438-260d24fa358c",
+            "name": "Quadro RTX 5000",
+            "temperature.gpu": 34,
+            "fan.speed": 0,
+            "utilization.gpu": 0,
+            "utilization.enc": 0,
+            "utilization.dec": 0,
+            "power.draw": 6,
+            "enforced.power.limit": 230,
+            "memory.used": 0,
+            "memory.total": 16384,
+            "processes": []
+        },
+        {
+            "index": 1,
+            "uuid": "GPU-186adbd6-869d-a96b-e984-bb1b5a453d30",
+            "name": "Quadro RTX 5000",
+            "temperature.gpu": 33,
+            "fan.speed": 0,
+            "utilization.gpu": 0,
+            "utilization.enc": 0,
+            "utilization.dec": 0,
+            "power.draw": 2,
+            "enforced.power.limit": 230,
+            "memory.used": 0,
+            "memory.total": 16384,
+            "processes": []
+        },
+        {
+            "index": 2,
+            "uuid": "GPU-836ff82b-ba4f-6245-b69a-3bf5b725eb9a",
+            "name": "Quadro RTX 5000",
+            "temperature.gpu": 32,
+            "fan.speed": 0,
+            "utilization.gpu": 0,
+            "utilization.enc": 0,
+            "utilization.dec": 0,
+            "power.draw": 7,
+            "enforced.power.limit": 230,
+            "memory.used": 0,
+            "memory.total": 16384,
+            "processes": []
+        },
+        {
+            "index": 3,
+            "uuid": "GPU-4ad01ea7-1724-cee3-272a-77d25f1bae93",
+            "name": "Quadro RTX 5000",
+            "temperature.gpu": 32,
+            "fan.speed": 0,
+            "utilization.gpu": 0,
+            "utilization.enc": 0,
+            "utilization.dec": 0,
+            "power.draw": 7,
+            "enforced.power.limit": 230,
+            "memory.used": 0,
+            "memory.total": 16384,
+            "processes": []
+        }
+    ]
   }
-  INFO:    Cleaning up image...
 
 .. Note::
 
@@ -485,21 +527,24 @@ It can be tested as follows:
 .. code-block:: console
 
   Change to your $SCRATCH directory
-  [gh]$ cd $SCRATCH
+  [rtx]$ cd $SCRATCH
 
   Download the test code
-  [gh]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/tf_test.py
+  [rtx]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/tf_test.py
 
   Pull the image
-  [gh]$ apptainer pull docker://nvcr.io/nvidia/tensorflow:24.12-tf2-py3
+  [rtx]$ apptainer pull docker://nvcr.io/nvidia/tensorflow:24.12-tf2-py3
 
   Run the code
-  [gh]$ apptainer exec --nv tensorflow_24.12-tf2-py3.sif python tf_test.py 2>warnings.txt
+  [rtx]$ apptainer exec --nv tensorflow_24.12-tf2-py3.sif python tf_test.py 2>warnings.txt
   Tensorflow version: 2.17.0
   GPU available: True
 
   GPUs:
   Name: /physical_device:GPU:0   Type: GPU
+  Name: /physical_device:GPU:1   Type: GPU
+  Name: /physical_device:GPU:2   Type: GPU
+  Name: /physical_device:GPU:3   Type: GPU
 
   TNA= tf.Tensor(
   [[1. 2. 3.]
@@ -524,62 +569,20 @@ It can be tested as follows:
 .. code-block:: console
 
   Change to your $SCRATCH directory
-  [gh]$ cd $SCRATCH
+  [rtx]$ cd $SCRATCH
 
   Download the test code
-  [gh]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/pytorch_matmul_scaling_test.py
+  [rtx]$ wget https://raw.githubusercontent.com/TACC/life_sciences_ml_at_tacc/main/docs/section4/files/pytorch_matmul_scaling_test.py
 
   Pull the image
-  [gh]$ apptainer pull docker://eriksf/pytorch-ml-container:0.2
+  [rtx]$ apptainer pull docker://eriksf/pytorch-ml-container:0.4
 
   Run the code against the CPU
-  [gh]$ apptainer exec --nv pytorch-ml-container_0.2.sif python3 pytorch_matmul_scaling_test.py --no-gpu
-  INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
+  [rtx]$ apptainer exec --nv pytorch-ml-container_0.4.sif python3 pytorch_matmul_scaling_test.py --no-gpu
   INFO:    gocryptfs not found, will not be able to use gocryptfs
-  INFO:    Converting SIF file to temporary sandbox...
   PyTorch Matrix Multiplication Test for Large Matrices
-  PyTorch version: 2.5.1
+  PyTorch version: 2.5.1+cu124
   Using device: cpu
-
-  Running test for matrix size: 2048x2048
-  Estimated memory requirement: 0.03 GB
-
-  Running test for matrix size: 4096x4096
-  Estimated memory requirement: 0.12 GB
-
-  Running test for matrix size: 8192x8192
-  Estimated memory requirement: 0.50 GB
-                    Matrix Multiplication Test Results
-  ┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-  ┃ Matrix Size ┃ Memory Size (GB) ┃ Computation Time (s) ┃ Performance   ┃
-  ┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-  │ 2048x2048   │ 0.03             │ 0.1755               │ 97.88 GFLOPS  │
-  │ 4096x4096   │ 0.12             │ 1.3749               │ 99.96 GFLOPS  │
-  │ 8192x8192   │ 0.50             │ 10.9043              │ 100.83 GFLOPS │
-  └─────────────┴──────────────────┴──────────────────────┴───────────────┘
-  Scaling plot saved as 'scaling_plot.png'
-  INFO:    Cleaning up image...
-
-The script also produces a scaling plot:
-
-.. figure:: ./images/scaling_plot_cpu.png
-  :align: center
-
-  Scaling plot for CPU
-
-.. code-block:: console
-
-  Run the code against the GPU
-  [gh]$ apptainer exec --nv pytorch-ml-container_0.2.sif python3 pytorch_matmul_scaling_test.py
-  INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
-  INFO:    gocryptfs not found, will not be able to use gocryptfs
-  INFO:    Converting SIF file to temporary sandbox...
-  PyTorch Matrix Multiplication Test for Large Matrices
-  PyTorch version: 2.5.1
-  Using device: cuda
-  CUDA version: 12.4
-  GPU: NVIDIA GH200 120GB
-  GPU Memory: 95.00 GB
 
   Running test for matrix size: 2048x2048
   Estimated memory requirement: 0.03 GB
@@ -593,12 +596,48 @@ The script also produces a scaling plot:
   ┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
   ┃ Matrix Size ┃ Memory Size (GB) ┃ Computation Time (s) ┃ Performance  ┃
   ┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
-  │ 2048x2048   │ 0.03             │ 0.0007               │ 25.98 TFLOPS │
-  │ 4096x4096   │ 0.12             │ 0.0053               │ 25.86 TFLOPS │
-  │ 8192x8192   │ 0.50             │ 0.0426               │ 25.82 TFLOPS │
+  │ 2048x2048   │ 0.03             │ 0.1984               │ 86.61 GFLOPS │
+  │ 4096x4096   │ 0.12             │ 1.5573               │ 88.25 GFLOPS │
+  │ 8192x8192   │ 0.50             │ 12.2906              │ 89.46 GFLOPS │
   └─────────────┴──────────────────┴──────────────────────┴──────────────┘
   Scaling plot saved as 'scaling_plot.png'
-  INFO:    Cleaning up image...
+
+The script also produces a scaling plot:
+
+.. figure:: ./images/scaling_plot_cpu.png
+  :align: center
+
+  Scaling plot for CPU
+
+.. code-block:: console
+
+  Run the code against the GPU
+  [rtx]$ apptainer exec --nv pytorch-ml-container_0.4.sif python3 pytorch_matmul_scaling_test.py
+  INFO:    gocryptfs not found, will not be able to use gocryptfs
+  PyTorch Matrix Multiplication Test for Large Matrices
+  PyTorch version: 2.5.1+cu124
+  Using device: cuda
+  CUDA version: 12.4
+  GPU: Quadro RTX 5000
+  GPU Memory: 15.74 GB
+
+  Running test for matrix size: 2048x2048
+  Estimated memory requirement: 0.03 GB
+
+  Running test for matrix size: 4096x4096
+  Estimated memory requirement: 0.12 GB
+
+  Running test for matrix size: 8192x8192
+  Estimated memory requirement: 0.50 GB
+                    Matrix Multiplication Test Results
+  ┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+  ┃ Matrix Size ┃ Memory Size (GB) ┃ Computation Time (s) ┃ Performance ┃
+  ┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+  │ 2048x2048   │ 0.03             │ 0.0036               │ 4.72 TFLOPS │
+  │ 4096x4096   │ 0.12             │ 0.0287               │ 4.78 TFLOPS │
+  │ 8192x8192   │ 0.50             │ 0.2256               │ 4.87 TFLOPS │
+  └─────────────┴──────────────────┴──────────────────────┴─────────────┘
+  Scaling plot saved as 'scaling_plot.png'
 
 The script also produces a scaling plot:
 
@@ -929,44 +968,42 @@ However, we will not do that here because it would take a long time (25-30 minut
 the training on the Vista system, which has powerful GPUs.
 
 
-Running the Container on Vista
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Running the Container on Frontera
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To start, let's allocate a single `Grace Hopper <https://docs.tacc.utexas.edu/hpc/vista/#system-gh>`_ node,
-which has a single NVIDIA GH200 GPU with 95 GB of Memory.
+To start, let's allocate a single `RTX <https://frontera-portal.tacc.utexas.edu/user-guide/system/#gpu-nodes>`_ node,
+which has 4 NVIDIA Quadro RTX 5000 GPUs with 16 GB of Memory each.
 
 .. code-block:: console
 
-  [vista]$ idev -m 60 -p gh
+  [frontera]$ idev -m 60 -p gh
 
 Once you have your node, pull the image and run it as follows:
 
 .. code-block:: console
 
   Load apptainer module
-  [gh]$ module load tacc-apptainer
+  [rtx]$ module load tacc-apptainer
 
   Change to $SCRATCH directory
-  [gh]$ cd $SCRATCH
+  [rtx]$ cd $SCRATCH
 
   Pull the image
-  [gh]$ apptainer pull docker://<username>/pytorch-transfer-learning:0.1.0
+  [rtx]$ apptainer pull docker://<username>/pytorch-transfer-learning:0.1.0
 
   Grab the hymenoptera dataset
-  [gh]$ wget https://download.pytorch.org/tutorial/hymenoptera_data.zip
-  [gh]$ unzip hymenoptera_data.zip
+  [rtx]$ wget https://download.pytorch.org/tutorial/hymenoptera_data.zip
+  [rtx]$ unzip hymenoptera_data.zip
 
   Run the container
-  [gh]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif train --data-dir hymenoptera_data
-  INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
+  [rtx]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif train --data-dir hymenoptera_data
   INFO:    gocryptfs not found, will not be able to use gocryptfs
-  INFO:    Converting SIF file to temporary sandbox...
   Training a CNN for hymenoptera classification using transfer learning
   PyTorch version: 2.6.0+cu126
   Using device: cuda:0
   CUDA version: 12.6
-  GPU: NVIDIA GH200 120GB
-  GPU Memory: 95.00 GB
+  GPU: Quadro RTX 5000
+  GPU Memory: 15.74 GB
 
   Data directory: hymenoptera_data
   Dataset sizes: {'train': 244, 'val': 153}
@@ -977,141 +1014,139 @@ Once you have your node, pull the image and run it as follows:
 
   Epoch 0/24
   ----------
-  train Loss: 0.6110 Acc: 0.7336
-  val Loss: 0.2670 Acc: 0.8954
+  train Loss: 0.6489 Acc: 0.6107
+  val Loss: 0.2445 Acc: 0.9150
   Epoch accuracy is better than current best, saving model...
 
   Epoch 1/24
   ----------
-  train Loss: 0.4454 Acc: 0.7951
-  val Loss: 0.2542 Acc: 0.8693
+  train Loss: 0.6228 Acc: 0.7254
+  val Loss: 0.4031 Acc: 0.8431
 
   Epoch 2/24
   ----------
-  train Loss: 0.3719 Acc: 0.8361
-  val Loss: 0.4829 Acc: 0.7908
+  train Loss: 0.4894 Acc: 0.7951
+  val Loss: 0.2155 Acc: 0.9085
 
   Epoch 3/24
   ----------
-  train Loss: 0.4174 Acc: 0.8525
-  val Loss: 0.5096 Acc: 0.8105
+  train Loss: 0.4832 Acc: 0.8238
+  val Loss: 0.1920 Acc: 0.9412
+  Epoch accuracy is better than current best, saving model...
 
   Epoch 4/24
   ----------
-  train Loss: 0.4799 Acc: 0.8238
-  val Loss: 0.3103 Acc: 0.8758
+  train Loss: 0.5797 Acc: 0.7623
+  val Loss: 0.3242 Acc: 0.8627
 
   Epoch 5/24
   ----------
-  train Loss: 0.6708 Acc: 0.7664
-  val Loss: 0.2981 Acc: 0.8889
+  train Loss: 0.4023 Acc: 0.8074
+  val Loss: 0.3212 Acc: 0.8889
 
   Epoch 6/24
   ----------
-  train Loss: 0.3612 Acc: 0.8730
-  val Loss: 0.6696 Acc: 0.7516
+  train Loss: 0.4252 Acc: 0.8197
+  val Loss: 0.6190 Acc: 0.7908
 
   Epoch 7/24
   ----------
-  train Loss: 0.3977 Acc: 0.8074
-  val Loss: 0.2333 Acc: 0.9216
-  Epoch accuracy is better than current best, saving model...
+  train Loss: 0.4579 Acc: 0.8361
+  val Loss: 0.1482 Acc: 0.9412
 
   Epoch 8/24
   ----------
-  train Loss: 0.2202 Acc: 0.9057
-  val Loss: 0.2097 Acc: 0.9412
-  Epoch accuracy is better than current best, saving model...
+  train Loss: 0.4030 Acc: 0.8525
+  val Loss: 0.2201 Acc: 0.9412
 
   Epoch 9/24
   ----------
-  train Loss: 0.3133 Acc: 0.8648
-  val Loss: 0.2120 Acc: 0.9477
-  Epoch accuracy is better than current best, saving model...
+  train Loss: 0.4598 Acc: 0.8156
+  val Loss: 0.1887 Acc: 0.9281
 
   Epoch 10/24
   ----------
-  train Loss: 0.2501 Acc: 0.8852
-  val Loss: 0.2218 Acc: 0.9477
+  train Loss: 0.3552 Acc: 0.8525
+  val Loss: 0.1527 Acc: 0.9346
 
   Epoch 11/24
   ----------
-  train Loss: 0.3130 Acc: 0.8730
-  val Loss: 0.2195 Acc: 0.9346
+  train Loss: 0.2532 Acc: 0.8852
+  val Loss: 0.1666 Acc: 0.9346
 
   Epoch 12/24
   ----------
-  train Loss: 0.3436 Acc: 0.8361
-  val Loss: 0.2296 Acc: 0.9085
+  train Loss: 0.3331 Acc: 0.8811
+  val Loss: 0.1602 Acc: 0.9412
 
   Epoch 13/24
   ----------
-  train Loss: 0.2763 Acc: 0.8566
-  val Loss: 0.2455 Acc: 0.9085
+  train Loss: 0.3184 Acc: 0.8648
+  val Loss: 0.1534 Acc: 0.9477
+  Epoch accuracy is better than current best, saving model...
 
   Epoch 14/24
   ----------
-  train Loss: 0.2794 Acc: 0.8811
-  val Loss: 0.2098 Acc: 0.9477
+  train Loss: 0.2983 Acc: 0.8770
+  val Loss: 0.1694 Acc: 0.9281
 
   Epoch 15/24
   ----------
-  train Loss: 0.2356 Acc: 0.9016
-  val Loss: 0.2074 Acc: 0.9412
+  train Loss: 0.2441 Acc: 0.8975
+  val Loss: 0.1680 Acc: 0.9216
 
   Epoch 16/24
   ----------
-  train Loss: 0.2779 Acc: 0.8811
-  val Loss: 0.2045 Acc: 0.9281
+  train Loss: 0.3554 Acc: 0.8648
+  val Loss: 0.1752 Acc: 0.9281
 
   Epoch 17/24
   ----------
-  train Loss: 0.2848 Acc: 0.8566
-  val Loss: 0.2068 Acc: 0.9477
+  train Loss: 0.2894 Acc: 0.8607
+  val Loss: 0.1794 Acc: 0.9412
 
   Epoch 18/24
   ----------
-  train Loss: 0.2334 Acc: 0.9098
-  val Loss: 0.2059 Acc: 0.9477
+  train Loss: 0.4286 Acc: 0.7992
+  val Loss: 0.1735 Acc: 0.9281
 
   Epoch 19/24
   ----------
-  train Loss: 0.2054 Acc: 0.8934
-  val Loss: 0.1988 Acc: 0.9412
+  train Loss: 0.2599 Acc: 0.8852
+  val Loss: 0.1535 Acc: 0.9412
 
   Epoch 20/24
   ----------
-  train Loss: 0.2842 Acc: 0.8607
-  val Loss: 0.2105 Acc: 0.9412
+  train Loss: 0.2866 Acc: 0.8893
+  val Loss: 0.1541 Acc: 0.9477
 
   Epoch 21/24
   ----------
-  train Loss: 0.3721 Acc: 0.8525
-  val Loss: 0.2380 Acc: 0.9150
+  train Loss: 0.2807 Acc: 0.8730
+  val Loss: 0.1588 Acc: 0.9412
 
   Epoch 22/24
   ----------
-  train Loss: 0.2626 Acc: 0.8770
-  val Loss: 0.2290 Acc: 0.9085
+  train Loss: 0.2638 Acc: 0.8648
+  val Loss: 0.1688 Acc: 0.9412
 
   Epoch 23/24
   ----------
-  train Loss: 0.2616 Acc: 0.8934
-  val Loss: 0.2280 Acc: 0.9281
+  train Loss: 0.3546 Acc: 0.8484
+  val Loss: 0.1602 Acc: 0.9412
 
   Epoch 24/24
   ----------
-  train Loss: 0.2375 Acc: 0.8934
-  val Loss: 0.2227 Acc: 0.9150
+  train Loss: 0.3408 Acc: 0.8607
+  val Loss: 0.1678 Acc: 0.9216
 
   ----------
-  Training complete in 0m 35s
+  Training complete in 0m 50s
   Best val Acc: 0.947712
 
   Prediction image for 'finetuning' model saved to './resnet18-finetuned_predictions.png'
 
   Model saved to './hymenoptera-finetuning.pt'
-  INFO:    Cleaning up image...
 
 Before the training started, the script created a grid of the training images and saved it to ``test_grid.png``.
 
@@ -1133,7 +1168,7 @@ Now that we have a trained model, we can use it to make predictions (run inferen
 
 .. code-block:: console
 
-  [gh]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --help
+  [rtx]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --help
   INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
   INFO:    gocryptfs not found, will not be able to use gocryptfs
   INFO:    Converting SIF file to temporary sandbox...
@@ -1151,21 +1186,18 @@ Now that we have a trained model, we can use it to make predictions (run inferen
     --output-dir PATH               Set the output directory  [default: .]
     --help                          Show this message and exit.
 
-  [gh]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --model hymenoptera-finetuning.pt /app/images/silver-tailed_petalcutter_bee.jpg
-  INFO:    squashfuse not found, will not be able to mount SIF or other squashfs files
+  [rtx]$ apptainer exec --nv pytorch-transfer-learning_0.1.0.sif predict --model hymenoptera-finetuning.pt /app/images/silver-tailed_petalcutter_bee.jpg
   INFO:    gocryptfs not found, will not be able to use gocryptfs
-  INFO:    Converting SIF file to temporary sandbox...
   Predict the class of an image based on the CNN trained for hymenoptera classification
   PyTorch version: 2.6.0+cu126
   Using device: cuda:0
   CUDA version: 12.6
-  GPU: NVIDIA GH200 120GB
-  GPU Memory: 95.00 GB
+  GPU: Quadro RTX 5000
+  GPU Memory: 15.74 GB
 
   Predicted class: bees
 
   Predicted image saved to './hymenoptera-finetuning_prediction_silver-tailed_petalcutter_bee.png'
-  INFO:    Cleaning up image...
 
 This script also creates an image based on the prediction and saves it to ``hymenoptera-finetuning_prediction_silver-tailed_petalcutter_bee.png``.
 
