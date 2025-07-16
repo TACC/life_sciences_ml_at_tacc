@@ -156,7 +156,7 @@ HPC system.
 
 In order to accomplish this, we will need to open a `DCV <https://docs.aws.amazon.com/dcv/latest/adminguide/what-is-dcv.html>`_
 (remote desktop) session on the `TACC Analysis Portal <https://tap.tacc.utexas.edu>`_ using the Vista
-compute cluster. See instructions `here </section1/tap_and_jupyter.html>`_.
+compute cluster. See instructions `here <https://docs.tacc.utexas.edu/tutorials/TAP/>`_.
 
 .. figure:: ./images/vista_dcv_session.png
    :width: 600
